@@ -2,11 +2,9 @@ package com.github.gilbertotcc.lifx.models;
 
 public interface Selector {
 
-    String getIdentifier();
+    Selector ALL = () -> "all";
 
-    static Selector all() {
-        return () -> "all";
-    }
+    String getIdentifier();
 
     static Selector id(final String lightId) {
         return () -> String.format("id:%s", lightId);

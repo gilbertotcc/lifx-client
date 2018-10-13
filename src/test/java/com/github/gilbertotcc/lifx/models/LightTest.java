@@ -20,5 +20,6 @@ public class LightTest {
         List<Light> lights = deserializeJson(json, new TypeReference<List<Light>>() {});
 
         assertEquals(1, lights.size());
+        // TODO Add more asserts
     }
 }

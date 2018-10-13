@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
-import com.github.gilbertotcc.lifx.exception.LifxClientException;
+import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.Selector;
 import com.github.gilbertotcc.lifx.models.converter.SelectorConverter;
@@ -23,6 +23,7 @@ public class LifxClientImpl implements LifxClient {
 
     private final LifxApi lifxApi;
 
+    // Mainly for testing purposes
     LifxClientImpl(final LifxApi lifxApi) {
         this.lifxApi = lifxApi;
     }
@@ -47,16 +48,12 @@ public class LifxClientImpl implements LifxClient {
     private static <T> T executeAndGetBody(final Call<T> call) {
         try {
             final Response<T> response = call.execute();
-            assertSuccessfull(response);
-            return response.body();
+            if (response.isSuccessful()) {
+                return response.body();
+            }
+            throw LifxRemoteException.of(response);
         } catch (IOException e) {
-            throw new LifxClientException("Error occurred while calling LIFX HTTP API", e);
-        }
-    }
-
-    private static <T> void assertSuccessfull(final Response<T> response) {
-        if (!response.isSuccessful()) {
-            throw new LifxClientException(String.format("Error occurred while calling LIFX HTTP API (code: %d)", response.code()));
+            throw new LifxRemoteException("Error occurred while calling LIFX HTTP API", e);
         }
     }
 }
