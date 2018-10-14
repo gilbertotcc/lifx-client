@@ -10,7 +10,7 @@ import com.github.gilbertotcc.lifx.models.State;
 
 public interface LifxClient {
 
-    static LifxClient lifxClientOf(final String accessToken) {
+    static LifxClient newLifxClient(final String accessToken) {
         return LifxClientImpl.createNew(accessToken);
     }
 

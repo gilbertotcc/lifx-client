@@ -1,29 +1,27 @@
 package com.github.gilbertotcc.lifx.impl;
 
-import javax.annotation.Nonnull;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-public class LifxOkHttpClientFactory {
+class LifxOkHttpClientFactory {
+
+    static final LifxOkHttpClientFactory INSTANCE = new LifxOkHttpClientFactory();
 
     // Shared OkHttpClient prevents OutOfMemoryError under high workloads
     private static final OkHttpClient OK_HTTP_CLIENT_INSTANCE = new OkHttpClient();
 
-    static final LifxOkHttpClientFactory INSTANCE = new LifxOkHttpClientFactory();
-
     private LifxOkHttpClientFactory() {}
 
-    public OkHttpClient getOkHttpClient(final String bearerAccessToken) {
+    OkHttpClient getOkHttpClient(final String accessToken, final HttpLoggingInterceptor.Logger logger, final boolean verboseLogging) {
         return OK_HTTP_CLIENT_INSTANCE.newBuilder()
-                .addInterceptor(bearerAccessTokenInterceptorOf(bearerAccessToken))
-                .addInterceptor(httpLoggingInterceptor())
+                .addInterceptor(accessTokenInterceptor(accessToken))
+                .addInterceptor(loggingInterceptor(logger, verboseLogging))
                 .build();
     }
 
-    private static Interceptor bearerAccessTokenInterceptorOf(@Nonnull final String bearedAccessToken) {
+    private static Interceptor accessTokenInterceptor(final String bearedAccessToken) {
         return chain -> {
             final Request authRequest = chain.request().newBuilder()
                     .addHeader("Authorization", String.format("Bearer %s", bearedAccessToken))
@@ -32,9 +30,9 @@ public class LifxOkHttpClientFactory {
         };
     }
 
-    private static Interceptor httpLoggingInterceptor() {
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+    private static Interceptor loggingInterceptor(final HttpLoggingInterceptor.Logger logger, final boolean verboseLogging) {
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(logger);
+        httpLoggingInterceptor.setLevel(verboseLogging ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.BASIC);
         return httpLoggingInterceptor;
     }
 }
