@@ -2,13 +2,13 @@ package com.github.gilbertotcc.lifx.models.converter;
 
 import java.io.IOException;
 
-import com.github.gilbertotcc.lifx.models.Selector;
+import com.github.gilbertotcc.lifx.models.LightsSelector;
 import retrofit2.Converter;
 
-public class SelectorConverter implements Converter<Selector, String> {
+public class SelectorConverter implements Converter<LightsSelector, String> {
 
     @Override
-    public String convert(final Selector selector) throws IOException {
-        return selector.getIdentifier();
+    public String convert(final LightsSelector lightsSelector) throws IOException {
+        return lightsSelector.getIdentifier();
     }
 }

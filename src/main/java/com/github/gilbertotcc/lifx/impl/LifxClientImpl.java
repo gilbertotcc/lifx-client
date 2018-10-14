@@ -7,7 +7,9 @@ import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
 import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
 import com.github.gilbertotcc.lifx.models.Light;
-import com.github.gilbertotcc.lifx.models.Selector;
+import com.github.gilbertotcc.lifx.models.LightsSelector;
+import com.github.gilbertotcc.lifx.models.Results;
+import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.models.converter.SelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
@@ -32,7 +34,7 @@ public class LifxClientImpl implements LifxClient {
         final OkHttpClient okHttpClient = LifxOkHttpClientFactory.INSTANCE.getOkHttpClient(accessToken);
         final LifxApi lifxApi = new Retrofit.Builder()
                 .baseUrl(LIFX_BASE_URL)
-                .addConverterFactory(StringConverterFactory.of(Selector.class, new SelectorConverter()))
+                .addConverterFactory(StringConverterFactory.of(LightsSelector.class, new SelectorConverter()))
                 .addConverterFactory(JacksonConverterFactory.create(JacksonUtils.OBJECT_MAPPER))
                 .client(okHttpClient)
                 .build()
@@ -41,8 +43,14 @@ public class LifxClientImpl implements LifxClient {
     }
 
     @Override
-    public List<Light> listLights(final Selector selector) {
-        return executeAndGetBody(lifxApi.listLights(selector));
+    public List<Light> listLights(final LightsSelector lightsSelector) {
+        return executeAndGetBody(lifxApi.listLights(lightsSelector));
+    }
+
+    @Override
+    public List<Results.Result> setLightsState(final LightsSelector lightsSelector, final State state) {
+        final Results results = executeAndGetBody(lifxApi.setLightsState(lightsSelector, state));
+        return results.getResults();
     }
 
     private static <T> T executeAndGetBody(final Call<T> call) {

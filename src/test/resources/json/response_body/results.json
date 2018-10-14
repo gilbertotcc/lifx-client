@@ -1,0 +1,14 @@
+{
+  "results": [
+    {
+      "id": "d3b2f2d97452",
+      "label": "Left Lamp",
+      "status": "timed_out"
+    },
+    {
+      "id": "da2c63c353b8",
+      "label": "Right Lamp",
+      "status": "offline"
+    }
+  ]
+}
