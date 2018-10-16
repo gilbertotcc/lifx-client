@@ -4,6 +4,8 @@ import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.github.gilbertotcc.lifx.models.deserializer.PowerDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Light {
@@ -172,7 +174,8 @@ public class Light {
     private boolean connected;
 
     @JsonProperty("power")
-    private String power;
+    @JsonDeserialize(using = PowerDeserializer.class)
+    private Power power;
 
     @JsonProperty("color")
     private Color color;
@@ -216,7 +219,7 @@ public class Light {
         return connected;
     }
 
-    public String getPower() {
+    public Power getPower() {
         return power;
     }
 
