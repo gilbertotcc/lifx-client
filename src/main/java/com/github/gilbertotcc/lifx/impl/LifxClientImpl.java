@@ -38,17 +38,22 @@ public class LifxClientImpl implements LifxClient {
         this.lifxApi = lifxApi;
     }
 
-    public static LifxClientImpl createNew(final String accessToken) {
+    // Mainly for testing purposes
+    static LifxClientImpl createNew(final String baseUrl, final String accessToken) {
         final OkHttpClient okHttpClient = LifxOkHttpClientFactory.INSTANCE
                 .getOkHttpClient(accessToken, LOG::info, asList(Level.FINEST, Level.ALL).contains(LOG.getLevel()));
         final LifxApi lifxApi = new Retrofit.Builder()
-                .baseUrl(LIFX_BASE_URL)
+                .baseUrl(baseUrl)
                 .addConverterFactory(StringConverterFactory.of(LightsSelector.class, new SelectorConverter()))
                 .addConverterFactory(JacksonConverterFactory.create(JacksonUtils.OBJECT_MAPPER))
                 .client(okHttpClient)
                 .build()
                 .create(LifxApi.class);
         return new LifxClientImpl(lifxApi);
+    }
+
+    public static LifxClientImpl createNew(final String accessToken) {
+        return createNew(LIFX_BASE_URL, accessToken);
     }
 
     @Override

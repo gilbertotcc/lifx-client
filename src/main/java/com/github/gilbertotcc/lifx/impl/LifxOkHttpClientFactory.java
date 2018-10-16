@@ -21,10 +21,10 @@ class LifxOkHttpClientFactory {
                 .build();
     }
 
-    private static Interceptor accessTokenInterceptor(final String bearedAccessToken) {
+    private static Interceptor accessTokenInterceptor(final String accessToken) {
         return chain -> {
             final Request authRequest = chain.request().newBuilder()
-                    .addHeader("Authorization", String.format("Bearer %s", bearedAccessToken))
+                    .addHeader("Authorization", String.format("Bearer %s", accessToken))
                     .build();
             return chain.proceed(authRequest);
         };
