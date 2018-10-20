@@ -1,17 +1,25 @@
 package com.github.gilbertotcc.lifx.impl;
 
+import static java.util.Arrays.asList;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
 import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
 import com.github.gilbertotcc.lifx.models.Light;
-import com.github.gilbertotcc.lifx.models.Selector;
+import com.github.gilbertotcc.lifx.models.LightsSelector;
+import com.github.gilbertotcc.lifx.models.Results;
+import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.models.converter.SelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 import okhttp3.OkHttpClient;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -21,6 +29,8 @@ public class LifxClientImpl implements LifxClient {
 
     private static final String LIFX_BASE_URL = "https://api.lifx.com";
 
+    private static final Logger LOG = Logger.getLogger(LifxClientImpl.class.getName());
+
     private final LifxApi lifxApi;
 
     // Mainly for testing purposes
@@ -28,11 +38,13 @@ public class LifxClientImpl implements LifxClient {
         this.lifxApi = lifxApi;
     }
 
-    public static LifxClientImpl createNew(final String accessToken) {
-        final OkHttpClient okHttpClient = LifxOkHttpClientFactory.INSTANCE.getOkHttpClient(accessToken);
+    // Mainly for testing purposes
+    static LifxClientImpl createNew(final String baseUrl, final String accessToken) {
+        final OkHttpClient okHttpClient = LifxOkHttpClientFactory.INSTANCE
+                .getOkHttpClient(accessToken, LOG::info, asList(Level.FINEST, Level.ALL).contains(LOG.getLevel()));
         final LifxApi lifxApi = new Retrofit.Builder()
-                .baseUrl(LIFX_BASE_URL)
-                .addConverterFactory(StringConverterFactory.of(Selector.class, new SelectorConverter()))
+                .baseUrl(baseUrl)
+                .addConverterFactory(StringConverterFactory.of(LightsSelector.class, new SelectorConverter()))
                 .addConverterFactory(JacksonConverterFactory.create(JacksonUtils.OBJECT_MAPPER))
                 .client(okHttpClient)
                 .build()
@@ -40,9 +52,21 @@ public class LifxClientImpl implements LifxClient {
         return new LifxClientImpl(lifxApi);
     }
 
+    public static LifxClientImpl createNew(final String accessToken) {
+        return createNew(LIFX_BASE_URL, accessToken);
+    }
+
     @Override
-    public List<Light> listLights(final Selector selector) {
-        return executeAndGetBody(lifxApi.listLights(selector));
+    public List<Light> listLights(final LightsSelector lightsSelector) {
+        LOG.info(() -> String.format("List lights (selector: %s)", lightsSelector.getIdentifier()));
+        return executeAndGetBody(lifxApi.listLights(lightsSelector));
+    }
+
+    @Override
+    public List<Results.Result> setLightsState(final LightsSelector lightsSelector, final State state) {
+        LOG.info(() -> String.format("Set lights state of %s to %s", lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(state, ToStringStyle.JSON_STYLE)));
+        final Results results = executeAndGetBody(lifxApi.setLightsState(lightsSelector, state));
+        return results.getResults();
     }
 
     private static <T> T executeAndGetBody(final Call<T> call) {
