@@ -1,5 +1,7 @@
 package com.github.gilbertotcc.lifx.impl;
 
+import javax.annotation.Nonnull;
+
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,12 +16,16 @@ class LifxOkHttpClientFactory {
 
     private LifxOkHttpClientFactory() {}
 
-    OkHttpClient getOkHttpClient(final String accessToken, final HttpLoggingInterceptor.Logger logger, final boolean verboseLogging) {
+    OkHttpClient getOkHttpClient(@Nonnull final String accessToken,
+                                 @Nonnull final HttpLoggingInterceptor.Logger logger,
+                                 final boolean verboseLogging) {
         return OK_HTTP_CLIENT_INSTANCE.newBuilder()
                 .addInterceptor(accessTokenInterceptor(accessToken))
                 .addInterceptor(loggingInterceptor(logger, verboseLogging))
                 .build();
     }
+
+    // Define interceptors
 
     private static Interceptor accessTokenInterceptor(final String accessToken) {
         return chain -> {

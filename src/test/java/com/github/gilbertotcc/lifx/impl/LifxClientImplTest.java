@@ -31,14 +31,14 @@ public class LifxClientImplTest {
     public final WireMockRule wireMockRule = new WireMockRule(options().port(PORT));
 
     @Test
-    public void listLightsShouldSuccess() throws IOException {
+    public void listAllLightsShouldSuccess() throws IOException {
         final String response = loadJsonFromFile("/json/response_body/list_lights_OK.json");
 
         stubFor(get(urlEqualTo("/v1/lights/all"))
                 .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
                 .willReturn(aResponse().withBody(response)));
 
-        final LifxClient lifxClient = LifxClientImpl.createNew(BASE_URL, VALID_ACCESS_TOKEN);
+        final LifxClient lifxClient = LifxClientImpl.createNewClientFor(BASE_URL, VALID_ACCESS_TOKEN);
         final List<Light> lights = lifxClient.listLights(LightsSelector.ALL);
 
         assertEquals(1, lights.size());
@@ -46,7 +46,7 @@ public class LifxClientImplTest {
 
     @Test
     public void createNewlifxClientImplShouldSuccess() {
-        LifxClientImpl lifxClient = LifxClientImpl.createNew("accessToken");
+        LifxClientImpl lifxClient = LifxClientImpl.createNewClientFor("accessToken");
         assertNotNull(lifxClient);
     }
 }

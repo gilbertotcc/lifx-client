@@ -7,8 +7,8 @@ import org.junit.Test;
 public class LifxClientTest {
 
     @Test
-    public void newLifxClientShouldSuccess() {
-        LifxClient lifxClient = LifxClient.newLifxClient("accessToken");
+    public void newLifxClientForShouldSuccess() {
+        LifxClient lifxClient = LifxClient.newLifxClientFor("accessToken");
         assertNotNull(lifxClient);
     }
 }
