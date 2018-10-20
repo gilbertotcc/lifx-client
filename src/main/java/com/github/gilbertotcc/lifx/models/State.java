@@ -27,6 +27,17 @@ public class State {
     @JsonProperty("fast")
     private Boolean fast;
 
+    protected State() {}
+
+    protected State(final State state) {
+        this.power = state.power;
+        this.color = state.color;
+        this.brightness = state.brightness;
+        this.duration = state.duration;
+        this.infrared = state.infrared;
+        this.fast = state.fast;
+    }
+
     private State(final Power power, final String color, final Double brightness, final Double duration, final Double infrared, final Boolean fast) {
         this.power = power;
         this.color = color;

@@ -1,0 +1,26 @@
+package com.github.gilbertotcc.lifx.models;
+
+import static com.github.gilbertotcc.lifx.testutil.JacksonTestUtils.loadJsonFromFile;
+import static com.github.gilbertotcc.lifx.testutil.JacksonTestUtils.serializeObject;
+
+import java.io.IOException;
+
+import org.json.JSONException;
+import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+
+public class LightsStateTest {
+
+    private static final String LIGHTS_STATE_JSON = "/json/request_body/lights_state.json";
+
+    @Test
+    public void createLightsStateShouldSuccess() throws IOException, JSONException {
+        String json = loadJsonFromFile(LIGHTS_STATE_JSON);
+
+        State state = State.builder().power(Power.ON).build();
+        LightsState lightsState = LightsState.of(LightsSelector.id("1234"), state);
+        String serializedObject = serializeObject(lightsState);
+
+        JSONAssert.assertEquals(json, serializedObject, true);
+    }
+}
