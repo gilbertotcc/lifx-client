@@ -10,7 +10,7 @@ import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightsSelector;
 import com.github.gilbertotcc.lifx.models.Power;
-import com.github.gilbertotcc.lifx.models.Results;
+import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.State;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.AfterClass;
@@ -31,7 +31,7 @@ public class LifxClientTestIT {
     public static void initLifxClient() {
         String accessToken = Optional.ofNullable(System.getenv("IT_ACCESS_TOKEN")).filter(StringUtils::isNotBlank)
                 .orElseThrow(() -> new RuntimeException("IT_ACCESS_TOKEN not set. Cannot run integration tests"));
-        lifxClient = LifxClient.newLifxClient(accessToken);
+        lifxClient = LifxClient.newLifxClientFor(accessToken);
     }
 
     @AfterClass
@@ -49,7 +49,7 @@ public class LifxClientTestIT {
 
         lights.stream().filter(Light::isConnected).findFirst().ifPresent(light -> {
             lightId = light.getId();
-            lightPower = "on".equals(light.getPower()) ? Power.OFF : Power.ON; // Very ugly!
+            lightPower = Power.ON == light.getPower() ? Power.OFF : Power.ON; // Very ugly!
         });
     }
 
@@ -60,15 +60,15 @@ public class LifxClientTestIT {
                 .power(lightPower)
                 .build();
 
-        List<Results.Result> results = lifxClient.setLightsState(LightsSelector.id(lightId), state);
+        List<Result> results = lifxClient.setLightsState(LightsSelector.id(lightId), state);
 
         assertEquals(1, results.size());
-        assertEquals(Results.Result.Status.OK, results.get(0).getStatus());
+        assertEquals(Result.Status.OK, results.get(0).getStatus());
     }
 
     @Test(expected = LifxRemoteException.class)
     public void listLightsShouldFail() {
-        LifxClient lifxClient = LifxClient.newLifxClient("unknownAccessToken");
+        LifxClient lifxClient = LifxClient.newLifxClientFor("unknownAccessToken");
         lifxClient.listLights(LightsSelector.ALL);
     }
 }

@@ -20,4 +20,7 @@ public interface LifxApi {
     @PUT("/v1/lights/{selector}/state")
     Call<Results> setLightsState(final @Path("selector") LightsSelector lightsSelector, @Body State state);
 
+    @PUT("/v1/lights/states")
+    Call<Object> setLightStates(); // FIXME
+
 }
