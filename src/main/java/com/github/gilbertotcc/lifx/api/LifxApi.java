@@ -3,6 +3,7 @@ package com.github.gilbertotcc.lifx.api;
 import java.util.List;
 
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
+import com.github.gilbertotcc.lifx.models.Cycle;
 import com.github.gilbertotcc.lifx.models.PulseEffect;
 import com.github.gilbertotcc.lifx.models.TogglePower;
 import com.github.gilbertotcc.lifx.models.StateDelta;
@@ -42,4 +43,7 @@ public interface LifxApi {
 
     @POST("/v1/lights/{selector}/effects/pulse")
     Call<Results<Result>> pulseEffect(final @Path("selector") LightsSelector lightsSelector, final @Body PulseEffect pulseEffect);
+
+    @POST("/v1/lights/{selector}/cycle")
+    Call<Results<Result>> cycle(final @Path("selector") LightsSelector lightsSelector, final @Body Cycle cycle);
 }
