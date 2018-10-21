@@ -2,7 +2,7 @@ package com.github.gilbertotcc.lifx.impl;
 
 import static java.util.function.Predicate.isEqual;
 
-import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -12,24 +12,21 @@ import java.util.stream.Stream;
 
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
-import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightsSelector;
 import com.github.gilbertotcc.lifx.models.LightsState;
 import com.github.gilbertotcc.lifx.models.LightsStates;
 import com.github.gilbertotcc.lifx.models.OperationResult;
 import com.github.gilbertotcc.lifx.models.Result;
-import com.github.gilbertotcc.lifx.models.Results;
 import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.models.StateDelta;
+import com.github.gilbertotcc.lifx.models.TogglePower;
 import com.github.gilbertotcc.lifx.models.converter.LightsSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -70,40 +67,35 @@ public class LifxClientImpl implements LifxClient {
     @Override
     public List<Light> listLights(final LightsSelector lightsSelector) {
         LOG.info(() -> String.format("List lights (selector: %s)", lightsSelector.getIdentifier()));
-        return executeAndGetBody(lifxApi.listLights(lightsSelector));
+        return LifxCallExecutor.of(lifxApi.listLights(lightsSelector)).getResponse();
     }
 
     @Override
     public List<Result> setLightsState(final LightsSelector lightsSelector, final State state) {
         LOG.info(() -> String.format("Set lights state of %s to %s", lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(state, ToStringStyle.JSON_STYLE)));
-        final Results<Result> results = executeAndGetBody(lifxApi.setLightsState(lightsSelector, state));
-        return results.getResults();
+        return LifxCallExecutor.of(lifxApi.setLightsState(lightsSelector, state)).getResponse()
+                .getResults();
     }
 
     @Override
     public List<OperationResult> setLightsStates(final LightsStates lightsStates) {
         LOG.info(() -> String.format("Set lights states of %s", lightsSelectorListOf(lightsStates)));
-        final Results<OperationResult> operationResults = executeAndGetBody(lifxApi.setLightsStates(lightsStates));
-        return operationResults.getResults();
+        return LifxCallExecutor.of(lifxApi.setLightsStates(lightsStates)).getResponse()
+                .getResults();
     }
 
     @Override
     public List<Result> setLightsStateDelta(final LightsSelector lightsSelector, final StateDelta stateDelta) {
         LOG.info(() -> String.format("Set lights state delta of %s to %s", lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(stateDelta, ToStringStyle.JSON_STYLE)));
-        final Results<Result> results = executeAndGetBody(lifxApi.setLightsStateDelta(lightsSelector, stateDelta));
-        return results.getResults();
+        return LifxCallExecutor.of(lifxApi.setLightsStateDelta(lightsSelector, stateDelta)).getResponse()
+                .getResults();
     }
 
-    private static <T> T executeAndGetBody(final Call<T> call) {
-        try {
-            final Response<T> response = call.execute();
-            if (response.isSuccessful()) {
-                return response.body();
-            }
-            throw LifxRemoteException.of(response);
-        } catch (IOException e) {
-            throw new LifxRemoteException("Error occurred while calling LIFX HTTP API", e);
-        }
+    @Override
+    public List<Result> toggleLightsPower(final LightsSelector lightsSelector, final Duration duration) {
+        LOG.info(() -> String.format("Toggle lights power of %s in %s seconds", lightsSelector.getIdentifier(), duration.getSeconds()));
+        return LifxCallExecutor.of(lifxApi.togglePower(lightsSelector, TogglePower.in(duration))).getResponse()
+                .getResults();
     }
 
     private static boolean isLoggingVerbose() {

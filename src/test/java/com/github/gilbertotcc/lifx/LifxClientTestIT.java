@@ -3,6 +3,7 @@ package com.github.gilbertotcc.lifx;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +62,14 @@ public class LifxClientTestIT {
                 .build();
 
         List<Result> results = lifxClient.setLightsState(LightsSelector.id(lightId), state);
+
+        assertEquals(1, results.size());
+        assertEquals(Result.Status.OK, results.get(0).getStatus());
+    }
+
+    @Test
+    public void test02_toggleLightsPowerShouldSuccess() {
+        List<Result> results = lifxClient.toggleLightsPower(LightsSelector.id(lightId), Duration.ofSeconds(10));
 
         assertEquals(1, results.size());
         assertEquals(Result.Status.OK, results.get(0).getStatus());

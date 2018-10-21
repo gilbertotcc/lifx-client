@@ -1,5 +1,6 @@
 package com.github.gilbertotcc.lifx;
 
+import java.time.Duration;
 import java.util.List;
 
 import com.github.gilbertotcc.lifx.impl.LifxClientImpl;
@@ -24,4 +25,6 @@ public interface LifxClient {
     List<OperationResult> setLightsStates(final LightsStates lightsStates);
 
     List<Result> setLightsStateDelta(final LightsSelector lightsSelector, final StateDelta stateDelta);
+
+    List<Result> toggleLightsPower(final LightsSelector lightsSelector, final Duration duration);
 }
