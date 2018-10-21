@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
+import com.github.gilbertotcc.lifx.models.BreatheEffect;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightsSelector;
 import com.github.gilbertotcc.lifx.models.LightsState;
@@ -95,6 +96,13 @@ public class LifxClientImpl implements LifxClient {
     public List<Result> toggleLightsPower(final LightsSelector lightsSelector, final Duration duration) {
         LOG.info(() -> String.format("Toggle lights power of %s in %s seconds", lightsSelector.getIdentifier(), duration.getSeconds()));
         return LifxCallExecutor.of(lifxApi.togglePower(lightsSelector, TogglePower.in(duration))).getResponse()
+                .getResults();
+    }
+
+    @Override
+    public List<Result> doBreatheEffect(final LightsSelector lightsSelector, final BreatheEffect breatheEffect) {
+        LOG.info(() -> String.format("Do breathe effect with %s. Settings: %s", lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(breatheEffect, ToStringStyle.JSON_STYLE)));
+        return LifxCallExecutor.of(lifxApi.breatheEffect(lightsSelector, breatheEffect)).getResponse()
                 .getResults();
     }
 
