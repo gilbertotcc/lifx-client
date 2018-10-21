@@ -2,6 +2,7 @@ package com.github.gilbertotcc.lifx.api;
 
 import java.util.List;
 
+import com.github.gilbertotcc.lifx.models.TogglePower;
 import com.github.gilbertotcc.lifx.models.StateDelta;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightsStates;
@@ -31,4 +32,6 @@ public interface LifxApi {
     @POST("/v1/lights/{selector}/state/delta")
     Call<Results<Result>> setLightsStateDelta(final @Path("selector") LightsSelector lightsSelector, final @Body StateDelta stateDelta);
 
+    @POST("/v1/lights/{selector}/toggle")
+    Call<Results<Result>> togglePower(final @Path("selector") LightsSelector lightsSelector, final @Body TogglePower togglePower);
 }
