@@ -152,6 +152,9 @@
                 <configuration>
                     <failurePriority>5</failurePriority>
                     <verbose>true</verbose>
+                    <excludes>
+                        <exclude>**/models/*.java</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -193,7 +196,7 @@
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.52</minimum>
+                                            <minimum>0.40</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
