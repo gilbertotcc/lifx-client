@@ -1,7 +1,10 @@
 package com.github.gilbertotcc.lifx.models;
 
+import java.time.Duration;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.gilbertotcc.lifx.models.serializer.DurationSerializer;
 import com.github.gilbertotcc.lifx.models.serializer.PowerSerializer;
 
 public class StateDelta {
@@ -11,7 +14,8 @@ public class StateDelta {
     private Power power;
 
     @JsonProperty("duration")
-    private Double duration;
+    @JsonSerialize(using = DurationSerializer.class)
+    private Duration duration;
 
     @JsonProperty("infrared")
     private Double infrared;
@@ -38,7 +42,7 @@ public class StateDelta {
         return power;
     }
 
-    public Double getDuration() {
+    public Duration getDuration() {
         return duration;
     }
 
@@ -65,7 +69,7 @@ public class StateDelta {
 
     public static final class Builder {
         private Power power;
-        private Double duration;
+        private Duration duration;
         private Double infrared;
         private Double hue;
         private Double saturation;
@@ -79,7 +83,7 @@ public class StateDelta {
             return this;
         }
 
-        public Builder duration(Double duration) {
+        public Builder duration(Duration duration) {
             this.duration = duration;
             return this;
         }
