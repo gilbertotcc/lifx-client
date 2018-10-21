@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.github.gilbertotcc.lifx.impl.LifxClientImpl;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
+import com.github.gilbertotcc.lifx.models.PulseEffect;
 import com.github.gilbertotcc.lifx.models.StateDelta;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightsSelector;
@@ -30,4 +31,6 @@ public interface LifxClient {
     List<Result> toggleLightsPower(final LightsSelector lightsSelector, final Duration duration);
 
     List<Result> doBreatheEffect(final LightsSelector lightsSelector, final BreatheEffect breatheEffect);
+
+    List<Result> doPulseEffect(final LightsSelector lightsSelector, final PulseEffect pulseEffect);
 }

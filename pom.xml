@@ -152,6 +152,9 @@
                 <configuration>
                     <failurePriority>5</failurePriority>
                     <verbose>true</verbose>
+                    <excludes>
+                        <exclude>**/models/*.java</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>

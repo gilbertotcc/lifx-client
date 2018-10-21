@@ -18,6 +18,7 @@ import com.github.gilbertotcc.lifx.models.LightsSelector;
 import com.github.gilbertotcc.lifx.models.LightsState;
 import com.github.gilbertotcc.lifx.models.LightsStates;
 import com.github.gilbertotcc.lifx.models.OperationResult;
+import com.github.gilbertotcc.lifx.models.PulseEffect;
 import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.models.StateDelta;
@@ -103,6 +104,13 @@ public class LifxClientImpl implements LifxClient {
     public List<Result> doBreatheEffect(final LightsSelector lightsSelector, final BreatheEffect breatheEffect) {
         LOG.info(() -> String.format("Do breathe effect with %s. Settings: %s", lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(breatheEffect, ToStringStyle.JSON_STYLE)));
         return LifxCallExecutor.of(lifxApi.breatheEffect(lightsSelector, breatheEffect)).getResponse()
+                .getResults();
+    }
+
+    @Override
+    public List<Result> doPulseEffect(final LightsSelector lightsSelector, final PulseEffect pulseEffect) {
+        LOG.info(() -> String.format("Do pulse effect with %s. Settings: %s", lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(pulseEffect, ToStringStyle.JSON_STYLE)));
+        return LifxCallExecutor.of(lifxApi.pulseEffect(lightsSelector, pulseEffect)).getResponse()
                 .getResults();
     }
 
