@@ -3,6 +3,7 @@ package com.github.gilbertotcc.lifx;
 import java.util.List;
 
 import com.github.gilbertotcc.lifx.impl.LifxClientImpl;
+import com.github.gilbertotcc.lifx.models.StateDelta;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightsSelector;
 import com.github.gilbertotcc.lifx.models.LightsStates;
@@ -21,4 +22,6 @@ public interface LifxClient {
     List<Result> setLightsState(final LightsSelector lightsSelector, final State state);
 
     List<OperationResult> setLightsStates(final LightsStates lightsStates);
+
+    List<Result> setLightsStateDelta(final LightsSelector lightsSelector, final StateDelta stateDelta);
 }
