@@ -21,6 +21,7 @@ import com.github.gilbertotcc.lifx.models.OperationResult;
 import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.Results;
 import com.github.gilbertotcc.lifx.models.State;
+import com.github.gilbertotcc.lifx.models.StateDelta;
 import com.github.gilbertotcc.lifx.models.converter.LightsSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
@@ -82,8 +83,15 @@ public class LifxClientImpl implements LifxClient {
     @Override
     public List<OperationResult> setLightsStates(final LightsStates lightsStates) {
         LOG.info(() -> String.format("Set lights states of %s", lightsSelectorListOf(lightsStates)));
-        final Results<OperationResult> operationResults = executeAndGetBody(lifxApi.setLightStates(lightsStates));
+        final Results<OperationResult> operationResults = executeAndGetBody(lifxApi.setLightsStates(lightsStates));
         return operationResults.getResults();
+    }
+
+    @Override
+    public List<Result> setLightsStateDelta(final LightsSelector lightsSelector, final StateDelta stateDelta) {
+        LOG.info(() -> String.format("Set lights state delta of %s to %s", lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(stateDelta, ToStringStyle.JSON_STYLE)));
+        final Results<Result> results = executeAndGetBody(lifxApi.setLightsStateDelta(lightsSelector, stateDelta));
+        return results.getResults();
     }
 
     private static <T> T executeAndGetBody(final Call<T> call) {

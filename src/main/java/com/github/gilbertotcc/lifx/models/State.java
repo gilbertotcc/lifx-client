@@ -1,8 +1,11 @@
 package com.github.gilbertotcc.lifx.models;
 
+import java.time.Duration;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.gilbertotcc.lifx.models.serializer.DurationSerializer;
 import com.github.gilbertotcc.lifx.models.serializer.PowerSerializer;
 
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
@@ -19,7 +22,8 @@ public class State {
     private Double brightness;
 
     @JsonProperty("duration")
-    private Double duration;
+    @JsonSerialize(using = DurationSerializer.class)
+    private Duration duration;
 
     @JsonProperty("infrared")
     private Double infrared;
@@ -27,9 +31,9 @@ public class State {
     @JsonProperty("fast")
     private Boolean fast;
 
-    protected State() {}
+    State() {}
 
-    protected State(final State state) {
+    State(final State state) {
         this.power = state.power;
         this.color = state.color;
         this.brightness = state.brightness;
@@ -38,7 +42,7 @@ public class State {
         this.fast = state.fast;
     }
 
-    private State(final Power power, final String color, final Double brightness, final Double duration, final Double infrared, final Boolean fast) {
+    private State(final Power power, final String color, final Double brightness, final Duration duration, final Double infrared, final Boolean fast) {
         this.power = power;
         this.color = color;
         this.brightness = brightness;
@@ -63,7 +67,7 @@ public class State {
         return brightness;
     }
 
-    public Double getDuration() {
+    public Duration getDuration() {
         return duration;
     }
 
@@ -80,7 +84,7 @@ public class State {
         private Power power;
         private String color;
         private Double brightness;
-        private Double duration;
+        private Duration duration;
         private Double infrared;
         private Boolean fast;
 
@@ -101,7 +105,7 @@ public class State {
             return this;
         }
 
-        public Builder duration(final Double duration) {
+        public Builder duration(final Duration duration) {
             this.duration = duration;
             return this;
         }
