@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
+import com.github.gilbertotcc.lifx.models.Cycle;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightsSelector;
 import com.github.gilbertotcc.lifx.models.LightsState;
@@ -111,6 +112,13 @@ public class LifxClientImpl implements LifxClient {
     public List<Result> doPulseEffect(final LightsSelector lightsSelector, final PulseEffect pulseEffect) {
         LOG.info(() -> String.format("Do pulse effect with %s. Settings: %s", lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(pulseEffect, ToStringStyle.JSON_STYLE)));
         return LifxCallExecutor.of(lifxApi.pulseEffect(lightsSelector, pulseEffect)).getResponse()
+                .getResults();
+    }
+
+    @Override
+    public List<Result> transitToNextStateOf(final LightsSelector lightsSelector, final Cycle cycle) {
+        LOG.info(() -> String.format("Transit to next state of %s", lightsSelector.getIdentifier()));
+        return LifxCallExecutor.of(lifxApi.cycle(lightsSelector, cycle)).getResponse()
                 .getResults();
     }
 
