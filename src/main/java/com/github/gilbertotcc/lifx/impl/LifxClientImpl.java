@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
+import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Cycle;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightsSelector;
@@ -120,6 +121,12 @@ public class LifxClientImpl implements LifxClient {
         LOG.info(() -> String.format("Transit to next state of %s", lightsSelector.getIdentifier()));
         return LifxCallExecutor.of(lifxApi.cycle(lightsSelector, cycle)).getResponse()
                 .getResults();
+    }
+
+    @Override
+    public Color validateColor(final String colorString) {
+        LOG.info(() -> String.format("Validate color %s", colorString));
+        return LifxCallExecutor.of(lifxApi.validateColor(colorString)).getResponse();
     }
 
     private static boolean isLoggingVerbose() {
