@@ -3,6 +3,7 @@ package com.github.gilbertotcc.lifx.api;
 import java.util.List;
 
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
+import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Cycle;
 import com.github.gilbertotcc.lifx.models.PulseEffect;
 import com.github.gilbertotcc.lifx.models.TogglePower;
@@ -20,6 +21,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface LifxApi {
 
@@ -46,4 +48,7 @@ public interface LifxApi {
 
     @POST("/v1/lights/{selector}/cycle")
     Call<Results<Result>> cycle(final @Path("selector") LightsSelector lightsSelector, final @Body Cycle cycle);
+
+    @GET("/v1/color")
+    Call<Color> validateColor(final @Query("string") String colorString);
 }

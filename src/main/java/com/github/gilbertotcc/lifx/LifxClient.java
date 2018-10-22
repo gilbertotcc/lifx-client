@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.github.gilbertotcc.lifx.impl.LifxClientImpl;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
+import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Cycle;
 import com.github.gilbertotcc.lifx.models.PulseEffect;
 import com.github.gilbertotcc.lifx.models.StateDelta;
@@ -36,4 +37,6 @@ public interface LifxClient {
     List<Result> doPulseEffect(final LightsSelector lightsSelector, final PulseEffect pulseEffect);
 
     List<Result> transitToNextStateOf(final LightsSelector lightsSelector, final Cycle cycle);
+
+    Color validateColor(final String colorString);
 }

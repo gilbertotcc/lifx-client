@@ -2,12 +2,14 @@ package com.github.gilbertotcc.lifx;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
 import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
+import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightsSelector;
 import com.github.gilbertotcc.lifx.models.Power;
@@ -73,6 +75,17 @@ public class LifxClientTestIT {
 
         assertEquals(1, results.size());
         assertEquals(Result.Status.OK, results.get(0).getStatus());
+    }
+
+    @Test
+    public void test03_validateGrenColorShouldSuccess() {
+        Color color = lifxClient.validateColor("green");
+
+        assertEquals(120, color.getHue(), 0.001);
+        assertEquals(1, color.getSaturation(), 0.001);
+        assertNull(color.getBrightness());
+        assertNull(color.getKelvin());
+
     }
 
     @Test(expected = LifxRemoteException.class)
