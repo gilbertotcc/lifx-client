@@ -1,7 +1,7 @@
 <settings>
     <servers>
         <server>
-            <id>${env.BINTRAY_ID}</id>
+            <id>bintray-gilbertotcc-lifx</id>
             <username>${env.BINTRAY_USERNAME}</username>
             <password>${env.BINTRAY_API_KEY}</password>
         </server>
