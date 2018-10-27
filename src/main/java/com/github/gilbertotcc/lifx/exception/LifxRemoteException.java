@@ -9,6 +9,8 @@ import retrofit2.Response;
 
 public class LifxRemoteException extends RuntimeException {
 
+    private static final long serialVersionUID = -1L;
+
     public LifxRemoteException(String message, Throwable cause) {
         super(message, cause);
     }
