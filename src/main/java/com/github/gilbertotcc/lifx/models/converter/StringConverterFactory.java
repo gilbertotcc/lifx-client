@@ -25,9 +25,4 @@ public class StringConverterFactory<T> extends Converter.Factory {
         final Class<?> rawType = getRawType(type);
         return sourceType.equals(rawType) ? converter : null;
     }
-
-    @Override
-    public String toString() {
-        return String.format("%s to String converter factory", sourceType.getName());
-    }
 }
