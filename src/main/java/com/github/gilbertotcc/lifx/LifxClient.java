@@ -3,6 +3,7 @@ package com.github.gilbertotcc.lifx;
 import java.time.Duration;
 import java.util.List;
 
+import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
 import com.github.gilbertotcc.lifx.impl.LifxClientImpl;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
 import com.github.gilbertotcc.lifx.models.Color;
@@ -22,21 +23,21 @@ public interface LifxClient {
         return LifxClientImpl.createNewClientFor(accessToken);
     }
 
-    List<Light> listLights(final LightsSelector lightsSelector);
+    List<Light> listLights(final LightsSelector lightsSelector) throws LifxRemoteException;
 
-    List<Result> setLightsState(final LightsSelector lightsSelector, final State state);
+    List<Result> setLightsState(final LightsSelector lightsSelector, final State state) throws LifxRemoteException;
 
-    List<OperationResult> setLightsStates(final LightsStates lightsStates);
+    List<OperationResult> setLightsStates(final LightsStates lightsStates) throws LifxRemoteException;
 
-    List<Result> setLightsStateDelta(final LightsSelector lightsSelector, final StateDelta stateDelta);
+    List<Result> setLightsStateDelta(final LightsSelector lightsSelector, final StateDelta stateDelta) throws LifxRemoteException;
 
-    List<Result> toggleLightsPower(final LightsSelector lightsSelector, final Duration duration);
+    List<Result> toggleLightsPower(final LightsSelector lightsSelector, final Duration duration) throws LifxRemoteException;
 
-    List<Result> doBreatheEffect(final LightsSelector lightsSelector, final BreatheEffect breatheEffect);
+    List<Result> doBreatheEffect(final LightsSelector lightsSelector, final BreatheEffect breatheEffect) throws LifxRemoteException;
 
-    List<Result> doPulseEffect(final LightsSelector lightsSelector, final PulseEffect pulseEffect);
+    List<Result> doPulseEffect(final LightsSelector lightsSelector, final PulseEffect pulseEffect) throws LifxRemoteException;
 
-    List<Result> transitToNextStateOf(final LightsSelector lightsSelector, final Cycle cycle);
+    List<Result> transitToNextStateOf(final LightsSelector lightsSelector, final Cycle cycle) throws LifxRemoteException;
 
-    Color validateColor(final String colorString);
+    Color validateColor(final String colorString) throws LifxRemoteException;
 }

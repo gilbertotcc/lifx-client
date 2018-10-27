@@ -18,7 +18,7 @@ class LifxCallExecutor<T> {
         return new LifxCallExecutor<>(call);
     }
 
-    T getResponse() {
+    T getResponse() throws LifxRemoteException {
         try {
             final Response<T> response = call.execute();
             if (response.isSuccessful()) {
@@ -26,7 +26,7 @@ class LifxCallExecutor<T> {
             }
             throw LifxRemoteException.of(response);
         } catch (IOException e) {
-            throw new LifxRemoteException("Error occurred while calling LIFX HTTP API", e);
+            throw new LifxRemoteException(String.format("Error occurred while calling LIFX HTTP API (%s %s)", call.request().method(), call.request().url()), e);
         }
     }
 }
