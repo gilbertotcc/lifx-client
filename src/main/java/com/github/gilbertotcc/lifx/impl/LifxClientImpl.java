@@ -2,7 +2,7 @@ package com.github.gilbertotcc.lifx.impl;
 
 import static java.util.function.Predicate.isEqual;
 
-import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -13,22 +13,25 @@ import java.util.stream.Stream;
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
 import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
+import com.github.gilbertotcc.lifx.models.BreatheEffect;
+import com.github.gilbertotcc.lifx.models.Color;
+import com.github.gilbertotcc.lifx.models.Cycle;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightsSelector;
 import com.github.gilbertotcc.lifx.models.LightsState;
 import com.github.gilbertotcc.lifx.models.LightsStates;
 import com.github.gilbertotcc.lifx.models.OperationResult;
+import com.github.gilbertotcc.lifx.models.PulseEffect;
 import com.github.gilbertotcc.lifx.models.Result;
-import com.github.gilbertotcc.lifx.models.Results;
 import com.github.gilbertotcc.lifx.models.State;
+import com.github.gilbertotcc.lifx.models.StateDelta;
+import com.github.gilbertotcc.lifx.models.TogglePower;
 import com.github.gilbertotcc.lifx.models.converter.LightsSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -67,35 +70,64 @@ public class LifxClientImpl implements LifxClient {
     }
 
     @Override
-    public List<Light> listLights(final LightsSelector lightsSelector) {
+    public List<Light> listLights(final LightsSelector lightsSelector) throws LifxRemoteException {
         LOG.info(() -> String.format("List lights (selector: %s)", lightsSelector.getIdentifier()));
-        return executeAndGetBody(lifxApi.listLights(lightsSelector));
+        return LifxCallExecutor.of(lifxApi.listLights(lightsSelector)).getResponse();
     }
 
     @Override
-    public List<Result> setLightsState(final LightsSelector lightsSelector, final State state) {
+    public List<Result> setLightsState(final LightsSelector lightsSelector, final State state) throws LifxRemoteException {
         LOG.info(() -> String.format("Set lights state of %s to %s", lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(state, ToStringStyle.JSON_STYLE)));
-        final Results<Result> results = executeAndGetBody(lifxApi.setLightsState(lightsSelector, state));
-        return results.getResults();
+        return LifxCallExecutor.of(lifxApi.setLightsState(lightsSelector, state)).getResponse()
+                .getResults();
     }
 
     @Override
-    public List<OperationResult> setLightsStates(final LightsStates lightsStates) {
+    public List<OperationResult> setLightsStates(final LightsStates lightsStates) throws LifxRemoteException {
         LOG.info(() -> String.format("Set lights states of %s", lightsSelectorListOf(lightsStates)));
-        final Results<OperationResult> operationResults = executeAndGetBody(lifxApi.setLightStates(lightsStates));
-        return operationResults.getResults();
+        return LifxCallExecutor.of(lifxApi.setLightsStates(lightsStates)).getResponse()
+                .getResults();
     }
 
-    private static <T> T executeAndGetBody(final Call<T> call) {
-        try {
-            final Response<T> response = call.execute();
-            if (response.isSuccessful()) {
-                return response.body();
-            }
-            throw LifxRemoteException.of(response);
-        } catch (IOException e) {
-            throw new LifxRemoteException("Error occurred while calling LIFX HTTP API", e);
-        }
+    @Override
+    public List<Result> setLightsStateDelta(final LightsSelector lightsSelector, final StateDelta stateDelta) throws LifxRemoteException {
+        LOG.info(() -> String.format("Set lights state delta of %s to %s", lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(stateDelta, ToStringStyle.JSON_STYLE)));
+        return LifxCallExecutor.of(lifxApi.setLightsStateDelta(lightsSelector, stateDelta)).getResponse()
+                .getResults();
+    }
+
+    @Override
+    public List<Result> toggleLightsPower(final LightsSelector lightsSelector, final Duration duration) throws LifxRemoteException {
+        LOG.info(() -> String.format("Toggle lights power of %s in %s seconds", lightsSelector.getIdentifier(), duration.getSeconds()));
+        return LifxCallExecutor.of(lifxApi.togglePower(lightsSelector, TogglePower.in(duration))).getResponse()
+                .getResults();
+    }
+
+    @Override
+    public List<Result> doBreatheEffect(final LightsSelector lightsSelector, final BreatheEffect breatheEffect) throws LifxRemoteException {
+        LOG.info(() -> String.format("Do breathe effect with %s. Settings: %s", lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(breatheEffect, ToStringStyle.JSON_STYLE)));
+        return LifxCallExecutor.of(lifxApi.breatheEffect(lightsSelector, breatheEffect)).getResponse()
+                .getResults();
+    }
+
+    @Override
+    public List<Result> doPulseEffect(final LightsSelector lightsSelector, final PulseEffect pulseEffect) throws LifxRemoteException {
+        LOG.info(() -> String.format("Do pulse effect with %s. Settings: %s", lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(pulseEffect, ToStringStyle.JSON_STYLE)));
+        return LifxCallExecutor.of(lifxApi.pulseEffect(lightsSelector, pulseEffect)).getResponse()
+                .getResults();
+    }
+
+    @Override
+    public List<Result> transitToNextStateOf(final LightsSelector lightsSelector, final Cycle cycle) throws LifxRemoteException {
+        LOG.info(() -> String.format("Transit to next state of %s", lightsSelector.getIdentifier()));
+        return LifxCallExecutor.of(lifxApi.cycle(lightsSelector, cycle)).getResponse()
+                .getResults();
+    }
+
+    @Override
+    public Color validateColor(final String colorString) throws LifxRemoteException {
+        LOG.info(() -> String.format("Validate color %s", colorString));
+        return LifxCallExecutor.of(lifxApi.validateColor(colorString)).getResponse();
     }
 
     private static boolean isLoggingVerbose() {
