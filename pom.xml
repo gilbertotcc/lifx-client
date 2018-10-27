@@ -5,7 +5,7 @@
     <groupId>com.github.gilbertotcc.lifx</groupId>
     <artifactId>lifx-client</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>lifx-client</name>
     <url>https://github.com/gilbertotcc/lifx-client</url>
 
@@ -229,7 +229,6 @@
     <distributionManagement>
         <repository>
             <id>bintray-gilbertotcc-lifx</id>
-            <name>gilbertotcc-lifx</name>
             <url>https://api.bintray.com/maven/gilbertotcc/lifx/lifx-client/;publish=1</url>
         </repository>
     </distributionManagement>
