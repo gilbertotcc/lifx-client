@@ -196,7 +196,7 @@
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.39</minimum>
+                                            <minimum>0.70</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -225,4 +225,12 @@
             </plugin>
         </plugins>
     </reporting>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-gilbertotcc-lifx</id>
+            <name>gilbertotcc-lifx</name>
+            <url>https://api.bintray.com/maven/gilbertotcc/lifx/lifx-client/;publish=1</url>
+        </repository>
+    </distributionManagement>
 </project>

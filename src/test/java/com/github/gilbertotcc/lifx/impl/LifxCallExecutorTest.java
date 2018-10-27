@@ -7,10 +7,13 @@ import java.io.IOException;
 
 import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
 import com.github.gilbertotcc.lifx.testutil.JacksonTestUtils;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
+import okhttp3.Request;
 import okhttp3.ResponseBody;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import retrofit2.Call;
@@ -19,7 +22,7 @@ import retrofit2.Response;
 @RunWith(MockitoJUnitRunner.class)
 public class LifxCallExecutorTest {
 
-    @Mock
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Call<String> callMock;
 
     @Test
@@ -34,7 +37,9 @@ public class LifxCallExecutorTest {
 
     @Test(expected = LifxRemoteException.class)
     public void getResultShouldFailForIOException() throws IOException {
+        Request request = new Request.Builder().get().url("http://localhost:8080/test").build();
         when(callMock.execute()).thenThrow(new IOException("error"));
+        when(callMock.request()).thenReturn(request);
         LifxCallExecutor.of(callMock).getResponse();
     }
 
