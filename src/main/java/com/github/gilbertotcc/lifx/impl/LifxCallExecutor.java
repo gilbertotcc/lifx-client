@@ -1,22 +1,21 @@
 package com.github.gilbertotcc.lifx.impl;
 
+import static java.lang.String.format;
+
 import java.io.IOException;
+import java.util.Optional;
 
 import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
+import lombok.Value;
+import okhttp3.HttpUrl;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Value(staticConstructor = "of")
 class LifxCallExecutor<T> {
 
     private Call<T> call;
-
-    private LifxCallExecutor(final Call<T> call) {
-        this.call = call;
-    }
-
-    static <T> LifxCallExecutor<T> of(final Call<T> call) {
-        return new LifxCallExecutor<>(call);
-    }
 
     T getResponse() throws LifxRemoteException {
         try {
@@ -26,7 +25,11 @@ class LifxCallExecutor<T> {
             }
             throw LifxRemoteException.of(response);
         } catch (IOException e) {
-            throw new LifxRemoteException(String.format("Error occurred while calling LIFX HTTP API (%s %s)", call.request().method(), call.request().url()), e);
+            throw new LifxRemoteException(format("Error occurred while calling LIFX HTTP API (%s %s)",
+                    Optional.of(call).map(Call::request).map(Request::method).orElse(null),
+                    Optional.of(call).map(Call::request).map(Request::url).map(HttpUrl::toString).orElse(null)),
+                    e
+            );
         }
     }
 }
