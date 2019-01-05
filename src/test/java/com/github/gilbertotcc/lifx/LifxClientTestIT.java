@@ -49,11 +49,12 @@ public class LifxClientTestIT {
         assertFalse(lights.isEmpty());
         // TODO Add more asserts
 
-
-        lights.stream().filter(Light::isConnected).findFirst().ifPresent(light -> {
-            lightId = light.getId();
-            lightPower = Power.ON == light.getPower() ? Power.OFF : Power.ON; // Very ugly!
-        });
+        Light connectedLight = lights.stream()
+                .filter(Light::isConnected)
+                .findFirst()
+                .orElseThrow(() -> new NullPointerException("No connected lights"));
+        lightId = connectedLight.getId();
+        lightPower = Power.ON == connectedLight.getPower() ? Power.OFF : Power.ON; // Very ugly!
     }
 
     @Test

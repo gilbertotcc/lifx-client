@@ -10,12 +10,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 
-public final class JacksonTestUtils {
+public final class TestUtils {
 
     private static final ObjectMapper OBJECT_MAPPER_INSTANCE = JacksonUtils.OBJECT_MAPPER;
 
     public static String loadJsonFromFile(final String file) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(JacksonTestUtils.class.getResourceAsStream(file), "UTF-8"))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(TestUtils.class.getResourceAsStream(file), "UTF-8"))) {
             return reader.lines().collect(Collectors.joining("\n"));
         } catch (IOException e) {
             throw new IOException(String.format("Error occured while loading/reading file %s", file), e);
@@ -34,5 +34,5 @@ public final class JacksonTestUtils {
         return OBJECT_MAPPER_INSTANCE.writeValueAsString(object);
     }
 
-    private JacksonTestUtils() {}
+    private TestUtils() {}
 }

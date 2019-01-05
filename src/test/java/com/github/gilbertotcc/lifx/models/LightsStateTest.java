@@ -1,7 +1,7 @@
 package com.github.gilbertotcc.lifx.models;
 
-import static com.github.gilbertotcc.lifx.testutil.JacksonTestUtils.loadJsonFromFile;
-import static com.github.gilbertotcc.lifx.testutil.JacksonTestUtils.serializeObject;
+import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
+import static com.github.gilbertotcc.lifx.testutil.TestUtils.serializeObject;
 
 import java.io.IOException;
 

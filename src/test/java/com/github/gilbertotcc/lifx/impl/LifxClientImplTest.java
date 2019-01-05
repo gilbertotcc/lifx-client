@@ -1,6 +1,6 @@
 package com.github.gilbertotcc.lifx.impl;
 
-import static com.github.gilbertotcc.lifx.testutil.JacksonTestUtils.loadJsonFromFile;
+import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -9,6 +9,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -38,7 +39,7 @@ import org.junit.Test;
 public class LifxClientImplTest {
 
     private static final int PORT = 9999;
-    private static final String BASE_URL = String.format("http://localhost:%d", PORT);
+    private static final String BASE_URL = format("http://localhost:%d", PORT);
     private static final String VALID_ACCESS_TOKEN = "validAccessToken";
     private static final LifxClient AUTHORIZED_CLIENT = authorizedClient();
 
