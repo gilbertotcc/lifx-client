@@ -6,8 +6,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 
 import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
-import com.github.gilbertotcc.lifx.testutil.JacksonTestUtils;
-import okhttp3.HttpUrl;
+import com.github.gilbertotcc.lifx.testutil.TestUtils;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
@@ -45,7 +44,7 @@ public class LifxCallExecutorTest {
 
     @Test(expected = LifxRemoteException.class)
     public void getResultShouldFailForNotSuccessfulResponse() throws IOException {
-        String errorResponseBody = JacksonTestUtils.loadJsonFromFile("/json/response_body/error_response.json");
+        String errorResponseBody = TestUtils.loadJsonFromFile("/json/response_body/error_response.json");
         Response<String> response = Response.error(404, ResponseBody.create(MediaType.parse("application/json"), errorResponseBody));
         when(callMock.execute()).thenReturn(response);
 

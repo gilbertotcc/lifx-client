@@ -1,9 +1,8 @@
 package com.github.gilbertotcc.lifx.models;
 
-import static com.github.gilbertotcc.lifx.testutil.JacksonTestUtils.deserializeJson;
-import static com.github.gilbertotcc.lifx.testutil.JacksonTestUtils.loadJsonFromFile;
+import static com.github.gilbertotcc.lifx.testutil.TestUtils.deserializeJson;
+import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
