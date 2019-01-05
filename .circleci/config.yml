@@ -30,8 +30,11 @@ jobs:
 
         - run: mvn integration-test
 
+        - run: mkdir libraryJar
+        - run: cp target/lifx-client-*.jar libraryJar/
+
         - store_artifacts:
-            path: target/lifx-client-*.jar
+            path: libraryJar
             destination: jars
 
         - store_test_results:
