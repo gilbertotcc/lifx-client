@@ -116,6 +116,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
+                    <useSystemClassLoader>false</useSystemClassLoader>
                     <skipITs>${skipITs}</skipITs>
                     <includes>
                         <include>**/*IT.java</include>
