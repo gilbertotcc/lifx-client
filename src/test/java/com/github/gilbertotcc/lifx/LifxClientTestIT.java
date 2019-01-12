@@ -32,8 +32,7 @@ public class LifxClientTestIT {
 
     @BeforeClass
     public static void initLifxClient() {
-        String accessToken = Optional.ofNullable(System.getenv("IT_ACCESS_TOKEN")).filter(StringUtils::isNotBlank)
-                .orElseThrow(() -> new RuntimeException("IT_ACCESS_TOKEN not set. Cannot run integration tests"));
+        String accessToken = Optional.ofNullable(System.getenv("IT_ACCESS_TOKEN")).filter(StringUtils::isNotBlank).get();
         lifxClient = LifxClient.newLifxClientFor(accessToken);
     }
 
