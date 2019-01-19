@@ -1,0 +1,9 @@
+<settings>
+    <servers>
+        <server>
+            <id>bintray-gilbertotcc-lifx</id>
+            <username>${env.BINTRAY_USERNAME}</username>
+            <password>${env.BINTRAY_API_KEY}</password>
+        </server>
+    </servers>
+</settings>

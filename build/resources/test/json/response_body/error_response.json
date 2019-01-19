@@ -1,0 +1,11 @@
+{
+  "error": "color is missing",
+  "errors": [
+    {
+      "field": "color",
+      "message": [
+        "is missing"
+      ]
+    }
+  ]
+}

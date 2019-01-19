@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.github.gilbertotcc.lifx.impl.LifxCallExecutorTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2019-01-19T11:37:01" hostname="MacBook-Pro-di-Gilberto.local" time="1.112">
+  <properties/>
+  <testcase name="getResultShouldFailForNotSuccessfulResponse" classname="com.github.gilbertotcc.lifx.impl.LifxCallExecutorTest" time="1.106"/>
+  <testcase name="getResultShouldSuccess" classname="com.github.gilbertotcc.lifx.impl.LifxCallExecutorTest" time="0.0"/>
+  <testcase name="getResultShouldFailForIOException" classname="com.github.gilbertotcc.lifx.impl.LifxCallExecutorTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
