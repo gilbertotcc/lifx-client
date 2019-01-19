@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.github.gilbertotcc.lifx.arch.ModelsDependencyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-01-19T11:37:04" hostname="MacBook-Pro-di-Gilberto.local" time="0.479">
-  <properties/>
-  <testcase name="MODELS_SHOULD_NOT_DEPEND_ON_OTHER_CLASSES" classname="com.github.gilbertotcc.lifx.arch.ModelsDependencyTest" time="0.479"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
