@@ -30,13 +30,13 @@ jobs:
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
           when: always
       - store_test_results:
-        path: ~/junit
+          path: ~/junit
       - store_artifacts:
-        path: ~/junit
-        destination: junit
+          path: ~/junit
+          destination: junit
       - store_artifacts:
-        path: build/reports
-        destination: reports
+          path: build/reports
+          destination: reports
 
   deploy:
     docker:
