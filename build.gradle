@@ -1,15 +1,9 @@
-buildscript {
-    ext {
-        retrofit2Version = '2.5.0'
-        jacksonVersion = '2.9.8'
-        lombokVersion = '1.18.4'
-    }
-}
-
 plugins {
     id 'java'
     id 'maven'
     id 'jacoco'
+    id 'com.jfrog.bintray' version '1.8.4'
+    id 'maven-publish'
 }
 
 group = 'com.github.gilbertotcc.lifx'
@@ -29,28 +23,28 @@ repositories {
 
 dependencies {
     // RETROFIT
-    compile "com.squareup.retrofit2:retrofit:${retrofit2Version}"
-    compile "com.squareup.retrofit2:converter-jackson:${retrofit2Version}"
+    compile 'com.squareup.retrofit2:retrofit:2.5.0'
+    compile 'com.squareup.retrofit2:converter-jackson:2.5.0'
 
     // JACKSON
-    compile "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
-    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-    compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
-    compile "com.fasterxml.jackson.module:jackson-module-parameter-names:${jacksonVersion}"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jacksonVersion}"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+    compile 'com.fasterxml.jackson.core:jackson-core:2.9.8'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.8'
+    compile 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.8'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.8'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.8'
 
     // COMMOMN
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor 'org.projectlombok:lombok:1.18.4'
+    compileOnly 'org.projectlombok:lombok:1.18.4'
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile 'org.apache.commons:commons-lang3:3.7'
     compile 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     compile 'com.google.code.findbugs:jsr305:3.0.2'
 
     // TEST
-    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
-    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
+    testCompileOnly 'org.projectlombok:lombok:1.18.4'
     testCompile 'junit:junit:4.12'
     testCompile 'org.skyscreamer:jsonassert:1.5.0'
     testCompile 'org.mockito:mockito-core:2.23.4'
@@ -58,10 +52,31 @@ dependencies {
     testCompile 'com.tngtech.archunit:archunit-junit4:0.9.3'
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
+jar {
+    archiveFileName = 'lifx-client'
 }
 
 test {
+    // Exclude integration tests
     exclude '**/*IT*'
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USERNAME')
+    key = System.getenv('BINTRAY_API_KEY')
+    pkg {
+        repo = 'maven'
+        name = 'lifx-client'
+        userOrg = 'bintray_user'
+        licenses = ['BSD 2-Clause']
+        vcsUrl = 'https://github.com/gilbertotcc/lifx-client.git'
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
