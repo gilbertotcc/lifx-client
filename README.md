@@ -1,12 +1,11 @@
-LIFX Client
-===========
+# LIFX Client
 
-Java client to consume LIFX [HTTP API](https://api.developer.lifx.com/).
+Java client to consume [LIFX HTTP API](https://api.developer.lifx.com/).
 
-Usage with Maven
-----------------
+## Usage with Maven
 
-Add the Bintray repository and the client dependency in the POM file.
+Library artifactories are published on Bintray. In order to use them, add the
+_lifx_ Bintray repository to your POM file and include the client dependency.
 
 ```xml
 <repositories>
@@ -16,16 +15,17 @@ Add the Bintray repository and the client dependency in the POM file.
         <url>https://dl.bintray.com/gilbertotcc/lifx</url>
     </repository>
 </repositories>
+```
 
-[...]
-
+```xml
 <dependencies>
     <dependency>
         <groupId>com.github.gilbertotcc.lifx</groupId>
         <artifactId>lifx-client</artifactId>
-        <version>1.0.0</version>
+        <version>${lifx-client.version}</version>
     </dependency>
 </dependencies>
 ```
 
-Then take a look at examples in `test` directory to understand how a LIFX client can be created and used.
+Then take a look at examples in `test` directory to understand how a LIFX client
+can be created and used.

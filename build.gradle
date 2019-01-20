@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'maven'
     id 'jacoco'
+    // id 'pmd' TODO Enable PMD
     id 'com.jfrog.bintray' version '1.8.4'
     id 'maven-publish'
     id 'com.adarshr.test-logger' version '1.6.0'
@@ -62,6 +63,16 @@ test {
     exclude '**/*IT*'
 }
 
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.75
+            }
+        }
+    }
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
@@ -87,3 +98,8 @@ bintray {
         githubReleaseNotesFile = 'README.md'
     }
 }
+
+// TODO Enable PMD
+//tasks.withType(Pmd) {
+//    exclude '**/models/*.java'
+//}
