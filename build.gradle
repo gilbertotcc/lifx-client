@@ -62,22 +62,28 @@ test {
     exclude '**/*IT*'
 }
 
-bintray {
-    user = System.getenv('BINTRAY_USERNAME')
-    key = System.getenv('BINTRAY_API_KEY')
-    pkg {
-        repo = 'maven'
-        name = 'lifx-client'
-        userOrg = 'bintray_user'
-        licenses = ['BSD 2-Clause']
-        vcsUrl = 'https://github.com/gilbertotcc/lifx-client.git'
-    }
-}
-
 publishing {
     publications {
         maven(MavenPublication) {
             from components.java
         }
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USERNAME')
+    key = System.getenv('BINTRAY_API_KEY')
+    publish = true
+    publications = ['maven']
+    pkg {
+        repo = 'lifx'
+        name = 'lifx-client'
+        description = 'Java client to consume LIFX HTTP API'
+        licenses = ['BSD 2-Clause']
+        websiteUrl = 'https://github.com/gilbertotcc/lifx-client'
+        vcsUrl = 'https://github.com/gilbertotcc/lifx-client.git'
+
+        githubRepo = 'gilbertotcc/lifx-client'
+        githubReleaseNotesFile = 'README.md'
     }
 }
