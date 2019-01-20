@@ -7,9 +7,9 @@ import retrofit2.Converter;
 
 public class LightsSelectorConverter implements Converter<LightsSelector, String> {
 
-    @Override
-    @ParametersAreNonnullByDefault
-    public String convert(final LightsSelector lightsSelector) {
-        return lightsSelector.getIdentifier();
-    }
+  @Override
+  @ParametersAreNonnullByDefault
+  public String convert(final LightsSelector lightsSelector) {
+    return lightsSelector.getIdentifier();
+  }
 }

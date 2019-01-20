@@ -15,21 +15,21 @@ import retrofit2.Response;
 @Value(staticConstructor = "of")
 class LifxCallExecutor<T> {
 
-    private Call<T> call;
+  private Call<T> call;
 
-    T getResponse() throws LifxRemoteException {
-        try {
-            final Response<T> response = call.execute();
-            if (response.isSuccessful()) {
-                return response.body();
-            }
-            throw LifxRemoteException.of(response);
-        } catch (IOException e) {
-            throw new LifxRemoteException(format("Error occurred while calling LIFX HTTP API (%s %s)",
-                    Optional.of(call).map(Call::request).map(Request::method).orElse(null),
-                    Optional.of(call).map(Call::request).map(Request::url).map(HttpUrl::toString).orElse(null)),
-                    e
-            );
-        }
+  T getResponse() throws LifxRemoteException {
+    try {
+      final Response<T> response = call.execute();
+      if (response.isSuccessful()) {
+        return response.body();
+      }
+      throw LifxRemoteException.of(response);
+    } catch (IOException e) {
+      throw new LifxRemoteException(format("Error occurred while calling LIFX HTTP API (%s %s)",
+        Optional.of(call).map(Call::request).map(Request::method).orElse(null),
+        Optional.of(call).map(Call::request).map(Request::url).map(HttpUrl::toString).orElse(null)),
+        e
+      );
     }
+  }
 }

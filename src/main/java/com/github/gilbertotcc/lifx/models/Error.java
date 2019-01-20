@@ -8,38 +8,40 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Error {
 
-    public static class ErrorDetail {
+  public static class ErrorDetail {
 
-        @JsonProperty("field")
-        private String field;
+    @JsonProperty("field")
+    private String field;
 
-        @JsonProperty("message")
-        private List<String> messages;
+    @JsonProperty("message")
+    private List<String> messages;
 
-        private ErrorDetail() {}
-
-        public String getField() {
-            return field;
-        }
-
-        public List<String> getMessages() {
-            return messages;
-        }
+    private ErrorDetail() {
     }
 
-    @JsonProperty("error")
-    private String errorMessage;
-
-    @JsonProperty("errors")
-    private List<ErrorDetail> details;
-
-    private Error() {}
-
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getField() {
+      return field;
     }
 
-    public List<ErrorDetail> getDetails() {
-        return details;
+    public List<String> getMessages() {
+      return messages;
     }
+  }
+
+  @JsonProperty("error")
+  private String errorMessage;
+
+  @JsonProperty("errors")
+  private List<ErrorDetail> details;
+
+  private Error() {
+  }
+
+  public String getErrorMessage() {
+    return errorMessage;
+  }
+
+  public List<ErrorDetail> getDetails() {
+    return details;
+  }
 }

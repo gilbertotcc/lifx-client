@@ -8,19 +8,19 @@ import com.github.gilbertotcc.lifx.models.serializer.DurationSerializer;
 
 public class TogglePower {
 
-    @JsonProperty("duration")
-    @JsonSerialize(using = DurationSerializer.class)
-    private Duration duration;
+  @JsonProperty("duration")
+  @JsonSerialize(using = DurationSerializer.class)
+  private Duration duration;
 
-    private TogglePower(final Duration duration) {
-        this.duration = duration;
-    }
+  private TogglePower(final Duration duration) {
+    this.duration = duration;
+  }
 
-    public static TogglePower in(final Duration duration) {
-        return new TogglePower(duration);
-    }
+  public static TogglePower in(final Duration duration) {
+    return new TogglePower(duration);
+  }
 
-    public Duration getDuration() {
-        return duration;
-    }
+  public Duration getDuration() {
+    return duration;
+  }
 }
