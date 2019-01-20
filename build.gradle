@@ -4,6 +4,7 @@ plugins {
     id 'jacoco'
     id 'com.jfrog.bintray' version '1.8.4'
     id 'maven-publish'
+    id 'com.adarshr.test-logger' version '1.6.0'
 }
 
 group = 'com.github.gilbertotcc.lifx'
@@ -53,7 +54,7 @@ dependencies {
 }
 
 jar {
-    archiveFileName = 'lifx-client'
+    archiveBaseName = 'lifx-client'
 }
 
 test {

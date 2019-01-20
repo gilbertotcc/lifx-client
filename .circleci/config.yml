@@ -75,6 +75,9 @@ jobs:
         path: build/reports
         destination: reports
     - run: ./gradlew bintrayUpload
+    - store_artifacts:
+        path: build/libs/
+        destination: jars
 
 workflows:
   version: 2
