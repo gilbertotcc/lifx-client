@@ -9,8 +9,11 @@ import com.github.gilbertotcc.lifx.models.Cycle;
 
 public class DirectionSerializer extends JsonSerializer<Cycle.Direction> {
 
-    @Override
-    public void serialize(final Cycle.Direction direction, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {
-        jsonGenerator.writeString(direction.label);
-    }
+  @Override
+  public void serialize(final Cycle.Direction direction,
+                        final JsonGenerator jsonGenerator,
+                        final SerializerProvider serializerProvider)
+    throws IOException {
+    jsonGenerator.writeString(direction.label);
+  }
 }

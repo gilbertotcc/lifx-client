@@ -14,13 +14,13 @@ import org.junit.runner.RunWith;
 @AnalyzeClasses(packages = "com.github.gilbertotcc.lifx")
 public class CodingRulesTest {
 
-    @ArchTest
-    private final ArchRule NO_ACCESS_TO_STANDARD_STREAMS = NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS;
+  @ArchTest
+  private final ArchRule noAccessToStandardStreams = NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS;
 
-    @ArchTest
-    private final ArchRule NO_GENERIC_EXCEPTIONS = NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS;
+  @ArchTest
+  private final ArchRule noGenericExceptions = NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS;
 
-    @ArchTest
-    private final ArchRule NO_JAVA_UTIL_LOGGING = NO_CLASSES_SHOULD_USE_JAVA_UTIL_LOGGING;
+  @ArchTest
+  private final ArchRule noJavaUtilLogging = NO_CLASSES_SHOULD_USE_JAVA_UTIL_LOGGING;
 
 }

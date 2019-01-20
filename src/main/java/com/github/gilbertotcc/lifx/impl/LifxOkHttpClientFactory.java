@@ -11,34 +11,35 @@ import okhttp3.logging.HttpLoggingInterceptor;
 
 class LifxOkHttpClientFactory {
 
-    static final LifxOkHttpClientFactory INSTANCE = new LifxOkHttpClientFactory();
+  static final LifxOkHttpClientFactory INSTANCE = new LifxOkHttpClientFactory();
 
-    // Shared OkHttpClient prevents OutOfMemoryError under high workloads
-    private static final OkHttpClient OK_HTTP_CLIENT_INSTANCE = new OkHttpClient();
+  // Shared OkHttpClient prevents OutOfMemoryError under high workloads
+  private static final OkHttpClient OK_HTTP_CLIENT_INSTANCE = new OkHttpClient();
 
-    private LifxOkHttpClientFactory() {}
+  private LifxOkHttpClientFactory() {
+  }
 
-    OkHttpClient getOkHttpClient(@Nonnull final String accessToken, @Nonnull final HttpLoggingInterceptor.Logger logger) {
-        return OK_HTTP_CLIENT_INSTANCE.newBuilder()
-                .addInterceptor(accessTokenInterceptor(accessToken))
-                .addInterceptor(loggingInterceptor(logger))
-                .build();
-    }
+  OkHttpClient getOkHttpClient(@Nonnull final String accessToken, @Nonnull final HttpLoggingInterceptor.Logger logger) {
+    return OK_HTTP_CLIENT_INSTANCE.newBuilder()
+      .addInterceptor(accessTokenInterceptor(accessToken))
+      .addInterceptor(loggingInterceptor(logger))
+      .build();
+  }
 
-    // Define interceptors
+  // Define interceptors
 
-    private static Interceptor accessTokenInterceptor(final String accessToken) {
-        return chain -> {
-            final Request authRequest = chain.request().newBuilder()
-                    .addHeader("Authorization", format("Bearer %s", accessToken))
-                    .build();
-            return chain.proceed(authRequest);
-        };
-    }
+  private static Interceptor accessTokenInterceptor(final String accessToken) {
+    return chain -> {
+      final Request authRequest = chain.request().newBuilder()
+        .addHeader("Authorization", format("Bearer %s", accessToken))
+        .build();
+      return chain.proceed(authRequest);
+    };
+  }
 
-    private static Interceptor loggingInterceptor(final HttpLoggingInterceptor.Logger logger) {
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(logger);
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        return httpLoggingInterceptor;
-    }
+  private static Interceptor loggingInterceptor(final HttpLoggingInterceptor.Logger logger) {
+    HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(logger);
+    httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    return httpLoggingInterceptor;
+  }
 }

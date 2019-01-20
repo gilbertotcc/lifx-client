@@ -11,39 +11,41 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OperationResult {
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Operation {
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public static class Operation {
 
-        @JsonProperty("selector")
-        private String selector;
+    @JsonProperty("selector")
+    private String selector;
 
-        private Operation() {}
-
-        public String getSelector() {
-            return selector;
-        }
+    private Operation() {
     }
 
-    @JsonProperty("operation")
-    private Operation operation;
-
-    @JsonProperty("results")
-    private List<Result> results = Collections.emptyList();
-
-    @JsonProperty("error")
-    private String error;
-
-    private OperationResult() {}
-
-    public Operation getOperation() {
-        return operation;
+    public String getSelector() {
+      return selector;
     }
+  }
 
-    public @Nonnull List<Result> getResults() {
-        return results;
-    }
+  @JsonProperty("operation")
+  private Operation operation;
 
-    public String getError() {
-        return error;
-    }
+  @JsonProperty("results")
+  private List<Result> results = Collections.emptyList();
+
+  @JsonProperty("error")
+  private String error;
+
+  private OperationResult() {
+  }
+
+  public Operation getOperation() {
+    return operation;
+  }
+
+  public @Nonnull List<Result> getResults() {
+    return results;
+  }
+
+  public String getError() {
+    return error;
+  }
 }

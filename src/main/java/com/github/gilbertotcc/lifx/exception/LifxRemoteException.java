@@ -9,29 +9,29 @@ import retrofit2.Response;
 
 public class LifxRemoteException extends RuntimeException {
 
-    private static final long serialVersionUID = -1L;
+  private static final long serialVersionUID = -1L;
 
-    public LifxRemoteException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public LifxRemoteException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public LifxRemoteException(String message) {
-        super(message);
-    }
+  public LifxRemoteException(String message) {
+    super(message);
+  }
 
-    public static LifxRemoteException of(final Response<?> response) {
-        Optional<Error> errorOpt = findErrorWithin(response);
-        return errorOpt.map(error -> new LifxRemoteException(error.getErrorMessage()))
-                .orElse(new LifxRemoteException(String.format("LIFX call failed with %d response code", response.code())));
-    }
+  public static LifxRemoteException of(final Response<?> response) {
+    Optional<Error> errorOpt = findErrorWithin(response);
+    return errorOpt.map(error -> new LifxRemoteException(error.getErrorMessage()))
+      .orElse(new LifxRemoteException(String.format("LIFX call failed with %d response code", response.code())));
+  }
 
-    private static Optional<Error> findErrorWithin(final Response<?> response) {
-        return Optional.ofNullable(response.errorBody()).map(errorBody -> {
-            try {
-                return  JacksonUtils.OBJECT_MAPPER.readerFor(Error.class).readValue(errorBody.string());
-            } catch (IOException e) {
-               return null;
-            }
-        });
-    }
+  private static Optional<Error> findErrorWithin(final Response<?> response) {
+    return Optional.ofNullable(response.errorBody()).map(errorBody -> {
+      try {
+        return JacksonUtils.OBJECT_MAPPER.readerFor(Error.class).readValue(errorBody.string());
+      } catch (IOException e) {
+        return null;
+      }
+    });
+  }
 }

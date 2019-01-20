@@ -8,45 +8,46 @@ import com.github.gilbertotcc.lifx.models.deserializer.ResultStatusDeserializer;
 
 public class Result {
 
-    public enum Status {
+  public enum Status {
 
-        OK("ok"),
-        TIMED_OUT("timed_out"),
-        OFFLINE("offline");
+    OK("ok"),
+    TIMED_OUT("timed_out"),
+    OFFLINE("offline");
 
-        public final String label;
+    public final String label;
 
-        Status(String label) {
-            this.label = label;
-        }
-
-        public static Status byLabel(final String label) {
-            return Stream.of(values()).filter(status -> status.label.equals(label)).findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException(String.format("Unknown status '%s'", label)));
-        }
+    Status(String label) {
+      this.label = label;
     }
 
-    @JsonProperty("id")
-    private String id;
-
-    @JsonProperty("label")
-    private String label;
-
-    @JsonProperty("status")
-    @JsonDeserialize(using = ResultStatusDeserializer.class)
-    private Status status;
-
-    private Result() {}
-
-    public String getId() {
-        return id;
+    public static Status byLabel(final String label) {
+      return Stream.of(values()).filter(status -> status.label.equals(label)).findFirst()
+        .orElseThrow(() -> new IllegalArgumentException(String.format("Unknown status '%s'", label)));
     }
+  }
 
-    public String getLabel() {
-        return label;
-    }
+  @JsonProperty("id")
+  private String id;
 
-    public Status getStatus() {
-        return status;
-    }
+  @JsonProperty("label")
+  private String label;
+
+  @JsonProperty("status")
+  @JsonDeserialize(using = ResultStatusDeserializer.class)
+  private Status status;
+
+  private Result() {
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public Status getStatus() {
+    return status;
+  }
 }

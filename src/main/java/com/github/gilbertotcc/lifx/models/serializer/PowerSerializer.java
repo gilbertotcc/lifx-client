@@ -9,8 +9,11 @@ import com.github.gilbertotcc.lifx.models.Power;
 
 public class PowerSerializer extends JsonSerializer<Power> {
 
-    @Override
-    public void serialize(final Power power, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {
-        jsonGenerator.writeString(power.label);
-    }
+  @Override
+  public void serialize(final Power power,
+                        final JsonGenerator jsonGenerator,
+                        final SerializerProvider serializerProvider)
+    throws IOException {
+    jsonGenerator.writeString(power.label);
+  }
 }

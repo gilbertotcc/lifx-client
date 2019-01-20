@@ -6,9 +6,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class JacksonUtils {
 
-    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .registerModule(new Jdk8Module());
+  public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
+    .registerModule(new JavaTimeModule())
+    .registerModule(new Jdk8Module());
 
-    private JacksonUtils() {}
+  private JacksonUtils() {
+  }
 }

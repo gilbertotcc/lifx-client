@@ -9,12 +9,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Results<T> {
 
-    @JsonProperty("results")
-    private List<T> results = Collections.emptyList();
+  @JsonProperty("results")
+  private List<T> results = Collections.emptyList();
 
-    private Results() {}
+  private Results() {
+  }
 
-    public @Nonnull  List<T> getResults() {
-        return results;
-    }
+  public @Nonnull List<T> getResults() {
+    return results;
+  }
 }
