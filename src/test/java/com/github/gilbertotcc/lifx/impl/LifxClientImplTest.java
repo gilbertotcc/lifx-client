@@ -98,7 +98,7 @@ public class LifxClientImplTest {
     final State state = State.builder().power(Power.ON).build();
     final LightsState lightsState = LightsState.of(LightsSelector.id("aaaaa"), state);
     final LightsStates lightsStates = LightsStates.builder()
-      .addLightsState(lightsState)
+      .lightsState(lightsState)
       .build();
 
     final List<OperationResult> results = AUTHORIZED_CLIENT.setLightsStates(lightsStates);
