@@ -47,6 +47,9 @@ dependencies {
   // LOGGING
   compile 'ch.qos.logback:logback-classic:1.+'
 
+  // LOGGING
+  compile 'ch.qos.logback:logback-classic:1.+'
+
   // TEST
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
   testCompileOnly 'org.projectlombok:lombok:1.18.4'
