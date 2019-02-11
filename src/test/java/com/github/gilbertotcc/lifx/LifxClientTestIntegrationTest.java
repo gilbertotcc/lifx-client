@@ -8,7 +8,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
-import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
+import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightsSelector;
@@ -88,7 +88,7 @@ public class LifxClientTestIntegrationTest {
 
   }
 
-  @Test(expected = LifxRemoteException.class)
+  @Test(expected = LifxCallException.class)
   public void listLightsShouldFail() {
     LifxClient lifxClient = LifxClient.newLifxClientFor("unknownAccessToken");
     lifxClient.listLights(LightsSelector.ALL);

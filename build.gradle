@@ -76,6 +76,17 @@ jacocoTestCoverageVerification {
   }
 }
 
+jacocoTestReport {
+  reports {
+    xml.enabled false
+    csv.enabled false
+    html.enabled true
+    html.destination file("${buildDir}/reports/jacocoHtml")
+  }
+}
+
+test.finalizedBy jacocoTestReport
+
 // CHECKSTYLE
 
 checkstyleMain.source = "src/main/java"

@@ -7,7 +7,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
-import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
+import com.github.gilbertotcc.lifx.exception.LifxCallException;
+import com.github.gilbertotcc.lifx.exception.LifxErrorException;
 import com.github.gilbertotcc.lifx.testutil.TestUtils;
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -30,7 +31,7 @@ public class LifxCallExecutorTest {
     assertEquals("ok", okResponse);
   }
 
-  @Test(expected = LifxRemoteException.class)
+  @Test(expected = LifxCallException.class)
   @SuppressWarnings("unchecked")
   public void getResultShouldFailForIoException() throws IOException {
     final var callMock = mock(Call.class, RETURNS_DEEP_STUBS);
@@ -40,7 +41,7 @@ public class LifxCallExecutorTest {
     LifxCallExecutor.of(callMock).getResponse();
   }
 
-  @Test(expected = LifxRemoteException.class)
+  @Test(expected = LifxErrorException.class)
   @SuppressWarnings("unchecked")
   public void getResultShouldFailForNotSuccessfulResponse() throws IOException {
     final var callMock = mock(Call.class, RETURNS_DEEP_STUBS);
