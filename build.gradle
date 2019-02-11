@@ -43,7 +43,7 @@ dependencies {
   compile 'org.apache.commons:commons-lang3:3.7'
   compile 'com.squareup.okhttp3:logging-interceptor:3.10.0'
   compile 'com.google.code.findbugs:jsr305:3.0.2'
-  
+
   // LOGGING
   compile 'ch.qos.logback:logback-classic:1.+'
 
@@ -70,7 +70,7 @@ jacocoTestCoverageVerification {
   violationRules {
     rule {
       limit {
-        minimum = 0.75
+        minimum = 0.95
       }
     }
   }
