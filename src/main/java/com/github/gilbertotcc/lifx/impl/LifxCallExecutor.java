@@ -1,14 +1,14 @@
 package com.github.gilbertotcc.lifx.impl;
 
-import static java.lang.String.format;
-
 import java.io.IOException;
 import java.util.Optional;
 
-import com.github.gilbertotcc.lifx.exception.LifxRemoteException;
+import com.github.gilbertotcc.lifx.exception.LifxErrorException;
+import com.github.gilbertotcc.lifx.exception.LifxErrorType;
+import com.github.gilbertotcc.lifx.exception.LifxCallException;
+import com.github.gilbertotcc.lifx.models.Error;
+import com.github.gilbertotcc.lifx.util.JacksonUtils;
 import lombok.Value;
-import okhttp3.HttpUrl;
-import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -17,19 +17,30 @@ class LifxCallExecutor<T> {
 
   private Call<T> call;
 
-  T getResponse() throws LifxRemoteException {
+  T getResponse() {
     try {
       final Response<T> response = call.execute();
       if (response.isSuccessful()) {
         return response.body();
       }
-      throw LifxRemoteException.of(response);
+      throw lifxErrorExceptionFrom(response);
     } catch (IOException e) {
-      throw new LifxRemoteException(format("Error occurred while calling LIFX HTTP API (%s %s)",
-        Optional.of(call).map(Call::request).map(Request::method).orElse(null),
-        Optional.of(call).map(Call::request).map(Request::url).map(HttpUrl::toString).orElse(null)),
-        e
-      );
+      throw new LifxCallException(call, e);
     }
+  }
+
+  private static LifxErrorException lifxErrorExceptionFrom(final Response<?> response) {
+    return Optional.ofNullable(response.errorBody())
+      .<Error>map(errorBody -> {
+        try {
+          return JacksonUtils.OBJECT_MAPPER.readerFor(Error.class).readValue(errorBody.string());
+        } catch (IOException e) {
+          return null;
+        }
+      })
+      .flatMap(error ->
+        LifxErrorType.byHttpCode(response.code())
+          .map(errorType -> new LifxErrorException(errorType, error)))
+      .orElse(LifxErrorException.GENERIC_LIFX_ERROR);
   }
 }
