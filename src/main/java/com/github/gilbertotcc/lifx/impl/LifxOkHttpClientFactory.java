@@ -2,13 +2,14 @@ package com.github.gilbertotcc.lifx.impl;
 
 import static java.lang.String.format;
 
-import javax.annotation.Nonnull;
-
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class LifxOkHttpClientFactory {
 
   static final LifxOkHttpClientFactory INSTANCE = new LifxOkHttpClientFactory();
@@ -16,10 +17,7 @@ class LifxOkHttpClientFactory {
   // Shared OkHttpClient prevents OutOfMemoryError under high workloads
   private static final OkHttpClient OK_HTTP_CLIENT_INSTANCE = new OkHttpClient();
 
-  private LifxOkHttpClientFactory() {
-  }
-
-  OkHttpClient getOkHttpClient(@Nonnull final String accessToken, @Nonnull final HttpLoggingInterceptor.Logger logger) {
+  OkHttpClient getOkHttpClient(final String accessToken, final HttpLoggingInterceptor.Logger logger) {
     return OK_HTTP_CLIENT_INSTANCE.newBuilder()
       .addInterceptor(accessTokenInterceptor(accessToken))
       .addInterceptor(loggingInterceptor(logger))
