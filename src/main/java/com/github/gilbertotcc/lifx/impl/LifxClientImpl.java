@@ -25,6 +25,8 @@ import com.github.gilbertotcc.lifx.models.converter.LightsSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -33,16 +35,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 @Slf4j
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class LifxClientImpl implements LifxClient {
 
   private static final String LIFX_BASE_URL = "https://api.lifx.com";
 
   private final LifxApi lifxApi;
-
-  // Mainly for testing purposes
-  private LifxClientImpl(final LifxApi lifxApi) {
-    this.lifxApi = lifxApi;
-  }
 
   // Mainly for testing purposes
   static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
