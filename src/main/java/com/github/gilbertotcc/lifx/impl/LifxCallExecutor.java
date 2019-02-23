@@ -10,10 +10,12 @@ import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.models.Error;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Slf4j
 @Value(staticConstructor = "of")
 class LifxCallExecutor<T> {
 

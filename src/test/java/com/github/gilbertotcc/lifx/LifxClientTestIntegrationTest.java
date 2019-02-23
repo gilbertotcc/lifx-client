@@ -43,7 +43,7 @@ public class LifxClientTestIntegrationTest {
 
   @Test
   public void test00_listLightsShouldSuccess() {
-    List<Light> lights = lifxClient.listLights(LightsSelector.ALL);
+    List<Light> lights = lifxClient.listLights(LightsSelector.all());
 
     assertFalse(lights.isEmpty());
     // TODO Add more asserts
@@ -63,7 +63,7 @@ public class LifxClientTestIntegrationTest {
       .power(lightPower)
       .build();
 
-    List<Result> results = lifxClient.setLightsState(LightsSelector.id(lightId), state);
+    List<Result> results = lifxClient.setLightsState(LightsSelector.byId(lightId), state);
 
     assertEquals(1, results.size());
     assertEquals(Result.Status.OK, results.get(0).getStatus());
@@ -71,7 +71,7 @@ public class LifxClientTestIntegrationTest {
 
   @Test
   public void test02_toggleLightsPowerShouldSuccess() {
-    List<Result> results = lifxClient.toggleLightsPower(LightsSelector.id(lightId), Duration.ofSeconds(10));
+    List<Result> results = lifxClient.toggleLightsPower(LightsSelector.byId(lightId), Duration.ofSeconds(10));
 
     assertEquals(1, results.size());
     assertEquals(Result.Status.OK, results.get(0).getStatus());
@@ -91,6 +91,6 @@ public class LifxClientTestIntegrationTest {
   @Test(expected = LifxCallException.class)
   public void listLightsShouldFail() {
     LifxClient lifxClient = LifxClient.newLifxClientFor("unknownAccessToken");
-    lifxClient.listLights(LightsSelector.ALL);
+    lifxClient.listLights(LightsSelector.all());
   }
 }

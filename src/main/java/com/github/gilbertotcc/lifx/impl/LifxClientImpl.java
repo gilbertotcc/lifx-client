@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
-import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
 import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Cycle;
@@ -64,14 +63,13 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public List<Light> listLights(final LightsSelector lightsSelector) throws LifxCallException {
+  public List<Light> listLights(final LightsSelector lightsSelector) {
     log.info("List lights (selector: {})", lightsSelector.getIdentifier());
     return LifxCallExecutor.of(lifxApi.listLights(lightsSelector)).getResponse();
   }
 
   @Override
-  public List<Result> setLightsState(final LightsSelector lightsSelector, final State state)
-    throws LifxCallException {
+  public List<Result> setLightsState(final LightsSelector lightsSelector, final State state) {
     log.info("Set lights state of {} to {}",
       lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(state, ToStringStyle.JSON_STYLE));
     return LifxCallExecutor.of(lifxApi.setLightsState(lightsSelector, state)).getResponse()
@@ -79,15 +77,14 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public List<OperationResult> setLightsStates(final LightsStates lightsStates) throws LifxCallException {
+  public List<OperationResult> setLightsStates(final LightsStates lightsStates) {
     log.info("Set lights states of {}", lightsSelectorListOf(lightsStates));
     return LifxCallExecutor.of(lifxApi.setLightsStates(lightsStates)).getResponse()
       .getResults();
   }
 
   @Override
-  public List<Result> setLightsStateDelta(final LightsSelector lightsSelector, final StateDelta stateDelta)
-    throws LifxCallException {
+  public List<Result> setLightsStateDelta(final LightsSelector lightsSelector, final StateDelta stateDelta) {
     log.info("Set lights state delta of {} to {}",
       lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(stateDelta, ToStringStyle.JSON_STYLE));
     return LifxCallExecutor.of(lifxApi.setLightsStateDelta(lightsSelector, stateDelta)).getResponse()
@@ -95,16 +92,14 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public List<Result> toggleLightsPower(final LightsSelector lightsSelector, final Duration duration)
-    throws LifxCallException {
+  public List<Result> toggleLightsPower(final LightsSelector lightsSelector, final Duration duration) {
     log.info("Toggle lights power of {} in {} seconds", lightsSelector.getIdentifier(), duration.getSeconds());
     return LifxCallExecutor.of(lifxApi.togglePower(lightsSelector, TogglePower.in(duration))).getResponse()
       .getResults();
   }
 
   @Override
-  public List<Result> doBreatheEffect(final LightsSelector lightsSelector, final BreatheEffect breatheEffect)
-    throws LifxCallException {
+  public List<Result> doBreatheEffect(final LightsSelector lightsSelector, final BreatheEffect breatheEffect) {
     log.info("Do breathe effect with {}. Settings: {}",
       lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(breatheEffect, ToStringStyle.JSON_STYLE));
     return LifxCallExecutor.of(lifxApi.breatheEffect(lightsSelector, breatheEffect)).getResponse()
@@ -112,8 +107,7 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public List<Result> doPulseEffect(final LightsSelector lightsSelector, final PulseEffect pulseEffect)
-    throws LifxCallException {
+  public List<Result> doPulseEffect(final LightsSelector lightsSelector, final PulseEffect pulseEffect) {
     log.info("Do pulse effect with {}. Settings: {}",
       lightsSelector.getIdentifier(), ReflectionToStringBuilder.toString(pulseEffect,
       ToStringStyle.JSON_STYLE));
@@ -122,15 +116,14 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public List<Result> transitToNextStateOf(final LightsSelector lightsSelector, final Cycle cycle)
-    throws LifxCallException {
+  public List<Result> transitToNextStateOf(final LightsSelector lightsSelector, final Cycle cycle) {
     log.info("Transit to next state of {}", lightsSelector.getIdentifier());
     return LifxCallExecutor.of(lifxApi.cycle(lightsSelector, cycle)).getResponse()
       .getResults();
   }
 
   @Override
-  public Color validateColor(final String colorString) throws LifxCallException {
+  public Color validateColor(final String colorString) {
     log.info("Validate color {}", colorString);
     return LifxCallExecutor.of(lifxApi.validateColor(colorString)).getResponse();
   }
