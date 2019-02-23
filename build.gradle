@@ -36,7 +36,7 @@ dependencies {
   compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.8'
   compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.8'
 
-  // COMMOMN
+  // COMMON
   annotationProcessor 'org.projectlombok:lombok:1.18.4'
   compileOnly 'org.projectlombok:lombok:1.18.4'
   compile 'org.slf4j:slf4j-api:1.7.25'

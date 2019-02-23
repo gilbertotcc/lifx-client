@@ -18,7 +18,7 @@ public class LightsStateTest {
     String json = loadJsonFromFile(LIGHTS_STATE_JSON);
 
     State state = State.builder().power(Power.ON).build();
-    LightsState lightsState = LightsState.of(LightsSelector.id("1234"), state);
+    LightsState lightsState = LightsState.of(LightsSelector.byId("1234"), state);
     String serializedObject = serializeObject(lightsState);
 
     JSONAssert.assertEquals(json, serializedObject, true);
