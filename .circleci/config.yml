@@ -8,32 +8,41 @@ jobs:
       working_directory: ~/repo
 
       steps:
+
       - checkout
+
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "build.gradle" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
+
       - run: ./gradlew dependencies
+
       - save_cache:
           paths:
           - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
+
       - run:
           command: ./gradlew build -i -s --max-workers=1
           environment:
             JAVA_TOOL_OPTIONS: -Xmx512m
+
       - run:
           name: Save test results
           command: |
             mkdir -p ~/junit/
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
           when: always
+
       - store_test_results:
           path: ~/junit
+
       - store_artifacts:
           path: ~/junit
           destination: junit
+
       - store_artifacts:
           path: build/reports
           destination: reports
@@ -45,36 +54,48 @@ jobs:
     working_directory: ~/repo
 
     steps:
+
     - checkout
+
     - restore_cache:
         keys:
         - v1-dependencies-{{ checksum "build.gradle" }}
         # fallback to using the latest cache if no exact match is found
         - v1-dependencies-
+
     - run: ./gradlew dependencies
+
     - save_cache:
         paths:
         - ~/.gradle
         key: v1-dependencies-{{ checksum "build.gradle" }}
+
     - run:
         command: ./gradlew build -i -s --max-workers=1
         environment:
           JAVA_TOOL_OPTIONS: -Xmx512m
+
     - run:
         name: Save test results
         command: |
           mkdir -p ~/junit/
           find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
         when: always
+
     - store_test_results:
         path: ~/junit
+
     - store_artifacts:
         path: ~/junit
         destination: junit
+
     - store_artifacts:
         path: build/reports
         destination: reports
+
     - run: ./gradlew bintrayUpload
+
+
     - store_artifacts:
         path: build/libs/
         destination: jars
