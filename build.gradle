@@ -1,3 +1,5 @@
+import net.researchgate.release.cli.Executor
+
 plugins {
   id 'java'
   id 'maven'
@@ -6,6 +8,7 @@ plugins {
   id 'com.jfrog.bintray' version '1.8.4'
   id 'maven-publish'
   id 'com.adarshr.test-logger' version '1.6.0'
+  id 'net.researchgate.release' version '2.8.0'
 }
 
 group = 'com.github.gilbertotcc.lifx'
@@ -44,6 +47,12 @@ dependencies {
   compile 'com.squareup.okhttp3:logging-interceptor:3.10.0'
   compile 'com.google.code.findbugs:jsr305:3.0.2'
 
+  // LOGGING
+  compile 'ch.qos.logback:logback-classic:1.+'
+
+  // LOGGING
+  compile 'ch.qos.logback:logback-classic:1.+'
+
   // TEST
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
   testCompileOnly 'org.projectlombok:lombok:1.18.4'
@@ -67,11 +76,22 @@ jacocoTestCoverageVerification {
   violationRules {
     rule {
       limit {
-        minimum = 0.75
+        minimum = 0.95
       }
     }
   }
 }
+
+jacocoTestReport {
+  reports {
+    xml.enabled false
+    csv.enabled false
+    html.enabled true
+    html.destination file("${buildDir}/reports/jacocoHtml")
+  }
+}
+
+test.finalizedBy jacocoTestReport
 
 // CHECKSTYLE
 
@@ -83,6 +103,27 @@ publishing {
     maven(MavenPublication) {
       from components.java
     }
+  }
+}
+
+release {
+  preTagCommitMessage = '[Gradle Release Plugin] - pre tag commit [skip ci]: '
+  newVersionCommitMessage = '[Gradle Release Plugin] - new version commit [skip ci]: '
+}
+
+afterReleaseBuild.dependsOn bintrayUpload
+
+commitNewVersion {
+  doLast {
+    logger.info("Merging and pushing branch 'master' to 'develop' after release.")
+    def executor = new Executor(project.logger)
+    def workingDirectory = project.rootDir
+    def toBranch = 'develop'
+    executor.exec(['git', 'fetch'], directory: workingDirectory, errorPatterns: ['error: ', 'fatal: '])
+    executor.exec(['git', 'checkout', toBranch], directory: workingDirectory, errorPatterns: ['error: ', 'fatal: '])
+    executor.exec(['git', 'merge', '--no-ff', 'master'], directory: workingDirectory, errorPatterns: ['error: ', 'fatal: ', 'CONFLICT'])
+    executor.exec(['git', 'push', '--porcelain', 'origin', 'develop'], directory: workingDirectory, errorMessage: "Failed to push to 'develop' branch after 'master' was merged.", errorPatterns: ['[rejected]', 'error: ', 'fatal: '])
+    executor.exec(['git', 'checkout', 'master'], directory: workingDirectory, errorPatterns: ['error: ', 'fatal: '])
   }
 }
 

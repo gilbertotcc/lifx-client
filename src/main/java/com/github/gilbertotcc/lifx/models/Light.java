@@ -6,10 +6,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.gilbertotcc.lifx.models.deserializer.PowerDeserializer;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Light {
 
+  @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class Color {
 
     @JsonProperty("hue")
@@ -20,23 +27,10 @@ public class Light {
 
     @JsonProperty("kelvin")
     private int kelvin;
-
-    private Color() {
-    }
-
-    public double getHue() {
-      return hue;
-    }
-
-    public double getSaturation() {
-      return saturation;
-    }
-
-    public int getKelvin() {
-      return kelvin;
-    }
   }
 
+  @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class Group {
 
     @JsonProperty("id")
@@ -44,19 +38,10 @@ public class Light {
 
     @JsonProperty("name")
     private String name;
-
-    private Group() {
-    }
-
-    public String getId() {
-      return id;
-    }
-
-    public String getName() {
-      return name;
-    }
   }
 
+  @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class Location {
 
     @JsonProperty("id")
@@ -64,21 +49,14 @@ public class Light {
 
     @JsonProperty("name")
     private String name;
-
-    private Location() {
-    }
-
-    public String getId() {
-      return id;
-    }
-
-    public String getName() {
-      return name;
-    }
   }
 
+  @Getter
+  @NoArgsConstructor
   public static class Product {
 
+    @Getter
+    @NoArgsConstructor
     public static class Capabilities {
 
       @JsonProperty("has_color")
@@ -101,37 +79,6 @@ public class Light {
 
       @JsonProperty("has_multizone")
       private boolean hasMultizone;
-
-      private Capabilities() {
-      }
-
-      public boolean hasColor() {
-        return hasColor;
-      }
-
-      public boolean hasVariableColorTemperature() {
-        return hasVariableColorTemperature;
-      }
-
-      public int getMinKelvin() {
-        return minKelvin;
-      }
-
-      public int getMaxKelvin() {
-        return maxKelvin;
-      }
-
-      public boolean hasIr() {
-        return hasIr;
-      }
-
-      public boolean hasChain() {
-        return hasChain;
-      }
-
-      public boolean hasMultizone() {
-        return hasMultizone;
-      }
     }
 
     @JsonProperty("name")
@@ -145,25 +92,6 @@ public class Light {
 
     @JsonProperty("capabilities")
     private Capabilities capabilities;
-
-    private Product() {
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public String getCompany() {
-      return company;
-    }
-
-    public String getIdentifier() {
-      return identifier;
-    }
-
-    public Capabilities getCapabilities() {
-      return capabilities;
-    }
   }
 
   @JsonProperty("id")
@@ -205,59 +133,4 @@ public class Light {
 
   @JsonProperty("product")
   private Product product;
-
-  private Light() {
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public String getUuid() {
-    return uuid;
-  }
-
-  public String getLabel() {
-    return label;
-  }
-
-  public boolean isConnected() {
-    return connected;
-  }
-
-  public Power getPower() {
-    return power;
-  }
-
-  public Color getColor() {
-    return color;
-  }
-
-  public String getInfrared() {
-    return infrared;
-  }
-
-  public double getBrightness() {
-    return brightness;
-  }
-
-  public Group getGroup() {
-    return group;
-  }
-
-  public Location getLocation() {
-    return location;
-  }
-
-  public ZonedDateTime getLastSeen() {
-    return lastSeen;
-  }
-
-  public int getSecondsSinceSeen() {
-    return secondsSinceSeen;
-  }
-
-  public Product getProduct() {
-    return product;
-  }
 }
