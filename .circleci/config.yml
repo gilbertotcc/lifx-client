@@ -16,7 +16,9 @@ jobs:
           - v1-dependencies-{{ checksum "build.gradle" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
+
       - run: ./gradlew dependencies
+
       - save_cache:
           paths:
           - ~/.gradle
@@ -61,9 +63,42 @@ jobs:
         # fallback to using the latest cache if no exact match is found
         - v1-dependencies-
 
-    - run: git config --global user.email "${GIT_USER_EMAIL}"
-    - run: git config --global user.name "${GIT_USER_NAME}"
-    - run: gradle release -Prelease.useAutomaticVersion=true -i
+    - run: ./gradlew dependencies
+
+    - save_cache:
+        paths:
+        - ~/.gradle
+        key: v1-dependencies-{{ checksum "build.gradle" }}
+
+    - run:
+        command: ./gradlew build -i -s --max-workers=1
+        environment:
+          JAVA_TOOL_OPTIONS: -Xmx512m
+
+    - run:
+        name: Save test results
+        command: |
+          mkdir -p ~/junit/
+          find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
+        when: always
+
+    - store_test_results:
+        path: ~/junit
+
+    - store_artifacts:
+        path: ~/junit
+        destination: junit
+
+    - store_artifacts:
+        path: build/reports
+        destination: reports
+
+    - run: ./gradlew bintrayUpload
+
+
+    - store_artifacts:
+        path: build/libs/
+        destination: jars
 
 workflows:
   version: 2
