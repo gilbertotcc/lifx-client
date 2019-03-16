@@ -9,9 +9,12 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 public class DurationSerializer extends JsonSerializer<Duration> {
 
-    @Override
-    public void serialize(final Duration duration, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {
-        final double durationInSeconds = (double) duration.getSeconds();
-        jsonGenerator.writeNumber(durationInSeconds);
-    }
+  @Override
+  public void serialize(final Duration duration,
+                        final JsonGenerator jsonGenerator,
+                        final SerializerProvider serializerProvider)
+    throws IOException {
+    final double durationInSeconds = (double) duration.getSeconds();
+    jsonGenerator.writeNumber(durationInSeconds);
+  }
 }

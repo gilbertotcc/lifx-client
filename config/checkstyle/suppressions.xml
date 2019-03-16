@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+  "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+  "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+  <!-- Suppress for operations since commonly we have validateCommand there for
+    different commands, but we want them to be close to the related operation
+    methods and not grouped together. -->
+  <suppress checks="OverloadMethodsDeclarationOrder" files=".*Operations\.java"/>
+</suppressions>

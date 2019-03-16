@@ -1,27 +1,52 @@
 package com.github.gilbertotcc.lifx.models;
 
+import java.time.Duration;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.gilbertotcc.lifx.models.serializer.DurationSerializer;
 import com.github.gilbertotcc.lifx.models.serializer.LightsSelectorSerializer;
+import com.github.gilbertotcc.lifx.models.serializer.PowerSerializer;
+import lombok.Builder;
+import lombok.Getter;
 
-public class LightsState extends State {
+@Getter
+@Builder
+public class LightsState {
 
-    @JsonProperty("selector")
-    @JsonSerialize(using = LightsSelectorSerializer.class)
-    private LightsSelector lightsSelector;
+  @JsonProperty("selector")
+  @JsonSerialize(using = LightsSelectorSerializer.class)
+  private LightsSelector lightsSelector;
 
-    private LightsState() {}
+  @JsonProperty("power")
+  @JsonSerialize(using = PowerSerializer.class)
+  private Power power;
 
-    private LightsState(final LightsSelector lightsSelector, final State state) {
-        super(state);
-        this.lightsSelector = lightsSelector;
-    }
+  @JsonProperty("color")
+  private String color;
 
-    public static LightsState of(final LightsSelector lightsSelector, final State state) {
-        return new LightsState(lightsSelector, state);
-    }
+  @JsonProperty("brightness")
+  private Double brightness;
 
-    public LightsSelector getLightsSelector() {
-        return lightsSelector;
-    }
+  @JsonProperty("duration")
+  @JsonSerialize(using = DurationSerializer.class)
+  private Duration duration;
+
+  @JsonProperty("infrared")
+  private Double infrared;
+
+  @JsonProperty("fast")
+  private Boolean fast;
+
+  public static LightsState of(final LightsSelector lightsSelector, final State state) {
+    return LightsState.builder()
+      .lightsSelector(lightsSelector)
+      .power(state.getPower())
+      .color(state.getColor())
+      .brightness(state.getBrightness())
+      .duration(state.getDuration())
+      .infrared(state.getInfrared())
+      .fast(state.getFast())
+      .build();
+  }
 }

@@ -3,78 +3,74 @@ version: 2
 jobs:
   test:
       docker:
-        - image: circleci/openjdk:8-jdk
+        - image: circleci/openjdk:11-jdk
 
       working_directory: ~/repo
 
-      environment:
-        # Customize the JVM maximum heap limit
-        MAVEN_OPTS: -Xmx3200m
-
       steps:
-        - checkout
 
-        # Download and cache dependencies
-        - restore_cache:
-            keys:
-              - v1-dependencies-{{ checksum "pom.xml" }}
-              # fallback to using the latest cache if no exact match is found
-              - v1-dependencies-
+      - checkout
 
-        - run: mvn dependency:go-offline
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - run: ./gradlew dependencies
+      - save_cache:
+          paths:
+          - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
 
-        - save_cache:
-            paths:
-              - ~/.m2
-            key: v1-dependencies-{{ checksum "pom.xml" }}
+      - run:
+          command: ./gradlew build -i -s --max-workers=1
+          environment:
+            JAVA_TOOL_OPTIONS: -Xmx512m
 
-        - run: mvn integration-test
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
+          when: always
 
-        - run: mkdir libraryJar
-        - run: cp target/lifx-client-*.jar libraryJar/
+      - store_test_results:
+          path: ~/junit
 
-        - store_artifacts:
-            path: libraryJar
-            destination: jars
+      - store_artifacts:
+          path: ~/junit
+          destination: junit
 
-        - store_test_results:
-            path: target/surefire-reports
+      - store_artifacts:
+          path: build/reports
+          destination: reports
 
-  deploy:
+  publish:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:11-jdk
 
     working_directory: ~/repo
 
-    environment:
-      # Customize the JVM maximum heap limit
-      MAVEN_OPTS: -Xmx3200m
-
     steps:
-      - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+    - checkout
 
-      - run: mvn dependency:go-offline
+    - restore_cache:
+        keys:
+        - v1-dependencies-{{ checksum "build.gradle" }}
+        # fallback to using the latest cache if no exact match is found
+        - v1-dependencies-
 
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
-
-      - run: mvn deploy --settings settings.xml
+    - run: git config --global user.email "${GIT_USER_EMAIL}"
+    - run: git config --global user.name "${GIT_USER_NAME}"
+    - run: gradle release -Prelease.useAutomaticVersion=true -i
 
 workflows:
   version: 2
-  build-test-and-deploy:
+  build-and-publish:
     jobs:
       - test
-      - deploy:
+      - publish:
           requires:
             - test
           filters:

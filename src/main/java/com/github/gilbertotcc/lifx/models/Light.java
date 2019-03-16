@@ -6,252 +6,131 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.gilbertotcc.lifx.models.deserializer.PowerDeserializer;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Light {
 
-    public static class Color {
+  @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  public static class Color {
 
-        @JsonProperty("hue")
-        private double hue;
+    @JsonProperty("hue")
+    private double hue;
 
-        @JsonProperty("saturation")
-        private double saturation;
+    @JsonProperty("saturation")
+    private double saturation;
 
-        @JsonProperty("kelvin")
-        private int kelvin;
+    @JsonProperty("kelvin")
+    private int kelvin;
+  }
 
-        private Color() {}
-
-        public double getHue() {
-            return hue;
-        }
-
-        public double getSaturation() {
-            return saturation;
-        }
-
-        public int getKelvin() {
-            return kelvin;
-        }
-    }
-
-    public static class Group {
-
-        @JsonProperty("id")
-        private String id;
-
-        @JsonProperty("name")
-        private String name;
-
-        private Group() {}
-
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    public static class Location {
-
-        @JsonProperty("id")
-        private String id;
-
-        @JsonProperty("name")
-        private String name;
-
-        private Location() {}
-
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    public static class Product {
-
-        public static class Capabilities {
-
-            @JsonProperty("has_color")
-            private boolean hasColor;
-
-            @JsonProperty("has_variable_color_temp")
-            private boolean hasVariableColorTemperature;
-
-            @JsonProperty("min_kelvin")
-            private int minKelvin;
-
-            @JsonProperty("max_kelvin")
-            private int maxKelvin;
-
-            @JsonProperty("has_ir")
-            private boolean hasIr;
-
-            @JsonProperty("has_chain")
-            private boolean hasChain;
-
-            @JsonProperty("has_multizone")
-            private boolean hasMultizone;
-
-            private Capabilities() {}
-
-            public boolean hasColor() {
-                return hasColor;
-            }
-
-            public boolean hasVariableColorTemperature() {
-                return hasVariableColorTemperature;
-            }
-
-            public int getMinKelvin() {
-                return minKelvin;
-            }
-
-            public int getMaxKelvin() {
-                return maxKelvin;
-            }
-
-            public boolean hasIr() {
-                return hasIr;
-            }
-
-            public boolean hasChain() {
-                return hasChain;
-            }
-
-            public boolean hasMultizone() {
-                return hasMultizone;
-            }
-        }
-
-        @JsonProperty("name")
-        private String name;
-
-        @JsonProperty("company")
-        private String company;
-
-        @JsonProperty("identifier")
-        private String identifier;
-
-        @JsonProperty("capabilities")
-        private Capabilities capabilities;
-
-        private Product() {}
-
-        public String getName() {
-            return name;
-        }
-
-        public String getCompany() {
-            return company;
-        }
-
-        public String getIdentifier() {
-            return identifier;
-        }
-
-        public Capabilities getCapabilities() {
-            return capabilities;
-        }
-    }
+  @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  public static class Group {
 
     @JsonProperty("id")
     private String id;
 
-    @JsonProperty("uuid")
-    private String uuid;
+    @JsonProperty("name")
+    private String name;
+  }
 
-    @JsonProperty("label")
-    private String label;
+  @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  public static class Location {
 
-    @JsonProperty("connected")
-    private boolean connected;
+    @JsonProperty("id")
+    private String id;
 
-    @JsonProperty("power")
-    @JsonDeserialize(using = PowerDeserializer.class)
-    private Power power;
+    @JsonProperty("name")
+    private String name;
+  }
 
-    @JsonProperty("color")
-    private Color color;
+  @Getter
+  @NoArgsConstructor
+  public static class Product {
 
-    @JsonProperty("infrared")
-    private String infrared; // FIXME According https://api.developer.lifx.com/docs/list-lights is a string
+    @Getter
+    @NoArgsConstructor
+    public static class Capabilities {
 
-    @JsonProperty("brightness")
-    private double brightness;
+      @JsonProperty("has_color")
+      private boolean hasColor;
 
-    @JsonProperty("group")
-    private Group group;
+      @JsonProperty("has_variable_color_temp")
+      private boolean hasVariableColorTemperature;
 
-    @JsonProperty("location")
-    private Location location;
+      @JsonProperty("min_kelvin")
+      private int minKelvin;
 
-    @JsonProperty("last_seen")
-    private ZonedDateTime lastSeen;
+      @JsonProperty("max_kelvin")
+      private int maxKelvin;
 
-    @JsonProperty("seconds_since_seen")
-    private int secondsSinceSeen;
+      @JsonProperty("has_ir")
+      private boolean hasIr;
 
-    @JsonProperty("product")
-    private Product product;
+      @JsonProperty("has_chain")
+      private boolean hasChain;
 
-    private Light() {}
-
-    public String getId() {
-        return id;
+      @JsonProperty("has_multizone")
+      private boolean hasMultizone;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
+    @JsonProperty("name")
+    private String name;
 
-    public String getLabel() {
-        return label;
-    }
+    @JsonProperty("company")
+    private String company;
 
-    public boolean isConnected() {
-        return connected;
-    }
+    @JsonProperty("identifier")
+    private String identifier;
 
-    public Power getPower() {
-        return power;
-    }
+    @JsonProperty("capabilities")
+    private Capabilities capabilities;
+  }
 
-    public Color getColor() {
-        return color;
-    }
+  @JsonProperty("id")
+  private String id;
 
-    public String getInfrared() {
-        return infrared;
-    }
+  @JsonProperty("uuid")
+  private String uuid;
 
-    public double getBrightness() {
-        return brightness;
-    }
+  @JsonProperty("label")
+  private String label;
 
-    public Group getGroup() {
-        return group;
-    }
+  @JsonProperty("connected")
+  private boolean connected;
 
-    public Location getLocation() {
-        return location;
-    }
+  @JsonProperty("power")
+  @JsonDeserialize(using = PowerDeserializer.class)
+  private Power power;
 
-    public ZonedDateTime getLastSeen() {
-        return lastSeen;
-    }
+  @JsonProperty("color")
+  private Color color;
 
-    public int getSecondsSinceSeen() {
-        return secondsSinceSeen;
-    }
+  @JsonProperty("infrared")
+  private String infrared; // FIXME According https://api.developer.lifx.com/docs/list-lights is a string
 
-    public Product getProduct() {
-        return product;
-    }
+  @JsonProperty("brightness")
+  private double brightness;
+
+  @JsonProperty("group")
+  private Group group;
+
+  @JsonProperty("location")
+  private Location location;
+
+  @JsonProperty("last_seen")
+  private ZonedDateTime lastSeen;
+
+  @JsonProperty("seconds_since_seen")
+  private int secondsSinceSeen;
+
+  @JsonProperty("product")
+  private Product product;
 }

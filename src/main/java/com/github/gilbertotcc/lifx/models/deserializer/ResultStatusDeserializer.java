@@ -11,11 +11,12 @@ import org.apache.commons.lang3.StringUtils;
 
 public class ResultStatusDeserializer extends JsonDeserializer<Result.Status> {
 
-    @Override
-    public Result.Status deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext) throws IOException {
-        return Optional.ofNullable(jsonParser.getText())
-                .filter(StringUtils::isNotBlank)
-                .map(Result.Status::byLabel)
-                .orElse(null);
-    }
+  @Override
+  public Result.Status deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext)
+    throws IOException {
+    return Optional.ofNullable(jsonParser.getText())
+      .filter(StringUtils::isNotBlank)
+      .map(Result.Status::byLabel)
+      .orElse(null);
+  }
 }

@@ -2,11 +2,11 @@ package com.github.gilbertotcc.lifx.models;
 
 public interface LightsSelector {
 
-    LightsSelector ALL = () -> "all";
+  LightsSelector ALL = () -> "all";
 
-    String getIdentifier();
+  String getIdentifier();
 
-    static LightsSelector id(final String lightId) {
-        return () -> String.format("id:%s", lightId);
-    }
+  static LightsSelector id(final String lightId) {
+    return () -> String.format("id:%s", lightId);
+  }
 }
