@@ -2,8 +2,6 @@
 
 Java client to consume [LIFX HTTP API](https://api.developer.lifx.com/).
 
-
-
 ## Usage with Maven
 
 Library artifactories are published on Bintray. In order to use them, add the
