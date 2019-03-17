@@ -74,10 +74,6 @@ jobs:
           path: build/libs/
           destination: jars
 
-    - store_artifacts:
-        path: build/libs/
-        destination: jars
-
 workflows:
   version: 2
   test-build-release:
