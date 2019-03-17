@@ -9,43 +9,43 @@ jobs:
 
     steps:
 
-    - checkout
+      - checkout
 
-    - restore_cache:
+      - restore_cache:
         keys:
         - v1-dependencies-{{ checksum "build.gradle" }}
         # fallback to using the latest cache if no exact match is found
         - v1-dependencies-
 
-    - run: ./gradlew dependencies
+      - run: ./gradlew dependencies
 
-    - save_cache:
-        paths:
-        - ~/.gradle
-        key: v1-dependencies-{{ checksum "build.gradle" }}
+      - save_cache:
+          paths:
+          - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
 
-    - run:
-        command: ./gradlew build -i -s --max-workers=1
-        environment:
-          JAVA_TOOL_OPTIONS: -Xmx512m
+      - run:
+          command: ./gradlew build -i -s --max-workers=1
+          environment:
+            JAVA_TOOL_OPTIONS: -Xmx512m
 
-    - run:
-        name: Save test results
-        command: |
-          mkdir -p ~/junit/
-          find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
-        when: always
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
+          when: always
 
-    - store_test_results:
-        path: ~/junit
+      - store_test_results:
+          path: ~/junit
 
-    - store_artifacts:
-        path: ~/junit
-        destination: junit
+      - store_artifacts:
+          path: ~/junit
+          destination: junit
 
-    - store_artifacts:
-        path: build/reports
-        destination: reports
+      - store_artifacts:
+          path: build/reports
+          destination: reports
 
   release:
     docker:
@@ -58,21 +58,21 @@ jobs:
           fingerprints:
             - "d4:b2:90:b1:90:38:6e:be:8f:05:2e:58:db:3b:f4:ba"
 
-    - checkout
+      - checkout
 
-    - restore_cache:
-        keys:
-        - v1-dependencies-{{ checksum "build.gradle" }}
-        # fallback to using the latest cache if no exact match is found
-        - v1-dependencies-
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
 
-    - run: git config --global user.email "${GIT_USER_EMAIL}"
-    - run: git config --global user.name "${GIT_USER_NAME}"
-    - run: gradle release -Prelease.useAutomaticVersion=true -i
+      - run: git config --global user.email "${GIT_USER_EMAIL}"
+      - run: git config --global user.name "${GIT_USER_NAME}"
+      - run: gradle release -Prelease.useAutomaticVersion=true -i
 
-    - store_artifacts:
-        path: build/libs/
-        destination: jars
+      - store_artifacts:
+          path: build/libs/
+          destination: jars
 
 workflows:
   version: 2
