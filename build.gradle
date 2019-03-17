@@ -11,10 +11,6 @@ plugins {
   id 'net.researchgate.release' version '2.8.0'
 }
 
-group = 'com.github.gilbertotcc.lifx'
-version = '1.0-SNAPSHOT'
-description = 'lifx-client'
-
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
