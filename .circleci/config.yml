@@ -16,7 +16,9 @@ jobs:
           - v1-dependencies-{{ checksum "build.gradle" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
+
       - run: ./gradlew dependencies
+
       - save_cache:
           paths:
           - ~/.gradle
@@ -45,7 +47,7 @@ jobs:
           path: build/reports
           destination: reports
 
-  publish:
+  release:
     docker:
       - image: circleci/openjdk:11-jdk
 
@@ -65,12 +67,16 @@ jobs:
     - run: git config --global user.name "${GIT_USER_NAME}"
     - run: gradle release -Prelease.useAutomaticVersion=true -i
 
+    - store_artifacts:
+        path: build/libs/
+        destination: jars
+
 workflows:
   version: 2
-  build-and-publish:
+  test-build-release:
     jobs:
       - test
-      - publish:
+      - release:
           requires:
             - test
           filters:
