@@ -63,8 +63,7 @@ jobs:
         # fallback to using the latest cache if no exact match is found
         - v1-dependencies-
 
-    - run: git config --global user.email "${GIT_USER_EMAIL}"
-    - run: git config --global user.name "${GIT_USER_NAME}"
+    - run: git config --global user.name "${CIRCLE_PR_USERNAME}"
     - run: gradle release -Prelease.useAutomaticVersion=true -i
 
     - store_artifacts:
