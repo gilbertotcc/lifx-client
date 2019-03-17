@@ -20,6 +20,7 @@ wrapper {
 
 repositories {
   mavenCentral()
+  mavenLocal()
 }
 
 dependencies {
