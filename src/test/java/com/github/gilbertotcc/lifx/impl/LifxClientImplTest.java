@@ -6,9 +6,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.put;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -32,8 +30,9 @@ import com.github.gilbertotcc.lifx.models.PulseEffect;
 import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.models.StateDelta;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.junit.Rule;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class LifxClientImplTest {
@@ -43,14 +42,24 @@ class LifxClientImplTest {
   private static final String VALID_ACCESS_TOKEN = "validAccessToken";
   private static final LifxClient AUTHORIZED_CLIENT = authorizedClient();
 
-  @Rule
-  final WireMockRule wireMockRule = new WireMockRule(options().port(PORT));
+  private WireMockServer wireMockServer;
+
+  @BeforeEach
+  void setup() {
+    wireMockServer = new WireMockServer(PORT);
+    wireMockServer.start();
+  }
+
+  @AfterEach
+  void teardown() {
+    wireMockServer.stop();
+  }
 
   @Test
   void listAllLightsShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/list_lights_OK.json");
 
-    stubFor(get(urlEqualTo("/v1/lights/all"))
+    wireMockServer.stubFor(get(urlEqualTo("/v1/lights/all"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody(response)));
 
@@ -63,7 +72,7 @@ class LifxClientImplTest {
   void toggleAllLightsPowerShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/results_OK.json");
 
-    stubFor(post(urlEqualTo("/v1/lights/all/toggle"))
+    wireMockServer.stubFor(post(urlEqualTo("/v1/lights/all/toggle"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody(response)));
 
@@ -76,7 +85,7 @@ class LifxClientImplTest {
   void setLightsStateShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/set_state_OK.json");
 
-    stubFor(put(urlEqualTo("/v1/lights/all/state"))
+    wireMockServer.stubFor(put(urlEqualTo("/v1/lights/all/state"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody(response)));
 
@@ -91,7 +100,7 @@ class LifxClientImplTest {
   void setLightsStatesShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/set_states_OK.json");
 
-    stubFor(put(urlEqualTo("/v1/lights/states"))
+    wireMockServer.stubFor(put(urlEqualTo("/v1/lights/states"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody(response)));
 
@@ -110,7 +119,7 @@ class LifxClientImplTest {
   void setLightsStateDeltaShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/results_OK.json");
 
-    stubFor(post(urlEqualTo("/v1/lights/all/state/delta"))
+    wireMockServer.stubFor(post(urlEqualTo("/v1/lights/all/state/delta"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody(response)));
 
@@ -127,7 +136,7 @@ class LifxClientImplTest {
   void doBreatheEffectShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/results_OK.json");
 
-    stubFor(post(urlEqualTo("/v1/lights/all/effects/breathe"))
+    wireMockServer.stubFor(post(urlEqualTo("/v1/lights/all/effects/breathe"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody(response)));
 
@@ -144,7 +153,7 @@ class LifxClientImplTest {
   void doPulseEffectShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/results_OK.json");
 
-    stubFor(post(urlEqualTo("/v1/lights/all/effects/pulse"))
+    wireMockServer.stubFor(post(urlEqualTo("/v1/lights/all/effects/pulse"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody(response)));
 
@@ -161,7 +170,7 @@ class LifxClientImplTest {
   void transitToNextStateOfShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/results_OK.json");
 
-    stubFor(post(urlEqualTo("/v1/lights/all/cycle"))
+    wireMockServer.stubFor(post(urlEqualTo("/v1/lights/all/cycle"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody(response)));
 
@@ -179,7 +188,7 @@ class LifxClientImplTest {
   void validateColorShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/validate_color_OK.json");
 
-    stubFor(get(urlEqualTo("/v1/color?string=red"))
+    wireMockServer.stubFor(get(urlEqualTo("/v1/color?string=red"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody(response)));
 

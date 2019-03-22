@@ -64,11 +64,6 @@ jar {
   archiveBaseName = 'lifx-client'
 }
 
-test {
-  // Exclude integration tests
-  exclude '**/*IntegrationTest*'
-}
-
 jacocoTestCoverageVerification {
   violationRules {
     rule {
@@ -77,6 +72,12 @@ jacocoTestCoverageVerification {
       }
     }
   }
+}
+
+test {
+  useJUnitPlatform()
+  // Exclude integration tests
+  exclude '**/*IntegrationTest*'
 }
 
 jacocoTestReport {
