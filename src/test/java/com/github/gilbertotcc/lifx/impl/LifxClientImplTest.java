@@ -34,9 +34,9 @@ import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.models.StateDelta;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class LifxClientImplTest {
+class LifxClientImplTest {
 
   private static final int PORT = 9999;
   private static final String BASE_URL = format("http://localhost:%d", PORT);
@@ -44,10 +44,10 @@ public class LifxClientImplTest {
   private static final LifxClient AUTHORIZED_CLIENT = authorizedClient();
 
   @Rule
-  public final WireMockRule wireMockRule = new WireMockRule(options().port(PORT));
+  final WireMockRule wireMockRule = new WireMockRule(options().port(PORT));
 
   @Test
-  public void listAllLightsShouldSuccess() throws IOException {
+  void listAllLightsShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/list_lights_OK.json");
 
     stubFor(get(urlEqualTo("/v1/lights/all"))
@@ -60,7 +60,7 @@ public class LifxClientImplTest {
   }
 
   @Test
-  public void toggleAllLightsPowerShouldSuccess() throws IOException {
+  void toggleAllLightsPowerShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/results_OK.json");
 
     stubFor(post(urlEqualTo("/v1/lights/all/toggle"))
@@ -73,7 +73,7 @@ public class LifxClientImplTest {
   }
 
   @Test
-  public void setLightsStateShouldSuccess() throws IOException {
+  void setLightsStateShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/set_state_OK.json");
 
     stubFor(put(urlEqualTo("/v1/lights/all/state"))
@@ -88,7 +88,7 @@ public class LifxClientImplTest {
   }
 
   @Test
-  public void setLightsStatesShouldSuccess() throws IOException {
+  void setLightsStatesShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/set_states_OK.json");
 
     stubFor(put(urlEqualTo("/v1/lights/states"))
@@ -107,7 +107,7 @@ public class LifxClientImplTest {
   }
 
   @Test
-  public void setLightsStateDeltaShouldSuccess() throws IOException {
+  void setLightsStateDeltaShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/results_OK.json");
 
     stubFor(post(urlEqualTo("/v1/lights/all/state/delta"))
@@ -124,7 +124,7 @@ public class LifxClientImplTest {
   }
 
   @Test
-  public void doBreatheEffectShouldSuccess() throws IOException {
+  void doBreatheEffectShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/results_OK.json");
 
     stubFor(post(urlEqualTo("/v1/lights/all/effects/breathe"))
@@ -141,7 +141,7 @@ public class LifxClientImplTest {
   }
 
   @Test
-  public void doPulseEffectShouldSuccess() throws IOException {
+  void doPulseEffectShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/results_OK.json");
 
     stubFor(post(urlEqualTo("/v1/lights/all/effects/pulse"))
@@ -158,7 +158,7 @@ public class LifxClientImplTest {
   }
 
   @Test
-  public void transitToNextStateOfShouldSuccess() throws IOException {
+  void transitToNextStateOfShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/results_OK.json");
 
     stubFor(post(urlEqualTo("/v1/lights/all/cycle"))
@@ -176,7 +176,7 @@ public class LifxClientImplTest {
   }
 
   @Test
-  public void validateColorShouldSuccess() throws IOException {
+  void validateColorShouldSuccess() throws IOException {
     final String response = loadJsonFromFile("/json/response_body/validate_color_OK.json");
 
     stubFor(get(urlEqualTo("/v1/color?string=red"))
@@ -190,7 +190,7 @@ public class LifxClientImplTest {
   }
 
   @Test
-  public void createNewlifxClientImplShouldSuccess() {
+  void createNewlifxClientImplShouldSuccess() {
     LifxClientImpl lifxClient = LifxClientImpl.createNewClientFor("accessToken");
     assertNotNull(lifxClient);
   }

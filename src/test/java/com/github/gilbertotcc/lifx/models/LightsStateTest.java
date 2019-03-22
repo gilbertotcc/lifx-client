@@ -6,15 +6,15 @@ import static com.github.gilbertotcc.lifx.testutil.TestUtils.serializeObject;
 import java.io.IOException;
 
 import org.json.JSONException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
-public class LightsStateTest {
+class LightsStateTest {
 
   private static final String LIGHTS_STATE_JSON = "/json/request_body/lights_state.json";
 
   @Test
-  public void createLightsStateShouldSuccess() throws IOException, JSONException {
+  void createLightsStateShouldSuccess() throws IOException, JSONException {
     String json = loadJsonFromFile(LIGHTS_STATE_JSON);
 
     State state = State.builder().power(Power.ON).build();

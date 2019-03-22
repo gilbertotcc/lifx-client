@@ -1,11 +1,13 @@
 package com.github.gilbertotcc.lifx.models;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class PowerTest {
+import org.junit.jupiter.api.Test;
 
-  @Test(expected = IllegalArgumentException.class)
-  public void thatPowerByLabelFails() {
-    Power.byLabel("unknown");
+class PowerTest {
+
+  @Test
+  void thatPowerByLabelFails() {
+    assertThrows(IllegalArgumentException.class, () -> Power.byLabel("unknown"));
   }
 }
