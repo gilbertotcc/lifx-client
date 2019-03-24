@@ -2,30 +2,54 @@
 
 Java client to consume [LIFX HTTP API](https://api.developer.lifx.com/).
 
-## Usage with Maven
+## Usage
 
-Library artifactories are published on Bintray. In order to use them, add the
-_lifx_ Bintray repository to your POM file and include the client dependency.
+Library artifactory is published on Bintray. In order to use it, add the `lifx` Bintray repository to your `build
+.settings` Gradle file and include the `lifx-client` dependency as shown below.
 
-```xml
-<repositories>
-    <repository>
-        <id>bintray-gilbertotcc-lifx</id>
-        <name>bintray</name>
-        <url>https://dl.bintray.com/gilbertotcc/lifx</url>
-    </repository>
-</repositories>
+```groovy
+repositories {
+  maven {
+    url  "https://dl.bintray.com/gilbertotcc/lifx" 
+  }
+}
+
+dependencies {
+  compile 'com.github.gilbertotcc.lifx:lifx-client:<VERSION>'
+}
 ```
 
-```xml
-<dependencies>
-    <dependency>
-        <groupId>com.github.gilbertotcc.lifx</groupId>
-        <artifactId>lifx-client</artifactId>
-        <version>${lifx-client.version}</version>
-    </dependency>
-</dependencies>
+### Sample application
+
+Following code provides a brief example that show how LIFX Client can be used to turn on all the lights in red color.
+
+To generate the access token, visit [LIFX Cloud Settings page](https://cloud.lifx.com/settings).
+
+```java
+import static com.github.gilbertotcc.lifx.models.Selectors.All;
+
+import com.github.gilbertotcc.lifx.models.Power;
+import com.github.gilbertotcc.lifx.models.State;
+
+public class RedLightOnSwitcher {
+
+  public static void main(String[] args) {
+
+    var client = LifxClient.newLifxClientFor("<YOUR_ACCESS_TOKEN>");
+
+    client.setLightsState(
+      All(),
+      State.builder()
+        .power(Power.ON)
+        .color("red")
+        .brightness(1.0)
+        .build()
+    );
+
+    System.exit(0);
+  }
+}
 ```
 
-Then take a look at examples in `test` directory to understand how a LIFX client
-can be created and used.
+In `src/test` directory can be found more examples that show how LIFX client can be used for the more advanced 
+operations that LIFX HTTP API provides.

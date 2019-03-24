@@ -2,12 +2,12 @@ package com.github.gilbertotcc.lifx;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class LifxClientTest {
+class LifxClientTest {
 
   @Test
-  public void newLifxClientForShouldSuccess() {
+  void newLifxClientForShouldSuccess() {
     LifxClient lifxClient = LifxClient.newLifxClientFor("accessToken");
     assertNotNull(lifxClient);
   }

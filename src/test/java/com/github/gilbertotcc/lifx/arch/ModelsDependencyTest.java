@@ -4,20 +4,18 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
-import com.tngtech.archunit.junit.ArchUnitRunner;
 import com.tngtech.archunit.lang.ArchRule;
-import com.tngtech.archunit.lang.syntax.elements.GivenClassesThat;
-import org.junit.runner.RunWith;
+import com.tngtech.archunit.lang.syntax.elements.ClassesThat;
+import com.tngtech.archunit.lang.syntax.elements.GivenClassesConjunction;
 
-@RunWith(ArchUnitRunner.class)
 @AnalyzeClasses(packages = "com.github.gilbertotcc.lifx")
-public class ModelsDependencyTest {
+class ModelsDependencyTest {
 
   private static final String MODELS_PACKAGE = "..lifx.models";
 
-  private static GivenClassesThat notTestClassesThat() {
+  private static ClassesThat<GivenClassesConjunction> notTestClassesThat() {
     return classes().that()
-      .haveNameNotMatching(".*Test.*")
+      .haveNameNotMatching(".*(Test|Spec).*")
       .and();
   }
 

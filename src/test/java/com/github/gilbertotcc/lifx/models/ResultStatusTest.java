@@ -1,11 +1,13 @@
 package com.github.gilbertotcc.lifx.models;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ResultStatusTest {
+import org.junit.jupiter.api.Test;
 
-  @Test(expected = IllegalArgumentException.class)
-  public void thatStatusByLabelFails() {
-    Result.Status.byLabel("unknown");
+class ResultStatusTest {
+
+  @Test
+  void thatStatusByLabelFails() {
+    assertThrows(IllegalArgumentException.class, () -> Result.Status.byLabel("unknown"));
   }
 }

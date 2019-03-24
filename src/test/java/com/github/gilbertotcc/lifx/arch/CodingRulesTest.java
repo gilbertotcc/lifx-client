@@ -6,13 +6,10 @@ import static com.tngtech.archunit.library.GeneralCodingRules.NO_CLASSES_SHOULD_
 
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
-import com.tngtech.archunit.junit.ArchUnitRunner;
 import com.tngtech.archunit.lang.ArchRule;
-import org.junit.runner.RunWith;
 
-@RunWith(ArchUnitRunner.class)
 @AnalyzeClasses(packages = "com.github.gilbertotcc.lifx")
-public class CodingRulesTest {
+class CodingRulesTest {
 
   @ArchTest
   private final ArchRule noAccessToStandardStreams = NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS;
