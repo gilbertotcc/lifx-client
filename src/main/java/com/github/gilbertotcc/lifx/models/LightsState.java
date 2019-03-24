@@ -5,7 +5,7 @@ import java.time.Duration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.gilbertotcc.lifx.models.serializer.DurationSerializer;
-import com.github.gilbertotcc.lifx.models.serializer.LightsSelectorSerializer;
+import com.github.gilbertotcc.lifx.models.serializer.LightSelectorSerializer;
 import com.github.gilbertotcc.lifx.models.serializer.PowerSerializer;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,8 +15,8 @@ import lombok.Getter;
 public class LightsState {
 
   @JsonProperty("selector")
-  @JsonSerialize(using = LightsSelectorSerializer.class)
-  private LightsSelector lightsSelector;
+  @JsonSerialize(using = LightSelectorSerializer.class)
+  private LightSelector lightSelector;
 
   @JsonProperty("power")
   @JsonSerialize(using = PowerSerializer.class)
@@ -38,9 +38,9 @@ public class LightsState {
   @JsonProperty("fast")
   private Boolean fast;
 
-  public static LightsState of(final LightsSelector lightsSelector, final State state) {
+  public static LightsState of(final LightSelector lightSelector, final State state) {
     return LightsState.builder()
-      .lightsSelector(lightsSelector)
+      .lightSelector(lightSelector)
       .power(state.getPower())
       .color(state.getColor())
       .brightness(state.getBrightness())

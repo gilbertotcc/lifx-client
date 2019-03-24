@@ -6,14 +6,14 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ErrorTest {
+class ErrorTest {
 
   private static final String JSON_FILE = "/json/response_body/error_response.json";
 
   @Test
-  public void deserializeLightShouldSuccess() throws IOException {
+  void deserializeLightShouldSuccess() throws IOException {
     String json = loadJsonFromFile(JSON_FILE);
     Error error = deserializeJson(json, Error.class);
 

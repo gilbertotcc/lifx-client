@@ -8,15 +8,15 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ResultsTest {
+class ResultsTest {
 
   private static final String JSON_FILE_SET_STATE = "/json/response_body/set_state_OK.json";
   private static final String JSON_FILE_SET_STATES = "/json/response_body/set_states_OK.json";
 
   @Test
-  public void deserializeSetStateOkShouldSuccess() throws IOException {
+  void deserializeSetStateOkShouldSuccess() throws IOException {
     String json = loadJsonFromFile(JSON_FILE_SET_STATE);
     Results<Result> results = deserializeJson(json, new TypeReference<Results<Result>>() {
     });
@@ -33,7 +33,7 @@ public class ResultsTest {
   }
 
   @Test
-  public void deserializeSetStatesOkShouldSuccess() throws IOException {
+  void deserializeSetStatesOkShouldSuccess() throws IOException {
     String json = loadJsonFromFile(JSON_FILE_SET_STATES);
     Results<OperationResult> results = deserializeJson(json, new TypeReference<Results<OperationResult>>() {
     });
