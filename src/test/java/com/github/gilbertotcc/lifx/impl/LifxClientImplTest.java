@@ -1,7 +1,7 @@
 package com.github.gilbertotcc.lifx.impl;
 
-import static com.github.gilbertotcc.lifx.models.Selectors.$.All;
-import static com.github.gilbertotcc.lifx.models.Selectors.$.IdSelector;
+import static com.github.gilbertotcc.lifx.models.Selectors.All;
+import static com.github.gilbertotcc.lifx.models.Selectors.IdSelector;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;

@@ -10,40 +10,36 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Selectors {
 
-  @UtilityClass
-  public static class $ {
+  public static AllSelector All() {
+    return new AllSelector();
+  }
 
-    public static AllSelector All() {
-      return new AllSelector();
-    }
+  public static LabelSelector LabelSelector(String label) {
+    return new LabelSelector(label);
+  }
 
-    public static LabelSelector LabelSelector(String label) {
-      return new LabelSelector(label);
-    }
+  public static IdSelector IdSelector(String id) {
+    return new IdSelector(id);
+  }
 
-    public static IdSelector IdSelector(String id) {
-      return new IdSelector(id);
-    }
+  public static GroupIdSelector GroupIdSelector(String groupId) {
+    return new GroupIdSelector(groupId);
+  }
 
-    public static GroupIdSelector GroupIdSelector(String groupId) {
-      return new GroupIdSelector(groupId);
-    }
+  public static GroupSelector GroupSelector(String group) {
+    return new GroupSelector(group);
+  }
 
-    public static GroupSelector GroupSelector(String group) {
-      return new GroupSelector(group);
-    }
+  public static LocationIdSelector LocationIdSelector(String locationId) {
+    return new LocationIdSelector(locationId);
+  }
 
-    public static LocationIdSelector LocationIdSelector(String locationId) {
-      return new LocationIdSelector(locationId);
-    }
+  public static LocationSelector LocationSelector(String location) {
+    return new LocationSelector(location);
+  }
 
-    public static LocationSelector LocationSelector(String location) {
-      return new LocationSelector(location);
-    }
-
-    public static SceneIdSelector SceneIdSelector(String sceneId) {
-      return new SceneIdSelector(sceneId);
-    }
+  public static SceneIdSelector SceneIdSelector(String sceneId) {
+    return new SceneIdSelector(sceneId);
   }
 
   @AllArgsConstructor

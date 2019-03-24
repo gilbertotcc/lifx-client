@@ -1,6 +1,6 @@
 package com.github.gilbertotcc.lifx.models;
 
-import static com.github.gilbertotcc.lifx.models.Selectors.$.IdSelector;
+import static com.github.gilbertotcc.lifx.models.Selectors.IdSelector;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.serializeObject;
 

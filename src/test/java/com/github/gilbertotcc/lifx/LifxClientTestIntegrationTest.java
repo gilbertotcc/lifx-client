@@ -1,7 +1,7 @@
 package com.github.gilbertotcc.lifx;
 
-import static com.github.gilbertotcc.lifx.models.Selectors.$.All;
-import static com.github.gilbertotcc.lifx.models.Selectors.$.IdSelector;
+import static com.github.gilbertotcc.lifx.models.Selectors.All;
+import static com.github.gilbertotcc.lifx.models.Selectors.IdSelector;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
