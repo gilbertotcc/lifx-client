@@ -15,9 +15,9 @@ public class CombinedLightSelector implements LightSelector, CombinableLightSele
   private Set<CombinableLightSelector> selectors;
 
   @Override
-  public String getIdentifier() {
+  public String identifier() {
     return selectors.stream()
-      .map(CombinableLightSelector::getIdentifier)
+      .map(CombinableLightSelector::identifier)
       .collect(Collectors.joining(","));
   }
 

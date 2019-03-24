@@ -7,6 +7,6 @@ public class LightSelectorConverter implements Converter<LightSelector, String> 
 
   @Override
   public String convert(final LightSelector lightSelector) {
-    return lightSelector.getIdentifier();
+    return lightSelector.identifier();
   }
 }

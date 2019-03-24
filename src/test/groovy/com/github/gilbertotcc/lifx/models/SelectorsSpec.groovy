@@ -8,7 +8,7 @@ class SelectorsSpec extends Specification {
 
   def "selector identifiers should be correctly generated"() {
     expect:
-    selector.getIdentifier() == identifier
+    selector.identifier() == identifier
 
     where:
     selector                         | identifier

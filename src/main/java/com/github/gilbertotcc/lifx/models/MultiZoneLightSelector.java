@@ -14,9 +14,9 @@ public class MultiZoneLightSelector implements LightSelector, CombinableLightSel
   private Set<Integer> zones;
 
   @Override
-  public String getIdentifier() {
+  public String identifier() {
     return zones.stream()
       .map(zone -> zone.toString())
-      .reduce(selector.getIdentifier(), (multiZoneSelector, zone) -> format("%s|%s", multiZoneSelector, zone));
+      .reduce(selector.identifier(), (multiZoneSelector, zone) -> format("%s|%s", multiZoneSelector, zone));
   }
 }

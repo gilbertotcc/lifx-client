@@ -47,7 +47,7 @@ public class Selectors {
     implements LightSelector, RandomizableLightSelector, MultiZoneEnabledLightSelector {
 
     @Override
-    public String getIdentifier() {
+    public String identifier() {
       return "all";
     }
   }
@@ -59,7 +59,7 @@ public class Selectors {
     private String label;
 
     @Override
-    public String getIdentifier() {
+    public String identifier() {
       return format("label:%s", label);
     }
   }
@@ -71,7 +71,7 @@ public class Selectors {
     private String id;
 
     @Override
-    public String getIdentifier() {
+    public String identifier() {
       return format("id:%s", id);
     }
   }
@@ -83,7 +83,7 @@ public class Selectors {
     private String groupId;
 
     @Override
-    public String getIdentifier() {
+    public String identifier() {
       return format("group_id:%s", groupId);
     }
   }
@@ -95,7 +95,7 @@ public class Selectors {
     private String group;
 
     @Override
-    public String getIdentifier() {
+    public String identifier() {
       return format("group:%s", group);
     }
   }
@@ -107,7 +107,7 @@ public class Selectors {
     private String locationId;
 
     @Override
-    public String getIdentifier() {
+    public String identifier() {
       return format("location_id:%s", locationId);
     }
   }
@@ -119,7 +119,7 @@ public class Selectors {
     private String location;
 
     @Override
-    public String getIdentifier() {
+    public String identifier() {
       return format("location:%s", location);
     }
   }
@@ -131,7 +131,7 @@ public class Selectors {
     private String sceneId;
 
     @Override
-    public String getIdentifier() {
+    public String identifier() {
       return format("scene_id:%s", sceneId);
     }
   }

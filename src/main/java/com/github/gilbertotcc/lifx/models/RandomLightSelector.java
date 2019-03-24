@@ -10,7 +10,7 @@ public class RandomLightSelector implements LightSelector {
   private RandomizableLightSelector selector;
 
   @Override
-  public String getIdentifier() {
-    return format("%s:random", selector.getIdentifier());
+  public String identifier() {
+    return format("%s:random", selector.identifier());
   }
 }

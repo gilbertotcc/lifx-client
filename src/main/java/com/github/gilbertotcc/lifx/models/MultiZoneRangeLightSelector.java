@@ -13,7 +13,7 @@ public class MultiZoneRangeLightSelector implements LightSelector, CombinableLig
   private int rangeEnd;
 
   @Override
-  public String getIdentifier() {
-    return format("%s|%d-%d", selector.getIdentifier(), rangeStart, rangeEnd);
+  public String identifier() {
+    return format("%s|%d-%d", selector.identifier(), rangeStart, rangeEnd);
   }
 }
