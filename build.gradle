@@ -2,6 +2,7 @@ import net.researchgate.release.cli.Executor
 
 plugins {
   id 'java'
+  id 'groovy'
   id 'maven'
   id 'jacoco'
   id 'checkstyle'
@@ -46,9 +47,6 @@ dependencies {
   // LOGGING
   compile 'ch.qos.logback:logback-classic:1.+'
 
-  // LOGGING
-  compile 'ch.qos.logback:logback-classic:1.+'
-
   // TEST
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
   testCompileOnly 'org.projectlombok:lombok:1.18.4'
@@ -59,35 +57,45 @@ dependencies {
   testCompile 'com.github.tomakehurst:wiremock:2.18.0'
   testCompile 'com.tngtech.archunit:archunit-junit5-api:0.10.1'
   testRuntime 'com.tngtech.archunit:archunit-junit5-engine:0.10.1'
+  testCompile 'org.codehaus.groovy:groovy-all:2.4.15'
+  testCompile 'org.spockframework:spock-core:1.2-groovy-2.4'
+  testRuntime 'net.bytebuddy:byte-buddy:1.8.21'
 }
 
 jar {
   archiveBaseName = 'lifx-client'
 }
 
-jacocoTestCoverageVerification {
-  violationRules {
-    rule {
-      limit {
-        minimum = 0.95
-      }
-    }
-  }
+ext {
+  jacocoMergedReport = file("$buildDir/jacoco/mergeTest.exec")
 }
 
-test {
-  useJUnitPlatform()
-  // Exclude integration tests
-  exclude '**/*IntegrationTest*'
+task jacocoMergeTestReport(type: JacocoMerge) {
+  executionData tasks.withType(Test)
+  destinationFile = jacocoMergedReport
 }
 
 jacocoTestReport {
+  dependsOn jacocoMergeTestReport
+  executionData jacocoMergedReport
   reports {
     xml.enabled false
     csv.enabled false
     html.enabled true
     html.destination file("${buildDir}/reports/jacocoHtml")
   }
+}
+
+task spockTest(type: Test, description: 'Runs tests written in Spock.', group: LifecycleBasePlugin.VERIFICATION_GROUP) {
+  useJUnit()
+}
+
+check.dependsOn spockTest
+
+test {
+  useJUnitPlatform()
+  // Exclude integration tests
+  exclude '**/*IntegrationTest*'
 }
 
 test.finalizedBy jacocoTestReport

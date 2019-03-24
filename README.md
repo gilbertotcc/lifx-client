@@ -26,7 +26,7 @@ Following code provides a brief example that show how LIFX Client can be used to
 To generate the access token, visit [LIFX Cloud Settings page](https://cloud.lifx.com/settings).
 
 ```java
-import static com.github.gilbertotcc.lifx.models.LightsSelector.all;
+import static com.github.gilbertotcc.lifx.models.Selectors.$.All;
 
 import com.github.gilbertotcc.lifx.models.Power;
 import com.github.gilbertotcc.lifx.models.State;
@@ -38,7 +38,7 @@ public class RedLightOnSwitcher {
     var client = LifxClient.newLifxClientFor("<YOUR_ACCESS_TOKEN>");
 
     client.setLightsState(
-      all(),
+      All(),
       State.builder()
         .power(Power.ON)
         .color("red")

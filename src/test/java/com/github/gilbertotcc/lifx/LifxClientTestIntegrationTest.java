@@ -1,5 +1,7 @@
 package com.github.gilbertotcc.lifx;
 
+import static com.github.gilbertotcc.lifx.models.Selectors.$.All;
+import static com.github.gilbertotcc.lifx.models.Selectors.$.IdSelector;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -12,7 +14,6 @@ import java.util.Optional;
 import com.github.gilbertotcc.lifx.exception.LifxErrorException;
 import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Light;
-import com.github.gilbertotcc.lifx.models.LightsSelector;
 import com.github.gilbertotcc.lifx.models.Power;
 import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.State;
@@ -44,7 +45,7 @@ class LifxClientTestIntegrationTest {
 
   @Test
   void test00_listLightsShouldSuccess() {
-    List<Light> lights = lifxClient.listLights(LightsSelector.all());
+    List<Light> lights = lifxClient.listLights(All());
 
     assertFalse(lights.isEmpty());
     // TODO Add more asserts
@@ -64,7 +65,7 @@ class LifxClientTestIntegrationTest {
       .power(lightPower)
       .build();
 
-    List<Result> results = lifxClient.setLightsState(LightsSelector.byId(lightId), state);
+    List<Result> results = lifxClient.setLightsState(IdSelector(lightId), state);
 
     assertEquals(1, results.size());
     assertEquals(Result.Status.OK, results.get(0).getStatus());
@@ -72,7 +73,7 @@ class LifxClientTestIntegrationTest {
 
   @Test
   void test02_toggleLightsPowerShouldSuccess() {
-    List<Result> results = lifxClient.toggleLightsPower(LightsSelector.byId(lightId), Duration.ofSeconds(10));
+    List<Result> results = lifxClient.toggleLightsPower(IdSelector(lightId), Duration.ofSeconds(10));
 
     assertEquals(1, results.size());
     assertEquals(Result.Status.OK, results.get(0).getStatus());
@@ -92,6 +93,6 @@ class LifxClientTestIntegrationTest {
   @Test
   void listLightsShouldFail() {
     LifxClient lifxClient = LifxClient.newLifxClientFor("unknownAccessToken");
-    assertThrows(LifxErrorException.class, () -> lifxClient.listLights(LightsSelector.all()));
+    assertThrows(LifxErrorException.class, () -> lifxClient.listLights(All()));
   }
 }

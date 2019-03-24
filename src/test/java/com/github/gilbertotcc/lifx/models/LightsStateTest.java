@@ -1,5 +1,6 @@
 package com.github.gilbertotcc.lifx.models;
 
+import static com.github.gilbertotcc.lifx.models.Selectors.$.IdSelector;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.serializeObject;
 
@@ -18,7 +19,7 @@ class LightsStateTest {
     String json = loadJsonFromFile(LIGHTS_STATE_JSON);
 
     State state = State.builder().power(Power.ON).build();
-    LightsState lightsState = LightsState.of(LightsSelector.byId("1234"), state);
+    LightsState lightsState = LightsState.of(IdSelector("1234"), state);
     String serializedObject = serializeObject(lightsState);
 
     JSONAssert.assertEquals(json, serializedObject, true);

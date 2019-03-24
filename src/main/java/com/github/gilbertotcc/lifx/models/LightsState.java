@@ -16,7 +16,7 @@ public class LightsState {
 
   @JsonProperty("selector")
   @JsonSerialize(using = LightsSelectorSerializer.class)
-  private LightsSelector lightsSelector;
+  private LightSelector lightSelector;
 
   @JsonProperty("power")
   @JsonSerialize(using = PowerSerializer.class)
@@ -38,9 +38,9 @@ public class LightsState {
   @JsonProperty("fast")
   private Boolean fast;
 
-  public static LightsState of(final LightsSelector lightsSelector, final State state) {
+  public static LightsState of(final LightSelector lightSelector, final State state) {
     return LightsState.builder()
-      .lightsSelector(lightsSelector)
+      .lightSelector(lightSelector)
       .power(state.getPower())
       .color(state.getColor())
       .brightness(state.getBrightness())

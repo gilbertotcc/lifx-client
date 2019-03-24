@@ -15,7 +15,7 @@ class ModelsDependencyTest {
 
   private static ClassesThat<GivenClassesConjunction> notTestClassesThat() {
     return classes().that()
-      .haveNameNotMatching(".*Test.*")
+      .haveNameNotMatching(".*(Test|Spec).*")
       .and();
   }
 

@@ -1,5 +1,7 @@
 package com.github.gilbertotcc.lifx.impl;
 
+import static com.github.gilbertotcc.lifx.models.Selectors.$.All;
+import static com.github.gilbertotcc.lifx.models.Selectors.$.IdSelector;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -21,7 +23,6 @@ import com.github.gilbertotcc.lifx.models.BreatheEffect;
 import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Cycle;
 import com.github.gilbertotcc.lifx.models.Light;
-import com.github.gilbertotcc.lifx.models.LightsSelector;
 import com.github.gilbertotcc.lifx.models.LightsState;
 import com.github.gilbertotcc.lifx.models.LightsStates;
 import com.github.gilbertotcc.lifx.models.OperationResult;
@@ -63,7 +64,7 @@ class LifxClientImplTest {
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody(response)));
 
-    final List<Light> lights = AUTHORIZED_CLIENT.listLights(LightsSelector.all());
+    final List<Light> lights = AUTHORIZED_CLIENT.listLights(All());
 
     assertEquals(1, lights.size());
   }
@@ -76,7 +77,7 @@ class LifxClientImplTest {
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody(response)));
 
-    final List<Result> results = AUTHORIZED_CLIENT.toggleLightsPower(LightsSelector.all(), Duration.ofSeconds(1L));
+    final List<Result> results = AUTHORIZED_CLIENT.toggleLightsPower(All(), Duration.ofSeconds(1L));
 
     assertEquals(1, results.size());
   }
@@ -91,7 +92,7 @@ class LifxClientImplTest {
 
     final State state = State.builder().power(Power.ON).build();
 
-    final List<Result> results = AUTHORIZED_CLIENT.setLightsState(LightsSelector.all(), state);
+    final List<Result> results = AUTHORIZED_CLIENT.setLightsState(All(), state);
 
     assertEquals(2, results.size());
   }
@@ -105,7 +106,7 @@ class LifxClientImplTest {
       .willReturn(aResponse().withBody(response)));
 
     final State state = State.builder().power(Power.ON).build();
-    final LightsState lightsState = LightsState.of(LightsSelector.byId("aaaaa"), state);
+    final LightsState lightsState = LightsState.of(IdSelector("aaaaa"), state);
     final LightsStates lightsStates = LightsStates.builder()
       .lightsState(lightsState)
       .build();
@@ -127,7 +128,7 @@ class LifxClientImplTest {
       .power(Power.ON)
       .build();
 
-    final List<Result> results = AUTHORIZED_CLIENT.setLightsStateDelta(LightsSelector.all(), stateDelta);
+    final List<Result> results = AUTHORIZED_CLIENT.setLightsStateDelta(All(), stateDelta);
 
     assertEquals(1, results.size());
   }
@@ -144,7 +145,7 @@ class LifxClientImplTest {
       .powerOn(true)
       .build();
 
-    final List<Result> results = AUTHORIZED_CLIENT.doBreatheEffect(LightsSelector.all(), breatheEffect);
+    final List<Result> results = AUTHORIZED_CLIENT.doBreatheEffect(All(), breatheEffect);
 
     assertEquals(1, results.size());
   }
@@ -161,7 +162,7 @@ class LifxClientImplTest {
       .powerOn(true)
       .build();
 
-    final List<Result> results = AUTHORIZED_CLIENT.doPulseEffect(LightsSelector.all(), pulseEffect);
+    final List<Result> results = AUTHORIZED_CLIENT.doPulseEffect(All(), pulseEffect);
 
     assertEquals(1, results.size());
   }
@@ -179,7 +180,7 @@ class LifxClientImplTest {
       State.builder().build(),
       Cycle.Direction.FORWARD);
 
-    final List<Result> results = AUTHORIZED_CLIENT.transitToNextStateOf(LightsSelector.all(), cycle);
+    final List<Result> results = AUTHORIZED_CLIENT.transitToNextStateOf(All(), cycle);
 
     assertEquals(1, results.size());
   }
