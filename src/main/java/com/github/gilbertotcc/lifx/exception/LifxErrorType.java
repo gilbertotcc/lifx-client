@@ -1,6 +1,7 @@
 package com.github.gilbertotcc.lifx.exception;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
 
@@ -17,7 +18,8 @@ public enum LifxErrorType {
   UNPROCESSABLE_ENTITY(422, "Missing or malformed parameters."),
   UPGRADE_REQUIRED(426, "HTTP was used to make the request instead of HTTPS."),
   TOO_MANY_REQUESTS(429, "The request exceeded a rate limit. See the Rate Limits section."),
-  SERVER_ERROR(asList(500, 502, 503, 523), "Something went wrong on LIFX's end.");
+  SERVER_ERROR(asList(500, 502, 503, 523), "Something went wrong on LIFX's end."),
+  UNKNOWN(emptyList(), "Unknown error.");
 
   public final List<Integer> httpCodes;
   public final String reason;
