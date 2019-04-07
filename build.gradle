@@ -40,6 +40,7 @@ dependencies {
   // COMMON
   annotationProcessor 'org.projectlombok:lombok:1.18.4'
   compileOnly 'org.projectlombok:lombok:1.18.4'
+  compile 'io.vavr:vavr:0.10.0'
   compile 'org.slf4j:slf4j-api:1.7.25'
   compile 'org.apache.commons:commons-lang3:3.7'
   compile 'com.squareup.okhttp3:logging-interceptor:3.10.0'
