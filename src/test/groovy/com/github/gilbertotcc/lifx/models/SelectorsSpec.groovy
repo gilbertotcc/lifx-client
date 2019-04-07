@@ -1,11 +1,13 @@
 package com.github.gilbertotcc.lifx.models
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import static com.github.gilbertotcc.lifx.models.Selectors.*
 
 class SelectorsSpec extends Specification {
 
+  @Unroll
   def "selector identifiers should be correctly generated"() {
     expect:
     selector.identifier() == identifier
