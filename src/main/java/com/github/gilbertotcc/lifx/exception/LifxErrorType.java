@@ -15,14 +15,14 @@ public enum LifxErrorType {
   UNAUTHORIZED(401, "Bad access token."),
   PERMISSION_DENIED(403, "Bad OAuth scope."),
   NOT_FOUND(404, "Selector did not match any lights."),
-  UNPROCESSABLE_ENTITY(422, "Missing or malformed parameters."),
+  NOT_PROCESSABLE_ENTITY(422, "Missing or malformed parameters."),
   UPGRADE_REQUIRED(426, "HTTP was used to make the request instead of HTTPS."),
   TOO_MANY_REQUESTS(429, "The request exceeded a rate limit. See the Rate Limits section."),
   SERVER_ERROR(asList(500, 502, 503, 523), "Something went wrong on LIFX's end."),
   UNKNOWN(emptyList(), "Unknown error.");
 
-  public final List<Integer> httpCodes;
-  public final String reason;
+  final List<Integer> httpCodes;
+  final String reason;
 
   LifxErrorType(final List<Integer> httpCodes,
                 final String reason) {
