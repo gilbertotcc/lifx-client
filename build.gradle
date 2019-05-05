@@ -125,7 +125,7 @@ ext {
   sonarLogin = System.getenv('SONAR_LOGIN')
   sonarProjectKey = 'gilbertotcc_lifx-client'
   sonarOrganization = 'gilbertotcc-github'
-  jacocoMergedReport = file("$buildDir/jacoco/mergeTest.exec")
+  jacocoMergedReport = "$buildDir/reports/jacoco/test"
   generatedTestSourcesDir = 'generated-test-sources'
 }
 
@@ -134,7 +134,7 @@ sonarqube {
     property 'sonar.host.url', sonarHostUrl
     property 'sonar.projectKey', sonarProjectKey
     property 'sonar.organization', sonarOrganization
-    property 'sonar.jacoco.reportPath', jacocoMergedReport
+    property 'sonar.coverage.jacoco.xmlReportPaths', jacocoMergedReport
     property 'sonar.test.exclusions', "**/${generatedTestSourcesDir}/**/*.java"
     property 'sonar.login', sonarLogin
   }
