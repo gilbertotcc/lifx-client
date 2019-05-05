@@ -13,7 +13,7 @@ import com.github.gilbertotcc.lifx.models.Cycle;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightSelector;
 import com.github.gilbertotcc.lifx.models.LightsState;
-import com.github.gilbertotcc.lifx.models.LightsStates;
+import com.github.gilbertotcc.lifx.models.LightsStatesDto;
 import com.github.gilbertotcc.lifx.models.OperationResult;
 import com.github.gilbertotcc.lifx.models.PulseEffect;
 import com.github.gilbertotcc.lifx.models.Result;
@@ -77,9 +77,9 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public List<OperationResult> setLightsStates(final LightsStates lightsStates) {
-    log.info("Set lights states of {}", lightSelectorListOf(lightsStates));
-    return LifxCallExecutor.of(lifxApi.setLightsStates(lightsStates)).getResponse()
+  public List<OperationResult> setLightsStates(final LightsStatesDto lightsStatesDto) {
+    log.info("Set lights states of {}", lightSelectorListOf(lightsStatesDto));
+    return LifxCallExecutor.of(lifxApi.setLightsStates(lightsStatesDto)).getResponse()
       .getResults();
   }
 
@@ -128,8 +128,8 @@ public class LifxClientImpl implements LifxClient {
     return LifxCallExecutor.of(lifxApi.validateColor(colorString)).getResponse();
   }
 
-  private static String lightSelectorListOf(final LightsStates lightsStates) {
-    return lightsStates.getLightsStates().stream()
+  private static String lightSelectorListOf(final LightsStatesDto lightsStatesDto) {
+    return lightsStatesDto.getLightsStates().stream()
       .map(LightsState::getLightSelector)
       .map(LightSelector::identifier)
       .collect(Collectors.joining(","));

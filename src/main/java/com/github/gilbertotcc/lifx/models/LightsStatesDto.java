@@ -9,7 +9,7 @@ import lombok.Singular;
 
 @Getter
 @Builder
-public class LightsStates {
+public class LightsStatesDto {
 
   @Singular
   @JsonProperty("states")

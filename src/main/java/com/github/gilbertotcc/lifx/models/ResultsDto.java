@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Results<T> {
+public class ResultsDto<T> {
 
   @JsonProperty("results")
   private List<T> results = Collections.emptyList();

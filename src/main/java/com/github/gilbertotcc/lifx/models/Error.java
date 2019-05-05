@@ -1,5 +1,6 @@
 package com.github.gilbertotcc.lifx.models;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,7 +12,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Error {
+public class Error implements Serializable {
+
+  private static final long serialVersionUID = -790843377907574526L;
 
   @Getter
   @NoArgsConstructor

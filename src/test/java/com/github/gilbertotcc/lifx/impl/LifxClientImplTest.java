@@ -24,7 +24,7 @@ import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Cycle;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightsState;
-import com.github.gilbertotcc.lifx.models.LightsStates;
+import com.github.gilbertotcc.lifx.models.LightsStatesDto;
 import com.github.gilbertotcc.lifx.models.OperationResult;
 import com.github.gilbertotcc.lifx.models.Power;
 import com.github.gilbertotcc.lifx.models.PulseEffect;
@@ -107,11 +107,11 @@ class LifxClientImplTest {
 
     final State state = State.builder().power(Power.ON).build();
     final LightsState lightsState = LightsState.of(IdSelector("aaaaa"), state);
-    final LightsStates lightsStates = LightsStates.builder()
+    final LightsStatesDto lightsStatesDto = LightsStatesDto.builder()
       .lightsState(lightsState)
       .build();
 
-    final List<OperationResult> results = AUTHORIZED_CLIENT.setLightsStates(lightsStates);
+    final List<OperationResult> results = AUTHORIZED_CLIENT.setLightsStates(lightsStatesDto);
 
     assertEquals(2, results.size());
   }
