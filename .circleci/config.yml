@@ -25,7 +25,7 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       - run:
-          command: ./gradlew build -i -s --max-workers=1
+          command: ./gradlew check coveralls -i -s --max-workers=1
           environment:
             JAVA_TOOL_OPTIONS: -Xmx512m
 

@@ -1,11 +1,13 @@
 package com.github.gilbertotcc.lifx.models;
 
-import java.util.stream.Stream;
+import static java.lang.String.format;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.gilbertotcc.lifx.models.deserializer.ResultStatusDeserializer;
+import io.vavr.collection.Stream;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Result {
 
+  @AllArgsConstructor
   public enum Status {
 
     OK("ok"),
@@ -21,13 +24,10 @@ public class Result {
 
     public final String label;
 
-    Status(String label) {
-      this.label = label;
-    }
-
     public static Status byLabel(final String label) {
-      return Stream.of(values()).filter(status -> status.label.equals(label)).findFirst()
-        .orElseThrow(() -> new IllegalArgumentException(String.format("Unknown status '%s'", label)));
+      return Stream.of(values())
+        .find(status -> status.label.equals(label))
+        .getOrElseThrow(() -> new IllegalArgumentException(format("Unknown status '%s'", label)));
     }
   }
 
