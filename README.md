@@ -2,6 +2,8 @@
 
 Java client to consume [LIFX HTTP API](https://api.developer.lifx.com/).
 
+[![Coverage Status](https://coveralls.io/repos/github/gilbertotcc/lifx-client/badge.svg?branch=develop)](https://coveralls.io/github/gilbertotcc/lifx-client?branch=develop)
+
 ## Usage
 
 Library artifactory is published on Bintray. In order to use it, add the `lifx` Bintray repository to your `build
