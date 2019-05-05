@@ -127,6 +127,7 @@ ext {
   sonarOrganization = 'gilbertotcc-github'
   testSources = 'src/test/groovy,src/test/java'
   jacocoMergedReport = file("$buildDir/jacoco/mergeTest.exec")
+  jacocoXmlReportPaths = "$buildDir/jacoco/test"
   generatedTestSourcesDir = 'generated-test-sources'
 }
 
@@ -135,17 +136,17 @@ sonarqube {
     property 'sonar.host.url', sonarHostUrl
     property 'sonar.projectKey', sonarProjectKey
     property 'sonar.organization', sonarOrganization
+    property 'sonar.login', sonarLogin
     property 'sonar.jacoco.reportPath', jacocoMergedReport
+    property 'sonar.coverage.jacoco.xmlReportPaths' jacocoXmlReportPaths
     property 'sonar.tests', testSources
     property 'sonar.test.exclusions', "**/${generatedTestSourcesDir}/**/*.java"
-    property 'sonar.login', sonarLogin
   }
 }
 
 def sonarqubeTask = project.tasks["sonarqube"]
 
 sonarqubeTask.enabled = isCIAndDevelopBranch
-check.dependsOn(sonarqubeTask)
 
 publishing {
   publications {
