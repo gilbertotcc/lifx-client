@@ -114,7 +114,7 @@ public class Light {
   private Color color;
 
   @JsonProperty("infrared")
-  private String infrared; // FIXME According https://api.developer.lifx.com/docs/list-lights is a string
+  private String infrared;
 
   @JsonProperty("brightness")
   private double brightness;

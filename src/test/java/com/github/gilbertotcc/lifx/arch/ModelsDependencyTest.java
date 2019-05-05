@@ -9,7 +9,7 @@ import com.tngtech.archunit.lang.syntax.elements.ClassesThat;
 import com.tngtech.archunit.lang.syntax.elements.GivenClassesConjunction;
 
 @AnalyzeClasses(packages = "com.github.gilbertotcc.lifx")
-class ModelsDependencyTest {
+class ModelsDependencyTest { //NOSONAR
 
   private static final String MODELS_PACKAGE = "..lifx.models";
 
@@ -27,7 +27,7 @@ class ModelsDependencyTest {
       .onlyDependOnClassesThat()
       .resideInAnyPackage(
         MODELS_PACKAGE,
-        "java.lang", "java.time", "java.util..", "io.vavr..",
+        "java.lang", "java.time", "java.util..", "io.vavr..", "java.io",
         "" /* Avoid issue with enums. See: https://github.com/TNG/ArchUnit/issues/81#issuecomment-399688049 */
       );
 }

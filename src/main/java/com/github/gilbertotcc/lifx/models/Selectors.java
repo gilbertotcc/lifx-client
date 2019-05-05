@@ -10,35 +10,35 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Selectors {
 
-  public static AllSelector All() {
+  public static AllSelector All() { //NOSONAR
     return new AllSelector();
   }
 
-  public static LabelSelector LabelSelector(String label) {
+  public static LabelSelector LabelSelector(String label) { //NOSONAR
     return new LabelSelector(label);
   }
 
-  public static IdSelector IdSelector(String id) {
+  public static IdSelector IdSelector(String id) { //NOSONAR
     return new IdSelector(id);
   }
 
-  public static GroupIdSelector GroupIdSelector(String groupId) {
+  public static GroupIdSelector GroupIdSelector(String groupId) { //NOSONAR
     return new GroupIdSelector(groupId);
   }
 
-  public static GroupSelector GroupSelector(String group) {
+  public static GroupSelector GroupSelector(String group) { //NOSONAR
     return new GroupSelector(group);
   }
 
-  public static LocationIdSelector LocationIdSelector(String locationId) {
+  public static LocationIdSelector LocationIdSelector(String locationId) { //NOSONAR
     return new LocationIdSelector(locationId);
   }
 
-  public static LocationSelector LocationSelector(String location) {
+  public static LocationSelector LocationSelector(String location) { //NOSONAR
     return new LocationSelector(location);
   }
 
-  public static SceneIdSelector SceneIdSelector(String sceneId) {
+  public static SceneIdSelector SceneIdSelector(String sceneId) { //NOSONAR
     return new SceneIdSelector(sceneId);
   }
 

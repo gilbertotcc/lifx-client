@@ -16,7 +16,7 @@ public class MultiZoneLightSelector implements LightSelector, CombinableLightSel
   @Override
   public String identifier() {
     return zones.stream()
-      .map(zone -> zone.toString())
+      .map(Object::toString)
       .reduce(selector.identifier(), (multiZoneSelector, zone) -> format("%s|%s", multiZoneSelector, zone));
   }
 }
