@@ -127,7 +127,6 @@ ext {
   sonarOrganization = 'gilbertotcc-github'
   testSources = 'src/test/groovy,src/test/java'
   jacocoMergedReport = file("$buildDir/jacoco/mergeTest.exec")
-  jacocoXmlReportPaths = "$buildDir/jacoco/test/jacocoTestReport.xml"
   generatedTestSourcesDir = 'generated-test-sources'
 }
 
@@ -138,7 +137,6 @@ sonarqube {
     property 'sonar.organization', sonarOrganization
     property 'sonar.login', sonarLogin
     property 'sonar.jacoco.reportPath', jacocoMergedReport
-    property 'sonar.coverage.jacoco.xmlReportPaths' jacocoXmlReportPaths
     property 'sonar.tests', testSources
     property 'sonar.test.exclusions', "**/${generatedTestSourcesDir}/**/*.java"
   }
