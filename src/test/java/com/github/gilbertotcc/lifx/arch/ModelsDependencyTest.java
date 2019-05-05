@@ -27,7 +27,7 @@ class ModelsDependencyTest {
       .onlyDependOnClassesThat()
       .resideInAnyPackage(
         MODELS_PACKAGE,
-        "java.lang", "java.time", "java.util..",
+        "java.lang", "java.time", "java.util..", "io.vavr..",
         "" /* Avoid issue with enums. See: https://github.com/TNG/ArchUnit/issues/81#issuecomment-399688049 */
       );
 }
