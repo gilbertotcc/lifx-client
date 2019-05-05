@@ -125,7 +125,7 @@ ext {
   sonarLogin = System.getenv('SONAR_LOGIN')
   sonarProjectKey = 'gilbertotcc_lifx-client'
   sonarOrganization = 'gilbertotcc-github'
-  jacocoMergedReport = "$buildDir/reports/jacoco/test"
+  jacocoMergedReport = "$buildDir/reports/jacoco/test/jacocoTestReport.xml"
   generatedTestSourcesDir = 'generated-test-sources'
 }
 
