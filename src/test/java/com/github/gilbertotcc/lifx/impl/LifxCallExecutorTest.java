@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.exception.LifxErrorException;
+import com.github.gilbertotcc.lifx.exception.LifxErrorType;
 import com.github.gilbertotcc.lifx.testutil.TestUtils;
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -39,7 +40,9 @@ class LifxCallExecutorTest {
     Request request = new Request.Builder().get().url("http://localhost:8080/test").build();
     when(callMock.execute()).thenThrow(new IOException("error"));
     when(callMock.request()).thenReturn(request);
-    assertThrows(LifxCallException.class, () -> LifxCallExecutor.of(callMock).getResponse());
+
+    var exception = assertThrows(LifxCallException.class, () -> LifxCallExecutor.of(callMock).getResponse());
+    assertEquals(callMock, exception.getCall());
   }
 
   @Test
@@ -51,6 +54,10 @@ class LifxCallExecutorTest {
       404, ResponseBody.create(MediaType.parse("application/json"), errorResponseBody));
     when(callMock.execute()).thenReturn(response);
 
-    assertThrows(LifxErrorException.class, () -> LifxCallExecutor.of(callMock).getResponse());
+    var exception = assertThrows(LifxErrorException.class, () -> LifxCallExecutor.of(callMock).getResponse());
+    assertEquals(LifxErrorType.NOT_FOUND, exception.getType());
+    assertEquals("color is missing", exception.getError().getErrorMessage());
+    assertEquals("color", exception.getError().getDetails().get(0).getField());
+    assertEquals("is missing", exception.getError().getDetails().get(0).getMessages().get(0));
   }
 }
