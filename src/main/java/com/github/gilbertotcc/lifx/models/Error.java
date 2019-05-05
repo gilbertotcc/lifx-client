@@ -18,7 +18,9 @@ public class Error implements Serializable {
 
   @Getter
   @NoArgsConstructor
-  public static class ErrorDetail {
+  public static class ErrorDetail implements Serializable {
+
+    private static final long serialVersionUID = -7071300361893825402L;
 
     @JsonProperty("field")
     private String field;
