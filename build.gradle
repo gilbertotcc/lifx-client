@@ -11,6 +11,7 @@ plugins {
   id 'com.adarshr.test-logger' version '1.6.0'
   id 'net.researchgate.release' version '2.8.0'
   id 'com.github.kt3k.coveralls' version '2.8.2'
+  id "org.sonarqube" version "2.7"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -114,6 +115,35 @@ test.finalizedBy jacocoTestReport
 
 checkstyleMain.source = "src/main/java"
 checkstyleTest.source = "src/test/java"
+
+// SONARQUBE
+
+ext {
+  isCIEnv = System.getenv('CI') != null
+  isCIAndDevelopBranch = 'develop' == System.getenv('CIRCLE_BRANCH') ?: ''
+  sonarHostUrl = 'https://sonarcloud.io'
+  sonarLogin = System.getenv('SONAR_LOGIN')
+  sonarProjectKey = 'gilbertotcc_lifx-client'
+  sonarOrganization = 'gilbertotcc-github'
+  jacocoMergedReport = file("$buildDir/jacoco/mergeTest.exec")
+  generatedTestSourcesDir = 'generated-test-sources'
+}
+
+sonarqube {
+  properties {
+    property 'sonar.host.url', sonarHostUrl
+    property 'sonar.projectKey', sonarProjectKey
+    property 'sonar.organization', sonarOrganization
+    property 'sonar.jacoco.reportPath', jacocoMergedReport
+    property 'sonar.test.exclusions', "**/${generatedTestSourcesDir}/**/*.java"
+    property 'sonar.login', sonarLogin
+  }
+}
+
+def sonarqubeTask = project.tasks["sonarqube"]
+
+sonarqubeTask.enabled = isCIAndDevelopBranch
+check.dependsOn(sonarqubeTask)
 
 publishing {
   publications {
