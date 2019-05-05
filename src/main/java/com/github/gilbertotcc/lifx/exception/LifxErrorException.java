@@ -12,8 +12,8 @@ public class LifxErrorException extends RuntimeException {
 
   public static final LifxErrorException GENERIC_LIFX_ERROR = new LifxErrorException();
 
-  private LifxErrorType type;
-  private Error error;
+  private final LifxErrorType type;
+  private final Error error;
 
   public LifxErrorException(final LifxErrorType type, final Error error) {
     super(format("Error %s (%s). %s. %s", type.name(), type.reason, error.getErrorMessage(), error.getDetails()));
@@ -23,5 +23,7 @@ public class LifxErrorException extends RuntimeException {
 
   private LifxErrorException() {
     super("Unknown error");
+    this.type = null;
+    this.error = null;
   }
 }

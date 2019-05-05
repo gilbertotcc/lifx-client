@@ -10,7 +10,7 @@ public class LifxCallException extends RuntimeException {
 
   private static final long serialVersionUID = 8909863162390335463L;
 
-  private final Call<?> call;
+  private final transient Call<?> call;
 
   public LifxCallException(final Call<?> call, Throwable cause) {
     super(
