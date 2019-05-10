@@ -1,6 +1,7 @@
 package com.github.gilbertotcc.lifx.models;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,13 +15,13 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Error implements Serializable {
 
-  private static final long serialVersionUID = -790843377907574526L;
+  private static final long serialVersionUID = -790843377907574526L; //NOSONAR
 
   @Getter
   @NoArgsConstructor
   public static class ErrorDetail implements Serializable {
 
-    private static final long serialVersionUID = -7071300361893825402L;
+    private static final long serialVersionUID = -7071300361893825402L; //NOSONAR
 
     @JsonProperty("field")
     private String field;
@@ -33,5 +34,5 @@ public class Error implements Serializable {
   private String errorMessage;
 
   @JsonProperty("errors")
-  private List<ErrorDetail> details;
+  private List<ErrorDetail> details  = Collections.emptyList(); //NOSONAR
 }
