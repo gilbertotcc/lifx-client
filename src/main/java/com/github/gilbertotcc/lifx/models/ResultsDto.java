@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 public class ResultsDto<T> {
 
   @JsonProperty("results")
-  private List<T> results = Collections.emptyList();
+  private List<T> results = Collections.emptyList(); //NOSONAR
 }

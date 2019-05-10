@@ -27,7 +27,7 @@ public class OperationResult {
   private Operation operation;
 
   @JsonProperty("results")
-  private List<Result> results = Collections.emptyList();
+  private List<Result> results = Collections.emptyList(); //NOSONAR
 
   @JsonProperty("error")
   private String error;
