@@ -37,10 +37,11 @@ class LifxCallExecutor<T> {
 
   private Function<Response<?>, LifxErrorException> createLifxErrorException() {
     return response -> Try.of(() -> new Tuple2<>(response.code(), response.errorBody()))
-      .mapTry(tuple -> new LifxErrorException(
-        LifxErrorType.byHttpCode(response.code()).orElse(LifxErrorType.UNKNOWN),
-        OBJECT_MAPPER.readerFor(Error.class).readValue(tuple._2.string())
-      ))
+      .mapTry(tuple -> {
+        LifxErrorType errorType = LifxErrorType.byHttpCode(tuple._1).orElse(LifxErrorType.UNKNOWN);
+        Error error = OBJECT_MAPPER.readerFor(Error.class).readValue(tuple._2.string());
+        return new LifxErrorException(errorType, error);
+      })
       .getOrElse(LifxErrorException.GENERIC_LIFX_ERROR);
   }
 }

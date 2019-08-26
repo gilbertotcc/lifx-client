@@ -3,7 +3,6 @@ package com.github.gilbertotcc.lifx.impl;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
@@ -24,6 +23,7 @@ import com.github.gilbertotcc.lifx.models.converter.LightSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 
+import io.vavr.control.Validation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +32,11 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+
+import static io.vavr.control.Validation.invalid;
+import static io.vavr.control.Validation.valid;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -43,11 +48,9 @@ public class LifxClientImpl implements LifxClient {
 
   // Mainly for testing purposes
   static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
-    Objects.requireNonNull(baseUrl, "baseUrl == null");
-    Objects.requireNonNull(accessToken, "accessToken == null");
+    validate(baseUrl, accessToken).get();
 
-    final OkHttpClient okHttpClient = LifxOkHttpClientFactory.INSTANCE
-      .getOkHttpClient(accessToken, log::debug);
+    final OkHttpClient okHttpClient = LifxOkHttpClientFactory.INSTANCE.getOkHttpClient(accessToken, log::debug);
     final LifxApi lifxApi = new Retrofit.Builder()
       .baseUrl(baseUrl)
       .addConverterFactory(StringConverterFactory.of(LightSelector.class, new LightSelectorConverter()))
@@ -132,6 +135,18 @@ public class LifxClientImpl implements LifxClient {
     return lightsStatesDto.getLightsStates().stream()
       .map(LightsState::getLightSelector)
       .map(LightSelector::identifier)
-      .collect(Collectors.joining(","));
+      .collect(joining(","));
+  }
+
+  static Validation<IllegalArgumentException, Object> validate(String baseUrl, String accessToken) {
+    return Validation.combine(
+      notNull("baseUrl", baseUrl),
+      notNull("accessToken", accessToken))
+      .ap((validBaseUrl, validAccessToken) -> null)
+      .mapError(errors -> new IllegalArgumentException(errors.collect(joining(", "))));
+  }
+
+  static <T> Validation<String, T> notNull(String parameterName, T value) {
+    return Objects.isNull(value) ? invalid(format("%s is null", parameterName)) : valid(value);
   }
 }
