@@ -37,7 +37,7 @@ public class RedLightOnSwitcher {
 
   public static void main(String[] args) {
 
-    var client = LifxClient.newLifxClientFor("<YOUR_ACCESS_TOKEN>");
+    LifxClient client = LifxClient.newLifxClientFor("<YOUR_ACCESS_TOKEN>");
 
     client.setLightsState(
       all(),
@@ -47,8 +47,6 @@ public class RedLightOnSwitcher {
         .brightness(1.0)
         .build()
     );
-
-    System.exit(0);
   }
 }
 ```
