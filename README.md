@@ -40,7 +40,7 @@ public class RedLightOnSwitcher {
     var client = LifxClient.newLifxClientFor("<YOUR_ACCESS_TOKEN>");
 
     client.setLightsState(
-      All(),
+      all(),
       State.builder()
         .power(Power.ON)
         .color("red")

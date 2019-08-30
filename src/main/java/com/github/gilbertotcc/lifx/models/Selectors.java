@@ -10,36 +10,76 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Selectors {
 
-  public static AllSelector All() { //NOSONAR
+  public static AllSelector all() {
     return new AllSelector();
   }
 
-  public static LabelSelector LabelSelector(String label) { //NOSONAR
+  public static LabelSelector byLabel(String label) {
     return new LabelSelector(label);
   }
 
-  public static IdSelector IdSelector(String id) { //NOSONAR
+  public static IdSelector byId(String id) {
     return new IdSelector(id);
   }
 
-  public static GroupIdSelector GroupIdSelector(String groupId) { //NOSONAR
+  public static GroupIdSelector byGroupId(String groupId) {
     return new GroupIdSelector(groupId);
   }
 
-  public static GroupSelector GroupSelector(String group) { //NOSONAR
+  public static GroupSelector byGroup(String group) {
     return new GroupSelector(group);
   }
 
-  public static LocationIdSelector LocationIdSelector(String locationId) { //NOSONAR
+  public static LocationIdSelector byLocationId(String locationId) {
     return new LocationIdSelector(locationId);
   }
 
-  public static LocationSelector LocationSelector(String location) { //NOSONAR
+  public static LocationSelector byLocation(String location) {
     return new LocationSelector(location);
   }
 
-  public static SceneIdSelector SceneIdSelector(String sceneId) { //NOSONAR
+  public static SceneIdSelector bySceneId(String sceneId) {
     return new SceneIdSelector(sceneId);
+  }
+
+  @Deprecated
+  public static AllSelector All() { //NOSONAR
+    return all();
+  }
+
+  @Deprecated
+  public static LabelSelector LabelSelector(String label) { //NOSONAR
+    return byLabel(label);
+  }
+
+  @Deprecated
+  public static IdSelector IdSelector(String id) { //NOSONAR
+    return byId(id);
+  }
+
+  @Deprecated
+  public static GroupIdSelector GroupIdSelector(String groupId) { //NOSONAR
+    return byGroupId(groupId);
+  }
+
+  @Deprecated
+  public static GroupSelector GroupSelector(String group) { //NOSONAR
+    return byGroup(group);
+  }
+
+  @Deprecated
+  public static LocationIdSelector LocationIdSelector(String locationId) { //NOSONAR
+    return byLocationId(locationId);
+  }
+
+  @Deprecated
+  public static LocationSelector LocationSelector(String location) { //NOSONAR
+    return byLocation(location);
+  }
+
+  @Deprecated
+  public static SceneIdSelector SceneIdSelector(String sceneId) { //NOSONAR
+    return bySceneId(sceneId);
   }
 
   @AllArgsConstructor
