@@ -3,8 +3,9 @@ package com.github.gilbertotcc.lifx.impl;
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
 import com.github.gilbertotcc.lifx.exception.LifxCallException;
-import com.github.gilbertotcc.lifx.exception.LifxGenericException;
-import com.github.gilbertotcc.lifx.impl.operations.ListLightsOperation;
+import com.github.gilbertotcc.lifx.operations.ListLightsInput;
+import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
+import com.github.gilbertotcc.lifx.operations.ListLightsQuery;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
 import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Cycle;
@@ -21,6 +22,7 @@ import com.github.gilbertotcc.lifx.models.TogglePower;
 import com.github.gilbertotcc.lifx.models.converter.LightSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
+import io.vavr.control.Either;
 import io.vavr.control.Validation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +36,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
-import static com.github.gilbertotcc.lifx.models.Selectors.all;
 import static io.vavr.control.Validation.invalid;
 import static io.vavr.control.Validation.valid;
 import static java.lang.String.format;
@@ -49,7 +51,7 @@ public class LifxClientImpl implements LifxClient {
 
   private final LifxApi lifxApi;
 
-  private final ListLightsOperation listLightsOperation;
+  private final ListLightsQuery listLightsQuery;
 
   // Mainly for testing purposes
   static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
@@ -65,7 +67,7 @@ public class LifxClientImpl implements LifxClient {
       .create(LifxApi.class);
     return new LifxClientImpl(
       lifxApi,
-      new ListLightsOperation(lifxApi)
+      new ListLightsQuery(lifxApi)
     );
   }
 
@@ -94,12 +96,18 @@ public class LifxClientImpl implements LifxClient {
 
   @Override
   public List<Light> listLights() {
-    return getResultOf(listLightsOperation.execute(all()));
+    return getResultOf(listLightsQuery.execute(Optional.empty())).getLights();
   }
 
   @Override
   public List<Light> listLights(final LightSelector lightsSelector) {
-    return getResultOf(listLightsOperation.execute(lightsSelector));
+    Optional<ListLightsInput> listLightsInput = Optional.of(new ListLightsInput(lightsSelector));
+    return getResultOf(listLightsQuery.execute(listLightsInput)).getLights();
+  }
+
+  @Override
+  public Either<LifxCallException, ListLightsOutput> listLights(Optional<ListLightsInput> input) {
+    return listLightsQuery.execute(input);
   }
 
   @Override
@@ -161,14 +169,8 @@ public class LifxClientImpl implements LifxClient {
     return LifxCallExecutor.of(lifxApi.validateColor(colorString)).getResponse();
   }
 
-  private static <T> T getResultOf(com.github.gilbertotcc.lifx.impl.operations.OperationResult<T> result) {
-    if (result.isSuccess()) {
-      return result.getResult();
-    }
-
-    Throwable error = result.getError();
-    throw error instanceof LifxCallException
-      ? (LifxCallException) error
-      : new LifxGenericException("Unexpected error", error);
+  private static <T> T getResultOf(Either<LifxCallException, T> operationResult) {
+    return operationResult
+      .getOrElseThrow(error -> error);
   }
 }

@@ -14,6 +14,7 @@ import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.Selectors;
 import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.models.StateDelta;
+import com.github.gilbertotcc.lifx.operations.ListLightsInput;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 import static com.github.gilbertotcc.lifx.models.Selectors.all;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
@@ -82,6 +84,20 @@ class LifxClientImplTest {
       .willReturn(aResponse().withBody(response)));
 
     final List<Light> lights = AUTHORIZED_CLIENT.listLights();
+
+    assertEquals(1, lights.size());
+  }
+
+  @Test
+  void newListLightsShouldSuccess() throws IOException {
+    final String response = loadJsonFromFile("/json/response_body/list_lights_OK.json");
+
+    wireMockServer.stubFor(get(urlEqualTo("/v1/lights/all"))
+      .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
+      .willReturn(aResponse().withBody(response)));
+
+    ListLightsInput listLightsInput = new ListLightsInput(all());
+    final List<Light> lights = AUTHORIZED_CLIENT.listLights(Optional.of(listLightsInput)).get().getLights();
 
     assertEquals(1, lights.size());
   }
