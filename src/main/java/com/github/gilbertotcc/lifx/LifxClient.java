@@ -1,26 +1,28 @@
 package com.github.gilbertotcc.lifx;
 
-import java.time.Duration;
-import java.util.List;
-
 import com.github.gilbertotcc.lifx.impl.LifxClientImpl;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
 import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Cycle;
-import com.github.gilbertotcc.lifx.models.LightSelector;
-import com.github.gilbertotcc.lifx.models.PulseEffect;
-import com.github.gilbertotcc.lifx.models.StateDelta;
 import com.github.gilbertotcc.lifx.models.Light;
+import com.github.gilbertotcc.lifx.models.LightSelector;
 import com.github.gilbertotcc.lifx.models.LightsStatesDto;
 import com.github.gilbertotcc.lifx.models.OperationResult;
+import com.github.gilbertotcc.lifx.models.PulseEffect;
 import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.State;
+import com.github.gilbertotcc.lifx.models.StateDelta;
+
+import java.time.Duration;
+import java.util.List;
 
 public interface LifxClient {
 
   static LifxClient newLifxClientFor(final String accessToken) {
     return LifxClientImpl.createNewClientFor(accessToken);
   }
+
+  List<Light> listLights();
 
   List<Light> listLights(final LightSelector lightSelector);
 
