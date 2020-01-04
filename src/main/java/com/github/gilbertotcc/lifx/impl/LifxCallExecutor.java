@@ -21,12 +21,12 @@ import retrofit2.Response;
 
 @Slf4j
 @Value(staticConstructor = "of")
-class LifxCallExecutor<T> {
+public class LifxCallExecutor<T> {
 
   private Call<T> call;
 
   @SuppressWarnings("unchecked")
-  T getResponse() {
+  public T getResponse() {
     return Try.of(call::execute)
       .filter(Response::isSuccessful, createLifxErrorException())
       .map(Response::body)

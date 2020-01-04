@@ -1,11 +1,10 @@
 package com.github.gilbertotcc.lifx.impl;
 
-import java.time.Duration;
-import java.util.List;
-import java.util.Objects;
-
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
+import com.github.gilbertotcc.lifx.exception.LifxCallException;
+import com.github.gilbertotcc.lifx.exception.LifxGenericException;
+import com.github.gilbertotcc.lifx.impl.operations.ListLightsOperation;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
 import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Cycle;
@@ -22,7 +21,6 @@ import com.github.gilbertotcc.lifx.models.TogglePower;
 import com.github.gilbertotcc.lifx.models.converter.LightSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
-
 import io.vavr.control.Validation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +31,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import java.time.Duration;
+import java.util.List;
+import java.util.Objects;
+
+import static com.github.gilbertotcc.lifx.models.Selectors.all;
 import static io.vavr.control.Validation.invalid;
 import static io.vavr.control.Validation.valid;
 import static java.lang.String.format;
@@ -46,6 +49,8 @@ public class LifxClientImpl implements LifxClient {
 
   private final LifxApi lifxApi;
 
+  private final ListLightsOperation listLightsOperation;
+
   // Mainly for testing purposes
   static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
     validate(baseUrl, accessToken).get();
@@ -58,17 +63,43 @@ public class LifxClientImpl implements LifxClient {
       .client(okHttpClient)
       .build()
       .create(LifxApi.class);
-    return new LifxClientImpl(lifxApi);
+    return new LifxClientImpl(
+      lifxApi,
+      new ListLightsOperation(lifxApi)
+    );
   }
 
   public static LifxClientImpl createNewClientFor(final String accessToken) {
     return createNewClientFor(LIFX_BASE_URL, accessToken);
   }
 
+  private static String lightSelectorListOf(final LightsStatesDto lightsStatesDto) {
+    return lightsStatesDto.getLightsStates().stream()
+      .map(LightsState::getLightSelector)
+      .map(LightSelector::identifier)
+      .collect(joining(","));
+  }
+
+  static Validation<IllegalArgumentException, Object> validate(String baseUrl, String accessToken) {
+    return Validation.combine(
+      notNull("baseUrl", baseUrl),
+      notNull("accessToken", accessToken))
+      .ap((validBaseUrl, validAccessToken) -> null)
+      .mapError(errors -> new IllegalArgumentException(errors.collect(joining(", "))));
+  }
+
+  static <T> Validation<String, T> notNull(String parameterName, T value) {
+    return Objects.isNull(value) ? invalid(format("%s is null", parameterName)) : valid(value);
+  }
+
+  @Override
+  public List<Light> listLights() {
+    return getResultOf(listLightsOperation.execute(all()));
+  }
+
   @Override
   public List<Light> listLights(final LightSelector lightsSelector) {
-    log.info("List lights (selector: {})", lightsSelector.identifier());
-    return LifxCallExecutor.of(lifxApi.listLights(lightsSelector)).getResponse();
+    return getResultOf(listLightsOperation.execute(lightsSelector));
   }
 
   @Override
@@ -82,8 +113,7 @@ public class LifxClientImpl implements LifxClient {
   @Override
   public List<OperationResult> setLightsStates(final LightsStatesDto lightsStatesDto) {
     log.info("Set lights states of {}", lightSelectorListOf(lightsStatesDto));
-    return LifxCallExecutor.of(lifxApi.setLightsStates(lightsStatesDto)).getResponse()
-      .getResults();
+    return LifxCallExecutor.of(lifxApi.setLightsStates(lightsStatesDto)).getResponse().getResults();
   }
 
   @Override
@@ -113,7 +143,7 @@ public class LifxClientImpl implements LifxClient {
   public List<Result> doPulseEffect(final LightSelector lightSelector, final PulseEffect pulseEffect) {
     log.info("Do pulse effect with {}. Settings: {}",
       lightSelector.identifier(), ReflectionToStringBuilder.toString(pulseEffect,
-      ToStringStyle.JSON_STYLE));
+        ToStringStyle.JSON_STYLE));
     return LifxCallExecutor.of(lifxApi.pulseEffect(lightSelector, pulseEffect)).getResponse()
       .getResults();
   }
@@ -131,22 +161,14 @@ public class LifxClientImpl implements LifxClient {
     return LifxCallExecutor.of(lifxApi.validateColor(colorString)).getResponse();
   }
 
-  private static String lightSelectorListOf(final LightsStatesDto lightsStatesDto) {
-    return lightsStatesDto.getLightsStates().stream()
-      .map(LightsState::getLightSelector)
-      .map(LightSelector::identifier)
-      .collect(joining(","));
-  }
+  private static <T> T getResultOf(com.github.gilbertotcc.lifx.impl.operations.OperationResult<T> result) {
+    if (result.isSuccess()) {
+      return result.getResult();
+    }
 
-  static Validation<IllegalArgumentException, Object> validate(String baseUrl, String accessToken) {
-    return Validation.combine(
-      notNull("baseUrl", baseUrl),
-      notNull("accessToken", accessToken))
-      .ap((validBaseUrl, validAccessToken) -> null)
-      .mapError(errors -> new IllegalArgumentException(errors.collect(joining(", "))));
-  }
-
-  static <T> Validation<String, T> notNull(String parameterName, T value) {
-    return Objects.isNull(value) ? invalid(format("%s is null", parameterName)) : valid(value);
+    Throwable error = result.getError();
+    throw error instanceof LifxCallException
+      ? (LifxCallException) error
+      : new LifxGenericException("Unexpected error", error);
   }
 }
