@@ -22,6 +22,8 @@ import com.github.gilbertotcc.lifx.models.TogglePower;
 import com.github.gilbertotcc.lifx.models.converter.LightSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateCommand;
+import com.github.gilbertotcc.lifx.operations.SetLightsStateDeltaCommand;
+import com.github.gilbertotcc.lifx.operations.SetLightsStateDeltaInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStatesCommand;
 import com.github.gilbertotcc.lifx.operations.SetLightsStatesInput;
@@ -58,6 +60,7 @@ public class LifxClientImpl implements LifxClient {
   private final ListLightsQuery listLightsQuery;
   private final SetLightsStateCommand setLightsStateCommand;
   private final SetLightsStatesCommand setLightsStatesCommand;
+  private final SetLightsStateDeltaCommand setLightsStateDeltaCommand;
 
   // Mainly for testing purposes
   public static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
@@ -75,7 +78,8 @@ public class LifxClientImpl implements LifxClient {
       lifxApi,
       new ListLightsQuery(lifxApi),
       new SetLightsStateCommand(lifxApi),
-      new SetLightsStatesCommand(lifxApi)
+      new SetLightsStatesCommand(lifxApi),
+      new SetLightsStateDeltaCommand(lifxApi)
     );
   }
 
@@ -97,13 +101,13 @@ public class LifxClientImpl implements LifxClient {
 
   @Override
   public List<Light> listLights() {
-    return getResultOf(listLightsQuery.execute(ListLightsInput.ALL_LIGHTS)).getLights();
+    return getResultOf(listLights(ListLightsInput.ALL_LIGHTS)).getLights();
   }
 
   @Override
   public List<Light> listLights(final LightSelector lightsSelector) {
     ListLightsInput listLightsInput = new ListLightsInput(lightsSelector);
-    return getResultOf(listLightsQuery.execute(listLightsInput)).getLights();
+    return getResultOf(listLights(listLightsInput)).getLights();
   }
 
   @Override
@@ -114,7 +118,7 @@ public class LifxClientImpl implements LifxClient {
   @Override
   public List<Result> setLightsState(final LightSelector lightSelector, final State state) {
     var input = new SetLightsStateInput(lightSelector, state);
-    return getResultOf(setLightsStateCommand.execute(input)).getResult();
+    return getResultOf(setLightsState(input)).getResult();
   }
 
   @Override
@@ -129,7 +133,7 @@ public class LifxClientImpl implements LifxClient {
       lightsStatesDto.getDefaultState(),
       lightsStatesDto.isFast()
     );
-    return getResultOf(setLightsStatesCommand.execute(input)).getResult();
+    return getResultOf(setLightsStates(input)).getResult();
   }
 
   @Override
@@ -139,10 +143,13 @@ public class LifxClientImpl implements LifxClient {
 
   @Override
   public List<Result> setLightsStateDelta(final LightSelector lightSelector, final StateDelta stateDelta) {
-    log.info("Set lights state delta of {} to {}",
-      lightSelector.identifier(), ReflectionToStringBuilder.toString(stateDelta, ToStringStyle.JSON_STYLE));
-    return LifxCallExecutor.of(lifxApi.setLightsStateDelta(lightSelector, stateDelta)).getResponse()
-      .getResults();
+    var input = new SetLightsStateDeltaInput(lightSelector, stateDelta);
+    return getResultOf(setLightsStateDelta(input)).getResult();
+  }
+
+  @Override
+  public Either<LifxCallException, CommandOutput<List<Result>>> setLightsStateDelta(SetLightsStateDeltaInput input) {
+    return setLightsStateDeltaCommand.execute(input);
   }
 
   @Override

@@ -16,6 +16,7 @@ import com.github.gilbertotcc.lifx.models.StateDelta;
 import com.github.gilbertotcc.lifx.operations.CommandOutput;
 import com.github.gilbertotcc.lifx.operations.ListLightsInput;
 import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
+import com.github.gilbertotcc.lifx.operations.SetLightsStateDeltaInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStatesInput;
 import io.vavr.control.Either;
@@ -46,7 +47,10 @@ public interface LifxClient {
 
   Either<LifxCallException, CommandOutput<List<OperationResult>>> setLightsStates(SetLightsStatesInput input);
 
+  @Deprecated(since = "1.2.0")
   List<Result> setLightsStateDelta(final LightSelector lightSelector, final StateDelta stateDelta);
+
+  Either<LifxCallException, CommandOutput<List<Result>>> setLightsStateDelta(SetLightsStateDeltaInput input);
 
   List<Result> toggleLightsPower(final LightSelector lightSelector, final Duration duration);
 
