@@ -3,6 +3,7 @@ package com.github.gilbertotcc.lifx.impl;
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
 import com.github.gilbertotcc.lifx.exception.LifxCallException;
+import com.github.gilbertotcc.lifx.operations.CommandOutput;
 import com.github.gilbertotcc.lifx.operations.ListLightsInput;
 import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
 import com.github.gilbertotcc.lifx.operations.ListLightsQuery;
@@ -21,6 +22,8 @@ import com.github.gilbertotcc.lifx.models.StateDelta;
 import com.github.gilbertotcc.lifx.models.TogglePower;
 import com.github.gilbertotcc.lifx.models.converter.LightSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
+import com.github.gilbertotcc.lifx.operations.SetLightsStateCommand;
+import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 import io.vavr.control.Either;
 import io.vavr.control.Validation;
@@ -36,7 +39,6 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static io.vavr.control.Validation.invalid;
 import static io.vavr.control.Validation.valid;
@@ -51,10 +53,12 @@ public class LifxClientImpl implements LifxClient {
 
   private final LifxApi lifxApi;
 
+  // Operations
   private final ListLightsQuery listLightsQuery;
+  private final SetLightsStateCommand setLightsStateCommand;
 
   // Mainly for testing purposes
-  static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
+  public static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
     validate(baseUrl, accessToken).get();
 
     final OkHttpClient okHttpClient = LifxOkHttpClientFactory.INSTANCE.getOkHttpClient(accessToken, log::debug);
@@ -67,7 +71,8 @@ public class LifxClientImpl implements LifxClient {
       .create(LifxApi.class);
     return new LifxClientImpl(
       lifxApi,
-      new ListLightsQuery(lifxApi)
+      new ListLightsQuery(lifxApi),
+      new SetLightsStateCommand(lifxApi)
     );
   }
 
@@ -96,26 +101,29 @@ public class LifxClientImpl implements LifxClient {
 
   @Override
   public List<Light> listLights() {
-    return getResultOf(listLightsQuery.execute(Optional.empty())).getLights();
+    return getResultOf(listLightsQuery.execute(ListLightsInput.ALL_LIGHTS)).getLights();
   }
 
   @Override
   public List<Light> listLights(final LightSelector lightsSelector) {
-    Optional<ListLightsInput> listLightsInput = Optional.of(new ListLightsInput(lightsSelector));
+    ListLightsInput listLightsInput = new ListLightsInput(lightsSelector);
     return getResultOf(listLightsQuery.execute(listLightsInput)).getLights();
   }
 
   @Override
-  public Either<LifxCallException, ListLightsOutput> listLights(Optional<ListLightsInput> input) {
+  public Either<LifxCallException, ListLightsOutput> listLights(ListLightsInput input) {
     return listLightsQuery.execute(input);
   }
 
   @Override
   public List<Result> setLightsState(final LightSelector lightSelector, final State state) {
-    log.info("Set lights state of {} to {}",
-      lightSelector.identifier(), ReflectionToStringBuilder.toString(state, ToStringStyle.JSON_STYLE));
-    return LifxCallExecutor.of(lifxApi.setLightsState(lightSelector, state)).getResponse()
-      .getResults();
+    var input = new SetLightsStateInput(lightSelector, state);
+    return getResultOf(setLightsStateCommand.execute(input)).getResult();
+  }
+
+  @Override
+  public Either<LifxCallException, CommandOutput<List<Result>>> setLightsState(SetLightsStateInput input) {
+    return setLightsStateCommand.execute(input);
   }
 
   @Override

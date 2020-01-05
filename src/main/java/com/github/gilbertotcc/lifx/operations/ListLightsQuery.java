@@ -8,17 +8,16 @@ import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Optional;
-
 @Slf4j
 @RequiredArgsConstructor
-public class ListLightsQuery implements Operation<Optional<ListLightsInput>, ListLightsOutput, LifxCallException> {
+public class ListLightsQuery implements Operation<ListLightsInput, ListLightsOutput, LifxCallException> {
 
   private final LifxApi lifxApi;
 
   @Override
-  public Either<LifxCallException, ListLightsOutput> execute(Optional<ListLightsInput> input) {
-    LightSelector lightSelector = input.orElse(ListLightsInput.ALL_LIGHTS).getSelector();
+  public Either<LifxCallException, ListLightsOutput> execute(ListLightsInput input) {
+    LightSelector lightSelector = input.getSelector();
+    
     log.info("List lights (selector: {})", lightSelector.identifier());
     return new CallExecutor<>(lifxApi.listLights(lightSelector))
       .execute(ListLightsOutput::new);

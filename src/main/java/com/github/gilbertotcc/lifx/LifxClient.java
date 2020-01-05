@@ -13,13 +13,14 @@ import com.github.gilbertotcc.lifx.models.PulseEffect;
 import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.models.StateDelta;
+import com.github.gilbertotcc.lifx.operations.CommandOutput;
 import com.github.gilbertotcc.lifx.operations.ListLightsInput;
 import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
+import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
 import io.vavr.control.Either;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Optional;
 
 public interface LifxClient {
 
@@ -27,15 +28,17 @@ public interface LifxClient {
     return LifxClientImpl.createNewClientFor(accessToken);
   }
 
-  @Deprecated(since = "1.2.0")
   List<Light> listLights();
 
   @Deprecated(since = "1.2.0")
   List<Light> listLights(final LightSelector lightSelector);
 
-  Either<LifxCallException, ListLightsOutput> listLights(Optional<ListLightsInput> input);
+  Either<LifxCallException, ListLightsOutput> listLights(ListLightsInput input);
 
+  @Deprecated(since = "1.2.0")
   List<Result> setLightsState(final LightSelector lightSelector, final State state);
+
+  Either<LifxCallException, CommandOutput<List<Result>>> setLightsState(SetLightsStateInput input);
 
   List<OperationResult> setLightsStates(final LightsStatesDto lightsStatesDto);
 
