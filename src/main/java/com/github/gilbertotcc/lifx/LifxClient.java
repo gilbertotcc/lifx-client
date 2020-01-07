@@ -19,6 +19,7 @@ import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateDeltaInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStatesInput;
+import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
 import io.vavr.control.Either;
 
 import java.time.Duration;
@@ -52,7 +53,10 @@ public interface LifxClient {
 
   Either<LifxCallException, CommandOutput<List<Result>>> setLightsStateDelta(SetLightsStateDeltaInput input);
 
+  @Deprecated(since = "1.2.0")
   List<Result> toggleLightsPower(final LightSelector lightSelector, final Duration duration);
+
+  Either<LifxCallException, CommandOutput<List<Result>>> toggleLightsPower(ToggleLightsPowerInput input);
 
   List<Result> doBreatheEffect(final LightSelector lightSelector, final BreatheEffect breatheEffect);
 

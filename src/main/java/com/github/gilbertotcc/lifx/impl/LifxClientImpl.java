@@ -18,7 +18,6 @@ import com.github.gilbertotcc.lifx.models.PulseEffect;
 import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.models.StateDelta;
-import com.github.gilbertotcc.lifx.models.TogglePower;
 import com.github.gilbertotcc.lifx.models.converter.LightSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateCommand;
@@ -27,6 +26,8 @@ import com.github.gilbertotcc.lifx.operations.SetLightsStateDeltaInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStatesCommand;
 import com.github.gilbertotcc.lifx.operations.SetLightsStatesInput;
+import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerCommand;
+import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 import io.vavr.control.Either;
 import io.vavr.control.Validation;
@@ -61,6 +62,7 @@ public class LifxClientImpl implements LifxClient {
   private final SetLightsStateCommand setLightsStateCommand;
   private final SetLightsStatesCommand setLightsStatesCommand;
   private final SetLightsStateDeltaCommand setLightsStateDeltaCommand;
+  private final ToggleLightsPowerCommand toggleLightsPowerCommand;
 
   // Mainly for testing purposes
   public static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
@@ -79,7 +81,8 @@ public class LifxClientImpl implements LifxClient {
       new ListLightsQuery(lifxApi),
       new SetLightsStateCommand(lifxApi),
       new SetLightsStatesCommand(lifxApi),
-      new SetLightsStateDeltaCommand(lifxApi)
+      new SetLightsStateDeltaCommand(lifxApi),
+      new ToggleLightsPowerCommand(lifxApi)
     );
   }
 
@@ -154,9 +157,13 @@ public class LifxClientImpl implements LifxClient {
 
   @Override
   public List<Result> toggleLightsPower(final LightSelector lightSelector, final Duration duration) {
-    log.info("Toggle lights power of {} in {} seconds", lightSelector.identifier(), duration.getSeconds());
-    return LifxCallExecutor.of(lifxApi.togglePower(lightSelector, TogglePower.in(duration))).getResponse()
-      .getResults();
+    var input = new ToggleLightsPowerInput(lightSelector, duration);
+    return getResultOf(toggleLightsPower(input)).getResult();
+  }
+
+  @Override
+  public Either<LifxCallException, CommandOutput<List<Result>>> toggleLightsPower(ToggleLightsPowerInput input) {
+    return toggleLightsPowerCommand.execute(input);
   }
 
   @Override
