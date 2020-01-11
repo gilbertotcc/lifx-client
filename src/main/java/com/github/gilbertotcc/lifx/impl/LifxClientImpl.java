@@ -3,10 +3,6 @@ package com.github.gilbertotcc.lifx.impl;
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
 import com.github.gilbertotcc.lifx.exception.LifxCallException;
-import com.github.gilbertotcc.lifx.operations.CommandOutput;
-import com.github.gilbertotcc.lifx.operations.ListLightsInput;
-import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
-import com.github.gilbertotcc.lifx.operations.ListLightsQuery;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
 import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Cycle;
@@ -20,6 +16,12 @@ import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.models.StateDelta;
 import com.github.gilbertotcc.lifx.models.converter.LightSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
+import com.github.gilbertotcc.lifx.operations.CommandOutput;
+import com.github.gilbertotcc.lifx.operations.DoBreatheEffectCommand;
+import com.github.gilbertotcc.lifx.operations.DoBreatheEffectInput;
+import com.github.gilbertotcc.lifx.operations.ListLightsInput;
+import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
+import com.github.gilbertotcc.lifx.operations.ListLightsQuery;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateCommand;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateDeltaCommand;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateDeltaInput;
@@ -63,6 +65,7 @@ public class LifxClientImpl implements LifxClient {
   private final SetLightsStatesCommand setLightsStatesCommand;
   private final SetLightsStateDeltaCommand setLightsStateDeltaCommand;
   private final ToggleLightsPowerCommand toggleLightsPowerCommand;
+  private final DoBreatheEffectCommand doBreatheEffectCommand;
 
   // Mainly for testing purposes
   public static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
@@ -82,7 +85,8 @@ public class LifxClientImpl implements LifxClient {
       new SetLightsStateCommand(lifxApi),
       new SetLightsStatesCommand(lifxApi),
       new SetLightsStateDeltaCommand(lifxApi),
-      new ToggleLightsPowerCommand(lifxApi)
+      new ToggleLightsPowerCommand(lifxApi),
+      new DoBreatheEffectCommand(lifxApi)
     );
   }
 
@@ -168,10 +172,13 @@ public class LifxClientImpl implements LifxClient {
 
   @Override
   public List<Result> doBreatheEffect(final LightSelector lightSelector, final BreatheEffect breatheEffect) {
-    log.info("Do breathe effect with {}. Settings: {}",
-      lightSelector.identifier(), ReflectionToStringBuilder.toString(breatheEffect, ToStringStyle.JSON_STYLE));
-    return LifxCallExecutor.of(lifxApi.breatheEffect(lightSelector, breatheEffect)).getResponse()
-      .getResults();
+    var input = new DoBreatheEffectInput(lightSelector, breatheEffect);
+    return getResultOf(doBreatheEffectCommand.execute(input)).getResult();
+  }
+
+  @Override
+  public Either<LifxCallException, CommandOutput<List<Result>>> doBreatheEffect(DoBreatheEffectInput input) {
+    return doBreatheEffectCommand.execute(input);
   }
 
   @Override
