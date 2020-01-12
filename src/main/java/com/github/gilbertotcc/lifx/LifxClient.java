@@ -38,47 +38,101 @@ public interface LifxClient {
 
   List<Light> listLights();
 
-  @Deprecated(since = "1.2.0")
+  /**
+   * Do not use this method.
+   *
+   * @deprecated Since version 1.2.0 this method is replaced by the method
+   *   {@link LifxClient#listLights(ListLightsInput)} with a more functional fashion.
+   */
+  @Deprecated(since = "1.2.0", forRemoval = true)
   List<Light> listLights(final LightSelector lightSelector);
 
   Either<LifxCallException, ListLightsOutput> listLights(ListLightsInput input);
 
-  @Deprecated(since = "1.2.0")
+  /**
+   * Do not use this method.
+   *
+   * @deprecated Since version 1.2.0 this method is replaced by the method
+   *   {@link LifxClient#setLightsState(SetLightsStateInput)} with a more functional fashion.
+   */
+  @Deprecated(since = "1.2.0", forRemoval = true)
   List<Result> setLightsState(final LightSelector lightSelector, final State state);
 
   Either<LifxCallException, CommandOutput<List<Result>>> setLightsState(SetLightsStateInput input);
 
-  @Deprecated(since = "1.2.0")
+  /**
+   * Do not use this method.
+   *
+   * @deprecated Since version 1.2.0 this method is replaced by the method
+   *   {@link LifxClient#setLightsStates(SetLightsStatesInput)} with a more functional fashion.
+   */
+  @Deprecated(since = "1.2.0", forRemoval = true)
   List<OperationResult> setLightsStates(final LightsStatesDto lightsStatesDto);
 
   Either<LifxCallException, CommandOutput<List<OperationResult>>> setLightsStates(SetLightsStatesInput input);
 
-  @Deprecated(since = "1.2.0")
+  /**
+   * Do not use this method.
+   *
+   * @deprecated Since version 1.2.0 this method is replaced by the method
+   *   {@link LifxClient#setLightsStateDelta(SetLightsStateDeltaInput)} with a more functional fashion.
+   */
+  @Deprecated(since = "1.2.0", forRemoval = true)
   List<Result> setLightsStateDelta(final LightSelector lightSelector, final StateDelta stateDelta);
 
   Either<LifxCallException, CommandOutput<List<Result>>> setLightsStateDelta(SetLightsStateDeltaInput input);
 
-  @Deprecated(since = "1.2.0")
+  /**
+   * Do not use this method.
+   *
+   * @deprecated Since version 1.2.0 this method is replaced by the method
+   *   {@link LifxClient#toggleLightsPower(ToggleLightsPowerInput)} with a more functional fashion.
+   */
+  @Deprecated(since = "1.2.0", forRemoval = true)
   List<Result> toggleLightsPower(final LightSelector lightSelector, final Duration duration);
 
   Either<LifxCallException, CommandOutput<List<Result>>> toggleLightsPower(ToggleLightsPowerInput input);
 
-  @Deprecated(since = "1.2.0")
+  /**
+   * Do not use this method.
+   *
+   * @deprecated Since version 1.2.0 this method is replaced by the method
+   *   {@link LifxClient#doBreatheEffect(DoBreatheEffectInput)} with a more functional fashion.
+   */
+  @Deprecated(since = "1.2.0", forRemoval = true)
   List<Result> doBreatheEffect(final LightSelector lightSelector, final BreatheEffect breatheEffect);
 
   Either<LifxCallException, CommandOutput<List<Result>>> doBreatheEffect(DoBreatheEffectInput input);
 
-  @Deprecated(since = "1.2.0")
+  /**
+   * Do not use this method.
+   *
+   * @deprecated Since version 1.2.0 this method is replaced by the method
+   *   {@link LifxClient#doPulseEffect(DoPulseEffectInput)} with a more functional fashion.
+   */
+  @Deprecated(since = "1.2.0", forRemoval = true)
   List<Result> doPulseEffect(final LightSelector lightSelector, final PulseEffect pulseEffect);
 
   Either<LifxCallException, CommandOutput<List<Result>>> doPulseEffect(DoPulseEffectInput input);
 
-  @Deprecated(since = "1.2.0")
+  /**
+   * Do not use this method.
+   *
+   * @deprecated Since version 1.2.0 this method is replaced by the method
+   *   {@link LifxClient#transitToNextState(TransitToNextStateInput)} with a more functional fashion.
+   */
+  @Deprecated(since = "1.2.0", forRemoval = true)
   List<Result> transitToNextStateOf(final LightSelector lightSelector, final Cycle cycle);
 
   Either<LifxCallException, CommandOutput<List<Result>>> transitToNextState(TransitToNextStateInput input);
 
-  @Deprecated(since = "1.2.0")
+  /**
+   * Do not use this method.
+   * 
+   * @deprecated Since version 1.2.0 this method is replaced by the method
+   *   {@link LifxClient#validateColor(ValidateColorInput)} with a more functional fashion.
+   */
+  @Deprecated(since = "1.2.0", forRemoval = true)
   Color validateColor(final String colorString);
 
   Either<LifxCallException, ValidateColorOutput> validateColor(ValidateColorInput input);

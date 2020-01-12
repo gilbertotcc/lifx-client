@@ -8,7 +8,7 @@ public class LifxCallException extends RuntimeException {
 
   private static final long serialVersionUID = 8909863162390335463L;
 
-  private final transient Call<?> call;
+  private final transient Call call;
 
   /**
    * If not {@code null}, return the call that failed.
@@ -17,12 +17,12 @@ public class LifxCallException extends RuntimeException {
    *
    * @deprecated This method might return an optional value in further releases.
    */
-  @Deprecated(since = "1.2.0")
-  public Call<?> getCall() {
+  @Deprecated(since = "1.2.0", forRemoval = true)
+  public Call getCall() {
     return call;
   }
 
-  public LifxCallException(final Call<?> call, Throwable cause) {
+  public LifxCallException(final Call call, Throwable cause) {
     super(
       format("Call %s %s failed with cause %s", call.request().method(), call.request().url(), cause.getMessage()),
       cause
