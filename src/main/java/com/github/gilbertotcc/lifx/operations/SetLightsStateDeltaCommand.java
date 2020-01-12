@@ -26,8 +26,8 @@ public class SetLightsStateDeltaCommand
 
     log.info("Set lights state delta of {} to {}",
       lightSelector.identifier(), ReflectionToStringBuilder.toString(stateDelta, ToStringStyle.JSON_STYLE));
-    return new CallExecutor<>(lifxApi.setLightsStateDelta(lightSelector, stateDelta))
-      .execute(response -> {
+    return new CallExecutor<>(lifxApi.setLightsStateDelta(lightSelector, stateDelta)).execute()
+      .map(response -> {
         var results = response.getResults();
         return new CommandOutput<>(results);
       });

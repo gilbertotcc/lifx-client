@@ -28,8 +28,8 @@ public class SetLightsStateCommand
       lightSelector.identifier(),
       ReflectionToStringBuilder.toString(state, ToStringStyle.JSON_STYLE)
     );
-    return new CallExecutor<>(lifxApi.setLightsState(lightSelector, state))
-      .execute(response -> {
+    return new CallExecutor<>(lifxApi.setLightsState(lightSelector, state)).execute()
+      .map(response -> {
         var results = response.getResults();
         return new CommandOutput<>(results);
       });

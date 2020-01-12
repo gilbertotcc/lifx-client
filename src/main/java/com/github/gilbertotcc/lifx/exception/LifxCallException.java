@@ -29,9 +29,4 @@ public class LifxCallException extends RuntimeException {
     );
     this.call = call;
   }
-
-  public LifxCallException(Throwable cause) {
-    super(format("Call failed with cause %s", cause.getMessage()), cause);
-    this.call = null;
-  }
 }

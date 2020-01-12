@@ -3,6 +3,7 @@
 Java client to consume [LIFX HTTP API](https://api.developer.lifx.com/).
 
 [![Coverage Status](https://coveralls.io/repos/github/gilbertotcc/lifx-client/badge.svg?branch=develop)](https://coveralls.io/github/gilbertotcc/lifx-client?branch=develop)
+[![Download](https://api.bintray.com/packages/gilbertotcc/lifx/lifx-client/images/download.svg?version=1.2.0) ](https://bintray.com/gilbertotcc/lifx/lifx-client/1.2.0/link)
 
 ## Usage
 
