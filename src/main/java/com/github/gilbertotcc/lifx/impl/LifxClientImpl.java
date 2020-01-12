@@ -19,6 +19,8 @@ import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.operations.CommandOutput;
 import com.github.gilbertotcc.lifx.operations.DoBreatheEffectCommand;
 import com.github.gilbertotcc.lifx.operations.DoBreatheEffectInput;
+import com.github.gilbertotcc.lifx.operations.DoPulseEffectCommand;
+import com.github.gilbertotcc.lifx.operations.DoPulseEffectInput;
 import com.github.gilbertotcc.lifx.operations.ListLightsInput;
 import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
 import com.github.gilbertotcc.lifx.operations.ListLightsQuery;
@@ -37,8 +39,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -66,6 +66,7 @@ public class LifxClientImpl implements LifxClient {
   private final SetLightsStateDeltaCommand setLightsStateDeltaCommand;
   private final ToggleLightsPowerCommand toggleLightsPowerCommand;
   private final DoBreatheEffectCommand doBreatheEffectCommand;
+  private final DoPulseEffectCommand doPulseEffectCommand;
 
   // Mainly for testing purposes
   public static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
@@ -86,7 +87,8 @@ public class LifxClientImpl implements LifxClient {
       new SetLightsStatesCommand(lifxApi),
       new SetLightsStateDeltaCommand(lifxApi),
       new ToggleLightsPowerCommand(lifxApi),
-      new DoBreatheEffectCommand(lifxApi)
+      new DoBreatheEffectCommand(lifxApi),
+      new DoPulseEffectCommand(lifxApi)
     );
   }
 
@@ -173,7 +175,7 @@ public class LifxClientImpl implements LifxClient {
   @Override
   public List<Result> doBreatheEffect(final LightSelector lightSelector, final BreatheEffect breatheEffect) {
     var input = new DoBreatheEffectInput(lightSelector, breatheEffect);
-    return getResultOf(doBreatheEffectCommand.execute(input)).getResult();
+    return getResultOf(doBreatheEffect(input)).getResult();
   }
 
   @Override
@@ -183,11 +185,13 @@ public class LifxClientImpl implements LifxClient {
 
   @Override
   public List<Result> doPulseEffect(final LightSelector lightSelector, final PulseEffect pulseEffect) {
-    log.info("Do pulse effect with {}. Settings: {}",
-      lightSelector.identifier(), ReflectionToStringBuilder.toString(pulseEffect,
-        ToStringStyle.JSON_STYLE));
-    return LifxCallExecutor.of(lifxApi.pulseEffect(lightSelector, pulseEffect)).getResponse()
-      .getResults();
+    var input = new DoPulseEffectInput(lightSelector, pulseEffect);
+    return getResultOf(doPulseEffect(input)).getResult();
+  }
+
+  @Override
+  public Either<LifxCallException, CommandOutput<List<Result>>> doPulseEffect(DoPulseEffectInput input) {
+    return doPulseEffectCommand.execute(input);
   }
 
   @Override

@@ -15,6 +15,7 @@ import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.models.StateDelta;
 import com.github.gilbertotcc.lifx.operations.CommandOutput;
 import com.github.gilbertotcc.lifx.operations.DoBreatheEffectInput;
+import com.github.gilbertotcc.lifx.operations.DoPulseEffectInput;
 import com.github.gilbertotcc.lifx.operations.ListLightsInput;
 import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateDeltaInput;
@@ -64,7 +65,10 @@ public interface LifxClient {
 
   Either<LifxCallException, CommandOutput<List<Result>>> doBreatheEffect(DoBreatheEffectInput input);
 
+  @Deprecated(since = "1.2.0")
   List<Result> doPulseEffect(final LightSelector lightSelector, final PulseEffect pulseEffect);
+
+  Either<LifxCallException, CommandOutput<List<Result>>> doPulseEffect(DoPulseEffectInput input);
 
   List<Result> transitToNextStateOf(final LightSelector lightSelector, final Cycle cycle);
 
