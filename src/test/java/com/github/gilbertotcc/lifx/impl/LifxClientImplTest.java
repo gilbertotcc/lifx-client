@@ -1,22 +1,5 @@
 package com.github.gilbertotcc.lifx.impl;
 
-import static com.github.gilbertotcc.lifx.models.Selectors.all;
-import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.put;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static java.lang.String.format;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
-import java.time.Duration;
-import java.util.List;
-
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
 import com.github.gilbertotcc.lifx.models.Color;
@@ -36,6 +19,23 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.time.Duration;
+import java.util.List;
+
+import static com.github.gilbertotcc.lifx.models.Selectors.all;
+import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.put;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 class LifxClientImplTest {
 
   private static final int PORT = 9999;
@@ -44,6 +44,10 @@ class LifxClientImplTest {
   private static final LifxClient AUTHORIZED_CLIENT = authorizedClient();
 
   private WireMockServer wireMockServer;
+
+  private static LifxClient authorizedClient() {
+    return LifxClientImpl.createNewClientFor(BASE_URL, VALID_ACCESS_TOKEN);
+  }
 
   @BeforeEach
   void setup() {
@@ -65,6 +69,19 @@ class LifxClientImplTest {
       .willReturn(aResponse().withBody(response)));
 
     final List<Light> lights = AUTHORIZED_CLIENT.listLights(all());
+
+    assertEquals(1, lights.size());
+  }
+
+  @Test
+  void listLightsShouldSuccess() throws IOException {
+    final String response = loadJsonFromFile("/json/response_body/list_lights_OK.json");
+
+    wireMockServer.stubFor(get(urlEqualTo("/v1/lights/all"))
+      .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
+      .willReturn(aResponse().withBody(response)));
+
+    final List<Light> lights = AUTHORIZED_CLIENT.listLights();
 
     assertEquals(1, lights.size());
   }
@@ -205,9 +222,5 @@ class LifxClientImplTest {
   void createNewlifxClientImplShouldSuccess() {
     LifxClientImpl lifxClient = LifxClientImpl.createNewClientFor("accessToken");
     assertNotNull(lifxClient);
-  }
-
-  private static LifxClient authorizedClient() {
-    return LifxClientImpl.createNewClientFor(BASE_URL, VALID_ACCESS_TOKEN);
   }
 }

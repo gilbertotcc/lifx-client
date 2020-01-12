@@ -17,6 +17,10 @@ import com.github.gilbertotcc.lifx.models.Power;
 import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.Selectors;
 import com.github.gilbertotcc.lifx.models.State;
+import com.github.gilbertotcc.lifx.operations.ListLightsInput;
+import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
+import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
+import com.github.gilbertotcc.lifx.operations.ValidateColorInput;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -33,19 +37,20 @@ class LifxClientTestIntegrationTest {
   private static Power lightPower = null;
 
   @BeforeClass
-  static void initLifxClient() {
+  public static void initLifxClient() {
     String accessToken = Optional.ofNullable(System.getenv("IT_ACCESS_TOKEN")).filter(StringUtils::isNotBlank).get();
     lifxClient = LifxClient.newLifxClientFor(accessToken);
   }
 
   @AfterClass
-  static void tearDownITs() {
+  public static void tearDownITs() {
     // TODO Reset the light state
   }
 
   @Test
   void test00_listLightsShouldSuccess() {
-    List<Light> lights = lifxClient.listLights(all());
+    var input = new ListLightsInput(all());
+    List<Light> lights = lifxClient.listLights(input).get().getLights();
 
     assertFalse(lights.isEmpty());
     // TODO Add more asserts
@@ -65,7 +70,8 @@ class LifxClientTestIntegrationTest {
       .power(lightPower)
       .build();
 
-    List<Result> results = lifxClient.setLightsState(Selectors.byId(lightId), state);
+    var input = new SetLightsStateInput(Selectors.byId(lightId), state);
+    List<Result> results = lifxClient.setLightsState(input).get().getResult();
 
     assertEquals(1, results.size());
     assertEquals(Result.Status.OK, results.get(0).getStatus());
@@ -73,7 +79,8 @@ class LifxClientTestIntegrationTest {
 
   @Test
   void test02_toggleLightsPowerShouldSuccess() {
-    List<Result> results = lifxClient.toggleLightsPower(Selectors.byId(lightId), Duration.ofSeconds(10));
+    var input = new ToggleLightsPowerInput(Selectors.byId(lightId), Duration.ofSeconds(10));
+    List<Result> results = lifxClient.toggleLightsPower(input).get().getResult();
 
     assertEquals(1, results.size());
     assertEquals(Result.Status.OK, results.get(0).getStatus());
@@ -81,7 +88,8 @@ class LifxClientTestIntegrationTest {
 
   @Test
   void test03_validateGrenColorShouldSuccess() {
-    Color color = lifxClient.validateColor("green");
+    var input = new ValidateColorInput("green");
+    Color color = lifxClient.validateColor(input).get().getColor();
 
     assertEquals(120, color.getHue(), 0.001);
     assertEquals(1, color.getSaturation(), 0.001);
@@ -93,6 +101,9 @@ class LifxClientTestIntegrationTest {
   @Test
   void listLightsShouldFail() {
     LifxClient lifxClient = LifxClient.newLifxClientFor("unknownAccessToken");
-    assertThrows(LifxErrorException.class, () -> lifxClient.listLights(all()));
+    assertThrows(LifxErrorException.class, () -> {
+      var input = new ListLightsInput(all());
+      lifxClient.listLights(input);
+    });
   }
 }
