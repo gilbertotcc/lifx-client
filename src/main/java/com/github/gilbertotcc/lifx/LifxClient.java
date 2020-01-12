@@ -22,6 +22,7 @@ import com.github.gilbertotcc.lifx.operations.SetLightsStateDeltaInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStatesInput;
 import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
+import com.github.gilbertotcc.lifx.operations.TransitToNextStateInput;
 import io.vavr.control.Either;
 
 import java.time.Duration;
@@ -70,7 +71,10 @@ public interface LifxClient {
 
   Either<LifxCallException, CommandOutput<List<Result>>> doPulseEffect(DoPulseEffectInput input);
 
+  @Deprecated(since = "1.2.0")
   List<Result> transitToNextStateOf(final LightSelector lightSelector, final Cycle cycle);
+
+  Either<LifxCallException, CommandOutput<List<Result>>> transitToNextState(TransitToNextStateInput input);
 
   Color validateColor(final String colorString);
 }

@@ -32,6 +32,8 @@ import com.github.gilbertotcc.lifx.operations.SetLightsStatesCommand;
 import com.github.gilbertotcc.lifx.operations.SetLightsStatesInput;
 import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerCommand;
 import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
+import com.github.gilbertotcc.lifx.operations.TransitToNextStateCommand;
+import com.github.gilbertotcc.lifx.operations.TransitToNextStateInput;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 import io.vavr.control.Either;
 import io.vavr.control.Validation;
@@ -67,6 +69,7 @@ public class LifxClientImpl implements LifxClient {
   private final ToggleLightsPowerCommand toggleLightsPowerCommand;
   private final DoBreatheEffectCommand doBreatheEffectCommand;
   private final DoPulseEffectCommand doPulseEffectCommand;
+  private final TransitToNextStateCommand transitToNextStateCommand;
 
   // Mainly for testing purposes
   public static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
@@ -88,7 +91,8 @@ public class LifxClientImpl implements LifxClient {
       new SetLightsStateDeltaCommand(lifxApi),
       new ToggleLightsPowerCommand(lifxApi),
       new DoBreatheEffectCommand(lifxApi),
-      new DoPulseEffectCommand(lifxApi)
+      new DoPulseEffectCommand(lifxApi),
+      new TransitToNextStateCommand(lifxApi)
     );
   }
 
@@ -196,9 +200,13 @@ public class LifxClientImpl implements LifxClient {
 
   @Override
   public List<Result> transitToNextStateOf(final LightSelector lightSelector, final Cycle cycle) {
-    log.info("Transit to next state of {}", lightSelector.identifier());
-    return LifxCallExecutor.of(lifxApi.cycle(lightSelector, cycle)).getResponse()
-      .getResults();
+    var input = new TransitToNextStateInput(lightSelector, cycle);
+    return getResultOf(transitToNextState(input)).getResult();
+  }
+
+  @Override
+  public Either<LifxCallException, CommandOutput<List<Result>>> transitToNextState(TransitToNextStateInput input) {
+    return transitToNextStateCommand.execute(input);
   }
 
   @Override
