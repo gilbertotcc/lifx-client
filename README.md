@@ -12,7 +12,7 @@ Library artifactory is published on Bintray. In order to use it, add the `lifx` 
 ```groovy
 repositories {
   maven {
-    url  "https://dl.bintray.com/gilbertotcc/lifx" 
+    url  "https://dl.bintray.com/gilbertotcc/lifx"
   }
 }
 
@@ -39,17 +39,17 @@ public class RedLightOnSwitcher {
 
     LifxClient client = LifxClient.newLifxClientFor("<YOUR_ACCESS_TOKEN>");
 
-    client.setLightsState(
-      all(),
-      State.builder()
-        .power(Power.ON)
-        .color("red")
-        .brightness(1.0)
-        .build()
-    );
+    var state = State.builder()
+      .power(Power.ON)
+      .color("red")
+      .brightness(1.0)
+      .build();
+    var input = new LightsStateInput(all(), state);
+
+    client.setLightsState(input);
   }
 }
 ```
 
-In `src/test` directory can be found more examples that show how LIFX client can be used for the more advanced 
+In `src/test` directory can be found more examples that show how LIFX client can be used for the more advanced
 operations that LIFX HTTP API provides.
