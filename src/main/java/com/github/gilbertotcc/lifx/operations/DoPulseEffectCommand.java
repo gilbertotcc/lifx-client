@@ -29,8 +29,8 @@ public class DoPulseEffectCommand
     log.info("Do pulse effect with {}. Settings: {}",
       lightSelector.identifier(),
       ReflectionToStringBuilder.toString(pulseEffect, ToStringStyle.JSON_STYLE));
-    return new CallExecutor<>(lifxApi.pulseEffect(lightSelector, pulseEffect))
-      .execute(response -> {
+    return new CallExecutor<>(lifxApi.pulseEffect(lightSelector, pulseEffect)).execute()
+      .map(response -> {
         var results = response.getResults();
         return new CommandOutput<>(results);
       });

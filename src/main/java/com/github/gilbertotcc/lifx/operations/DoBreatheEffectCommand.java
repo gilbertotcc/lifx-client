@@ -28,8 +28,8 @@ public class DoBreatheEffectCommand
 
     log.info("Do breathe effect with {}. Settings: {}",
       lightSelector.identifier(), ReflectionToStringBuilder.toString(breatheEffect, ToStringStyle.JSON_STYLE));
-    return new CallExecutor<>(lifxApi.breatheEffect(lightSelector, breatheEffect))
-      .execute(response -> {
+    return new CallExecutor<>(lifxApi.breatheEffect(lightSelector, breatheEffect)).execute()
+      .map(response -> {
         var results = response.getResults();
         return new CommandOutput<>(results);
       });

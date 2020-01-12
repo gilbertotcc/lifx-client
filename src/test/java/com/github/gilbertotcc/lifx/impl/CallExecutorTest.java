@@ -1,15 +1,20 @@
 package com.github.gilbertotcc.lifx.impl;
 
 import com.github.gilbertotcc.lifx.exception.LifxCallException;
+import com.github.gilbertotcc.lifx.exception.LifxErrorException;
+import com.github.gilbertotcc.lifx.exception.LifxErrorType;
+import com.github.gilbertotcc.lifx.testutil.TestUtils;
+import okhttp3.MediaType;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
+import retrofit2.Response;
 
 import java.io.IOException;
-import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -18,35 +23,47 @@ public class CallExecutorTest {
 
   @Test
   @SuppressWarnings("unchecked")
-  void executeShouldReturnLeftEitherEncapsulatingIoException() throws IOException {
-    var ioException = new IOException("error");
-    var callMock = callMockThatFailsWith(ioException);
+  void executeShouldSuccess() throws IOException {
+    final var callMock = mock(Call.class, RETURNS_DEEP_STUBS);
+    Response<String> response = Response.success("ok");
+    when(callMock.execute()).thenReturn(response);
 
-    var callExecutor = new CallExecutor<String>(callMock);
-    var response = callExecutor.execute(Function.identity());
+    var okResponse = new CallExecutor<String>(callMock).execute().get();
 
-    assertTrue(response.isLeft());
+    assertEquals("ok", okResponse);
   }
 
   @Test
   @SuppressWarnings("unchecked")
-  void executeShouldReturnLeftEither() throws IOException {
-    var lifxCallException = new LifxCallException(new RuntimeException());
-    var callMock = callMockThatFailsWith(lifxCallException);
+  void executeShouldFailForIoException() throws IOException {
+    final var callMock = mock(Call.class, RETURNS_DEEP_STUBS);
+    Request request = new Request.Builder().get().url("http://localhost:8080/test").build();
+    when(callMock.execute()).thenThrow(new IOException("error"));
+    when(callMock.request()).thenReturn(request);
 
-    var callExecutor = new CallExecutor<String>(callMock);
-    var response = callExecutor.execute(Function.identity());
+    LifxCallException exception = new CallExecutor<String>(callMock).execute().getLeft();
 
-    assertTrue(response.isLeft());
-    assertEquals(lifxCallException, response.getLeft());
+    assertNotNull(exception);
+    assertEquals(callMock, exception.getCall());
   }
 
+  @Test
   @SuppressWarnings("unchecked")
-  private Call callMockThatFailsWith(Throwable cause) throws IOException {
-    var callMock = mock(Call.class, RETURNS_DEEP_STUBS);
-    var request = new Request.Builder().get().url("http://localhost:8080/test").build();
-    when(callMock.execute()).thenThrow(cause);
+  void executeShouldFailForNotSuccessfulResponse() throws IOException {
+    final var callMock = mock(Call.class, RETURNS_DEEP_STUBS);
+    Request request = new Request.Builder().get().url("http://localhost:8080/test").build();
+    String errorResponseBody = TestUtils.loadJsonFromFile("/json/response_body/error_response.json");
+    Response<String> response = Response.error(
+      404, ResponseBody.create(MediaType.parse("application/json"), errorResponseBody));
     when(callMock.request()).thenReturn(request);
-    return callMock;
+    when(callMock.execute()).thenReturn(response);
+
+    var exception = new CallExecutor<String>(callMock).execute().getLeft();
+    LifxErrorException cause = (LifxErrorException) exception.getCause();
+
+    assertEquals(LifxErrorType.NOT_FOUND, cause.getType());
+    assertEquals("color is missing", cause.getError().getErrorMessage());
+    assertEquals("color", cause.getError().getDetails().get(0).getField());
+    assertEquals("is missing", cause.getError().getDetails().get(0).getMessages().get(0));
   }
 }

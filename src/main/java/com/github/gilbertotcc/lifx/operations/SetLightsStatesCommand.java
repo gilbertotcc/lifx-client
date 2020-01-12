@@ -25,8 +25,8 @@ public class SetLightsStatesCommand
   @Override
   public Either<LifxCallException, CommandOutput<List<OperationResult>>> execute(SetLightsStatesInput input) {
     log.info("Set lights states of {}", lightSelectorListOf(input));
-    return new CallExecutor<>(lifxApi.setLightsStates(input))
-      .execute(response -> {
+    return new CallExecutor<>(lifxApi.setLightsStates(input)).execute()
+      .map(response -> {
         var results = response.getResults();
         return new CommandOutput<>(results);
       });
