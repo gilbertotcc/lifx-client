@@ -189,6 +189,5 @@
     </module>
     <module name="SingleLineJavadoc"/>
     <module name="SuppressionCommentFilter"/>
-    <module name="SuppressWarningsHolder"/>
   </module>
 </module>

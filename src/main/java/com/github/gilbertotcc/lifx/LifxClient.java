@@ -128,7 +128,7 @@ public interface LifxClient {
 
   /**
    * Do not use this method.
-   * 
+   *
    * @deprecated Since version 1.2.0 this method is replaced by the method
    *   {@link LifxClient#validateColor(ValidateColorInput)} with a more functional fashion.
    */
