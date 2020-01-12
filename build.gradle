@@ -135,7 +135,7 @@ sonarqube {
     property 'sonar.projectKey', sonarProjectKey
     property 'sonar.organization', sonarOrganization
     property 'sonar.login', sonarLogin
-    property 'sonar.jacoco.reportPath', jacocoMergedReport
+    property 'sonar.jacoco.reportPath', "$buildDir/reports/jacoco/test/jacocoTestReport.xml"
     property 'sonar.tests', testSources
     property 'sonar.test.exclusions', "**/${generatedTestSourcesDir}/**/*.java"
   }
