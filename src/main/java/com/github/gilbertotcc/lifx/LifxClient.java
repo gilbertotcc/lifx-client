@@ -23,6 +23,8 @@ import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStatesInput;
 import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
 import com.github.gilbertotcc.lifx.operations.TransitToNextStateInput;
+import com.github.gilbertotcc.lifx.operations.ValidateColorInput;
+import com.github.gilbertotcc.lifx.operations.ValidateColorOutput;
 import io.vavr.control.Either;
 
 import java.time.Duration;
@@ -76,5 +78,8 @@ public interface LifxClient {
 
   Either<LifxCallException, CommandOutput<List<Result>>> transitToNextState(TransitToNextStateInput input);
 
+  @Deprecated(since = "1.2.0")
   Color validateColor(final String colorString);
+
+  Either<LifxCallException, ValidateColorOutput> validateColor(ValidateColorInput input);
 }

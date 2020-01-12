@@ -34,6 +34,9 @@ import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerCommand;
 import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
 import com.github.gilbertotcc.lifx.operations.TransitToNextStateCommand;
 import com.github.gilbertotcc.lifx.operations.TransitToNextStateInput;
+import com.github.gilbertotcc.lifx.operations.ValidateColorInput;
+import com.github.gilbertotcc.lifx.operations.ValidateColorOutput;
+import com.github.gilbertotcc.lifx.operations.ValidateColorQuery;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 import io.vavr.control.Either;
 import io.vavr.control.Validation;
@@ -59,8 +62,6 @@ public class LifxClientImpl implements LifxClient {
 
   private static final String LIFX_BASE_URL = "https://api.lifx.com";
 
-  private final LifxApi lifxApi;
-
   // Operations
   private final ListLightsQuery listLightsQuery;
   private final SetLightsStateCommand setLightsStateCommand;
@@ -70,6 +71,7 @@ public class LifxClientImpl implements LifxClient {
   private final DoBreatheEffectCommand doBreatheEffectCommand;
   private final DoPulseEffectCommand doPulseEffectCommand;
   private final TransitToNextStateCommand transitToNextStateCommand;
+  private final ValidateColorQuery validateColorQuery;
 
   // Mainly for testing purposes
   public static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
@@ -84,7 +86,6 @@ public class LifxClientImpl implements LifxClient {
       .build()
       .create(LifxApi.class);
     return new LifxClientImpl(
-      lifxApi,
       new ListLightsQuery(lifxApi),
       new SetLightsStateCommand(lifxApi),
       new SetLightsStatesCommand(lifxApi),
@@ -92,7 +93,8 @@ public class LifxClientImpl implements LifxClient {
       new ToggleLightsPowerCommand(lifxApi),
       new DoBreatheEffectCommand(lifxApi),
       new DoPulseEffectCommand(lifxApi),
-      new TransitToNextStateCommand(lifxApi)
+      new TransitToNextStateCommand(lifxApi),
+      new ValidateColorQuery(lifxApi)
     );
   }
 
@@ -211,8 +213,13 @@ public class LifxClientImpl implements LifxClient {
 
   @Override
   public Color validateColor(final String colorString) {
-    log.info("Validate color {}", colorString);
-    return LifxCallExecutor.of(lifxApi.validateColor(colorString)).getResponse();
+    var input = new ValidateColorInput(colorString);
+    return getResultOf(validateColor(input)).getColor();
+  }
+
+  @Override
+  public Either<LifxCallException, ValidateColorOutput> validateColor(ValidateColorInput input) {
+    return validateColorQuery.execute(input);
   }
 
   private static <T> T getResultOf(Either<LifxCallException, T> operationResult) {
