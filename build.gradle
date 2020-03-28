@@ -14,12 +14,8 @@ plugins {
   id "org.sonarqube" version "2.7"
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
-
-wrapper {
-  gradleVersion = '5.1'
-}
+sourceCompatibility = JavaVersion.VERSION_14
+targetCompatibility = JavaVersion.VERSION_14
 
 repositories {
   mavenCentral()
