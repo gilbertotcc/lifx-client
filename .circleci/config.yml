@@ -3,7 +3,7 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/openjdk:14-jdk
+      - image: circleci/openjdk:14-buster
 
     working_directory: ~/repo
 
@@ -49,7 +49,7 @@ jobs:
 
   release:
     docker:
-      - image: circleci/openjdk:14-jdk
+      - image: circleci/openjdk:14-buster
 
     working_directory: ~/repo
 
