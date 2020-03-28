@@ -44,7 +44,6 @@ public class CallExecutorTest {
     LifxCallException exception = new CallExecutor<String>(callMock).execute().getLeft();
 
     assertNotNull(exception);
-    assertEquals(callMock, exception.getCall());
   }
 
   @Test

@@ -1,5 +1,8 @@
 package com.github.gilbertotcc.lifx.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -9,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+@AllArgsConstructor
 public enum LifxErrorType {
 
   BAD_REQUEST(400, "Request was invalid."),
@@ -21,14 +25,11 @@ public enum LifxErrorType {
   SERVER_ERROR(asList(500, 502, 503, 523), "Something went wrong on LIFX's end."),
   UNKNOWN(emptyList(), "Unknown error.");
 
+  @NonNull
   final List<Integer> httpCodes;
-  final String reason;
 
-  LifxErrorType(final List<Integer> httpCodes,
-                final String reason) {
-    this.httpCodes = unmodifiableList(httpCodes);
-    this.reason = reason;
-  }
+  @NonNull
+  final String reason;
 
   LifxErrorType(final Integer httpCode,
                 final String reason) {
