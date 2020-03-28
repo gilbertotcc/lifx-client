@@ -10,7 +10,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public final class TestUtils {
 
   private static final ObjectMapper OBJECT_MAPPER_INSTANCE = JacksonUtils.OBJECT_MAPPER;
@@ -21,7 +23,7 @@ public final class TestUtils {
     ) {
       return reader.lines().collect(Collectors.joining("\n"));
     } catch (IOException e) {
-      throw new IOException(String.format("Error occured while loading/reading file %s", file), e);
+      throw new IOException(String.format("Error occurred while loading/reading file %s", file), e);
     }
   }
 
@@ -29,14 +31,11 @@ public final class TestUtils {
     return OBJECT_MAPPER_INSTANCE.readValue(json, clazz);
   }
 
-  public static <T> T deserializeJson(final String json, TypeReference typeReference) throws IOException {
+  public static <T> T deserializeJson(final String json, TypeReference<T> typeReference) throws IOException {
     return OBJECT_MAPPER_INSTANCE.readValue(json, typeReference);
   }
 
   public static <T> String serializeObject(final T object) throws JsonProcessingException {
     return OBJECT_MAPPER_INSTANCE.writeValueAsString(object);
-  }
-
-  private TestUtils() {
   }
 }
