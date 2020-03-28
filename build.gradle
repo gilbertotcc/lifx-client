@@ -40,8 +40,8 @@ dependencies {
   compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9'
 
   // COMMON
-  annotationProcessor 'org.projectlombok:lombok:1.18.4'
-  compileOnly 'org.projectlombok:lombok:1.18.4'
+  annotationProcessor 'org.projectlombok:lombok:1.18.12'
+  compileOnly 'org.projectlombok:lombok:1.18.12'
   compile 'io.vavr:vavr:0.10.0'
   compile 'org.slf4j:slf4j-api:1.7.25'
   compile 'org.apache.commons:commons-lang3:3.7'
@@ -51,8 +51,8 @@ dependencies {
   compile 'ch.qos.logback:logback-classic:1.+'
 
   // TEST
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
-  testCompileOnly 'org.projectlombok:lombok:1.18.4'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+  testCompileOnly 'org.projectlombok:lombok:1.18.12'
   testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
   testCompile 'com.tngtech.archunit:archunit-junit5-api:0.12.0'
   testRuntime 'com.tngtech.archunit:archunit-junit5-engine:0.12.0'
