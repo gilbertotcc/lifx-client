@@ -26,7 +26,7 @@ public class CallExecutor<T> {
       .toEither()
       .filterOrElse(Response::isSuccessful, LifxErrorException::from)
       .map(Response::body)
-      .mapLeft(Case($(instanceOf(IOException.class)), error -> new LifxCallException(call, error)))
+      .mapLeft(Case($(instanceOf(IOException.class)), error -> LifxCallException.with(call, error)))
       .peekLeft(error -> log.error("Call {} failed with error: {}", call.request(), error.getMessage()));
   }
 }

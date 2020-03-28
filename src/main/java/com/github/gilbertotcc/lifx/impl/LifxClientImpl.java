@@ -3,17 +3,9 @@ package com.github.gilbertotcc.lifx.impl;
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
 import com.github.gilbertotcc.lifx.exception.LifxCallException;
-import com.github.gilbertotcc.lifx.models.BreatheEffect;
-import com.github.gilbertotcc.lifx.models.Color;
-import com.github.gilbertotcc.lifx.models.Cycle;
-import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightSelector;
-import com.github.gilbertotcc.lifx.models.LightsStatesDto;
 import com.github.gilbertotcc.lifx.models.OperationResult;
-import com.github.gilbertotcc.lifx.models.PulseEffect;
 import com.github.gilbertotcc.lifx.models.Result;
-import com.github.gilbertotcc.lifx.models.State;
-import com.github.gilbertotcc.lifx.models.StateDelta;
 import com.github.gilbertotcc.lifx.models.converter.LightSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.operations.CommandOutput;
@@ -47,7 +39,6 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
@@ -115,25 +106,8 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public List<Light> listLights() {
-    return getResultOf(listLights(ListLightsInput.ALL_LIGHTS)).getLights();
-  }
-
-  @Override
-  public List<Light> listLights(final LightSelector lightsSelector) {
-    ListLightsInput listLightsInput = new ListLightsInput(lightsSelector);
-    return getResultOf(listLights(listLightsInput)).getLights();
-  }
-
-  @Override
   public Either<LifxCallException, ListLightsOutput> listLights(ListLightsInput input) {
     return listLightsQuery.execute(input);
-  }
-
-  @Override
-  public List<Result> setLightsState(final LightSelector lightSelector, final State state) {
-    var input = new SetLightsStateInput(lightSelector, state);
-    return getResultOf(setLightsState(input)).getResult();
   }
 
   @Override
@@ -142,24 +116,8 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public List<OperationResult> setLightsStates(final LightsStatesDto lightsStatesDto) {
-    var input = new SetLightsStatesInput(
-      lightsStatesDto.getLightsStates(),
-      lightsStatesDto.getDefaultState(),
-      lightsStatesDto.isFast()
-    );
-    return getResultOf(setLightsStates(input)).getResult();
-  }
-
-  @Override
   public Either<LifxCallException, CommandOutput<List<OperationResult>>> setLightsStates(SetLightsStatesInput input) {
     return setLightsStatesCommand.execute(input);
-  }
-
-  @Override
-  public List<Result> setLightsStateDelta(final LightSelector lightSelector, final StateDelta stateDelta) {
-    var input = new SetLightsStateDeltaInput(lightSelector, stateDelta);
-    return getResultOf(setLightsStateDelta(input)).getResult();
   }
 
   @Override
@@ -168,20 +126,8 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public List<Result> toggleLightsPower(final LightSelector lightSelector, final Duration duration) {
-    var input = new ToggleLightsPowerInput(lightSelector, duration);
-    return getResultOf(toggleLightsPower(input)).getResult();
-  }
-
-  @Override
   public Either<LifxCallException, CommandOutput<List<Result>>> toggleLightsPower(ToggleLightsPowerInput input) {
     return toggleLightsPowerCommand.execute(input);
-  }
-
-  @Override
-  public List<Result> doBreatheEffect(final LightSelector lightSelector, final BreatheEffect breatheEffect) {
-    var input = new DoBreatheEffectInput(lightSelector, breatheEffect);
-    return getResultOf(doBreatheEffect(input)).getResult();
   }
 
   @Override
@@ -190,20 +136,8 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public List<Result> doPulseEffect(final LightSelector lightSelector, final PulseEffect pulseEffect) {
-    var input = new DoPulseEffectInput(lightSelector, pulseEffect);
-    return getResultOf(doPulseEffect(input)).getResult();
-  }
-
-  @Override
   public Either<LifxCallException, CommandOutput<List<Result>>> doPulseEffect(DoPulseEffectInput input) {
     return doPulseEffectCommand.execute(input);
-  }
-
-  @Override
-  public List<Result> transitToNextStateOf(final LightSelector lightSelector, final Cycle cycle) {
-    var input = new TransitToNextStateInput(lightSelector, cycle);
-    return getResultOf(transitToNextState(input)).getResult();
   }
 
   @Override
@@ -212,18 +146,7 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public Color validateColor(final String colorString) {
-    var input = new ValidateColorInput(colorString);
-    return getResultOf(validateColor(input)).getColor();
-  }
-
-  @Override
   public Either<LifxCallException, ValidateColorOutput> validateColor(ValidateColorInput input) {
     return validateColorQuery.execute(input);
-  }
-
-  private static <T> T getResultOf(Either<LifxCallException, T> operationResult) {
-    return operationResult
-      .getOrElseThrow(error -> error);
   }
 }
