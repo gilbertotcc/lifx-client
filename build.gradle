@@ -24,16 +24,16 @@ repositories {
 
 dependencies {
   // RETROFIT
-  compile 'com.squareup.retrofit2:retrofit:2.5.0'
-  compile 'com.squareup.retrofit2:converter-jackson:2.5.0'
+  compile 'com.squareup.retrofit2:retrofit:2.8.1'
+  compile 'com.squareup.retrofit2:converter-jackson:2.8.1'
 
   // JACKSON
-  compile 'com.fasterxml.jackson.core:jackson-core:2.9.9'
-  compile 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
-  compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.9'
-  compile 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.9'
-  compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.9'
-  compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9'
+  compile 'com.fasterxml.jackson.core:jackson-core:2.10.0'
+  compile 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+  compile 'com.fasterxml.jackson.core:jackson-annotations:2.10.0'
+  compile 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.10.0'
+  compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.0'
+  compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0'
 
   // COMMON
   annotationProcessor 'org.projectlombok:lombok:1.18.12'
