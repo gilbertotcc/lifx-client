@@ -17,7 +17,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
 
-public class SetLightsStatesCommandTest extends OperationsTestFixtures {
+class SetLightsStatesCommandTest extends OperationsTestFixtures {
 
   @Test
   void setLightsStatesShouldSuccess() throws IOException {

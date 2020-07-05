@@ -15,7 +15,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
 
-public class DoBreatheEffectCommandTest extends OperationsTestFixtures {
+class DoBreatheEffectCommandTest extends OperationsTestFixtures {
 
   @Test
   void doBreatheEffectShouldSuccess() throws IOException {
