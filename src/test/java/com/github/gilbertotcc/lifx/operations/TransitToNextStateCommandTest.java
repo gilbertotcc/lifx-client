@@ -18,7 +18,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
-public class TransitToNextStateCommandTest extends OperationsTestFixtures {
+class TransitToNextStateCommandTest extends OperationsTestFixtures {
 
   @Test
   void transitToNextStateShouldSuccess() throws IOException {

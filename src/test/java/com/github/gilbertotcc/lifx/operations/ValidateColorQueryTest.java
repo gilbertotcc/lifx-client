@@ -12,7 +12,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
 
-public class ValidateColorQueryTest extends OperationsTestFixtures {
+class ValidateColorQueryTest extends OperationsTestFixtures {
 
   @Test
   void validateColorShouldSuccess() throws IOException {

@@ -1,16 +1,6 @@
 package com.github.gilbertotcc.lifx;
 
-import static com.github.gilbertotcc.lifx.models.Selectors.all;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.time.Duration;
-import java.util.List;
-import java.util.Optional;
-
-import com.github.gilbertotcc.lifx.exception.LifxErrorException;
+import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.Power;
@@ -21,12 +11,22 @@ import com.github.gilbertotcc.lifx.operations.ListLightsInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
 import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
 import com.github.gilbertotcc.lifx.operations.ValidateColorInput;
+import io.vavr.control.Try;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Optional;
+
+import static com.github.gilbertotcc.lifx.models.Selectors.all;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class LifxClientTestIntegrationTest {
@@ -38,7 +38,9 @@ class LifxClientTestIntegrationTest {
 
   @BeforeClass
   public static void initLifxClient() {
-    String accessToken = Optional.ofNullable(System.getenv("IT_ACCESS_TOKEN")).filter(StringUtils::isNotBlank).get();
+    String accessToken = Optional.ofNullable(System.getenv("IT_ACCESS_TOKEN"))
+      .filter(StringUtils::isNotBlank)
+      .get();
     lifxClient = LifxClient.newLifxClientFor(accessToken);
   }
 
@@ -101,9 +103,11 @@ class LifxClientTestIntegrationTest {
   @Test
   void listLightsShouldFail() {
     LifxClient lifxClient = LifxClient.newLifxClientFor("unknownAccessToken");
-    assertThrows(LifxErrorException.class, () -> {
-      var input = new ListLightsInput(all());
-      lifxClient.listLights(input);
-    });
+    var thrownException = Try.ofSupplier(Selectors::all)
+      .map(ListLightsInput::new)
+      .map(lifxClient::listLights)
+      .flatMap(result -> result.toTry(result::getLeft))
+      .getCause();
+    assertEquals(LifxCallException.class, thrownException.getClass());
   }
 }
