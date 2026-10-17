@@ -36,8 +36,8 @@ configurations {
 
 dependencies {
   // RETROFIT
-  api 'com.squareup.retrofit2:retrofit:2.8.1'
-  api 'com.squareup.retrofit2:converter-jackson:2.8.1'
+  api 'com.squareup.retrofit2:retrofit:3.0.0'
+  api 'com.squareup.retrofit2:converter-jackson:3.0.0'
 
   // JACKSON
   api 'com.fasterxml.jackson.core:jackson-core:2.18.11'
