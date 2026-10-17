@@ -43,42 +43,42 @@ public class Selectors {
   }
 
   @Deprecated
-  public static AllSelector All() { //NOSONAR
+  public static AllSelector All() {
     return all();
   }
 
   @Deprecated
-  public static LabelSelector LabelSelector(String label) { //NOSONAR
+  public static LabelSelector LabelSelector(String label) {
     return byLabel(label);
   }
 
   @Deprecated
-  public static IdSelector IdSelector(String id) { //NOSONAR
+  public static IdSelector IdSelector(String id) {
     return byId(id);
   }
 
   @Deprecated
-  public static GroupIdSelector GroupIdSelector(String groupId) { //NOSONAR
+  public static GroupIdSelector GroupIdSelector(String groupId) {
     return byGroupId(groupId);
   }
 
   @Deprecated
-  public static GroupSelector GroupSelector(String group) { //NOSONAR
+  public static GroupSelector GroupSelector(String group) {
     return byGroup(group);
   }
 
   @Deprecated
-  public static LocationIdSelector LocationIdSelector(String locationId) { //NOSONAR
+  public static LocationIdSelector LocationIdSelector(String locationId) {
     return byLocationId(locationId);
   }
 
   @Deprecated
-  public static LocationSelector LocationSelector(String location) { //NOSONAR
+  public static LocationSelector LocationSelector(String location) {
     return byLocation(location);
   }
 
   @Deprecated
-  public static SceneIdSelector SceneIdSelector(String sceneId) { //NOSONAR
+  public static SceneIdSelector SceneIdSelector(String sceneId) {
     return bySceneId(sceneId);
   }
 

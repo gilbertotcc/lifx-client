@@ -10,7 +10,7 @@ import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 
 @AnalyzeClasses(packages = "com.github.gilbertotcc.lifx", importOptions = ImportOption.DoNotIncludeTests.class)
-class CodingRulesTest { //NOSONAR
+class CodingRulesTest {
 
   @ArchTest
   private final ArchRule noAccessToStandardStreams = NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS;

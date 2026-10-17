@@ -2,8 +2,6 @@
 
 Java client to consume [LIFX HTTP API](https://api.developer.lifx.com/).
 
-[![Coverage Status](https://coveralls.io/repos/github/gilbertotcc/lifx-client/badge.svg?branch=develop)](https://coveralls.io/github/gilbertotcc/lifx-client?branch=develop)
-
 ## Usage
 
 Build the library and install it into the local Maven repository with `./gradlew publishToMavenLocal`, then add

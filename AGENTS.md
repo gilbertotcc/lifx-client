@@ -21,7 +21,7 @@ Gradle itself can run on any JVM 8–24, but compilation and tests use a Java 14
 ./gradlew jacocoTestReport      # HTML report in build/reports/jacocoHtml
 ```
 
-CI (CircleCI) runs `./gradlew check coveralls sonarqube`; pushes to `master` trigger `gradle release` (Gradle Release Plugin, then auto-merge `master` back into `develop`). No remote publishing repository is configured; `maven-publish` provides `publishToMavenLocal`.
+CI (CircleCI) runs `./gradlew check`. No remote publishing repository is configured; `maven-publish` provides `publishToMavenLocal`.
 
 `*IntegrationTest*` classes are excluded from `test`. `LifxClientTestIntegrationTest` hits the real LIFX cloud and needs `IT_ACCESS_TOKEN`; no Gradle task currently runs it.
 

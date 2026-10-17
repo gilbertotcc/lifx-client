@@ -25,7 +25,7 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       - run:
-          command: ./gradlew check coveralls sonarqube -i -s --max-workers=1
+          command: ./gradlew check -i -s --max-workers=1
           environment:
             JAVA_TOOL_OPTIONS: -Xmx512m
 
@@ -47,43 +47,8 @@ jobs:
           path: build/reports
           destination: reports
 
-  release:
-    docker:
-      - image: circleci/openjdk:14-buster
-
-    working_directory: ~/repo
-
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "d4:b2:90:b1:90:38:6e:be:8f:05:2e:58:db:3b:f4:ba"
-
-      - checkout
-
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run: git config --global user.email "${GIT_USER_EMAIL}"
-      - run: git config --global user.name "${GIT_USER_NAME}"
-      - run: gradle release -Prelease.useAutomaticVersion=true -i
-
-      - store_artifacts:
-          path: build/libs/
-          destination: jars
-
 workflows:
   version: 2
-  test-build-release:
+  test:
     jobs:
       - test
-      - release:
-          requires:
-            - test
-          filters:
-            branches:
-              only:
-                - master
-
