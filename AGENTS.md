@@ -4,7 +4,9 @@ This file provides guidance to AI coding agents working with code in this reposi
 
 ## Project
 
-Java 14 client library for the [LIFX HTTP API](https://api.developer.lifx.com/), built with Gradle (wrapper pins Gradle 6.3). Published as `com.github.gilbertotcc.lifx:lifx-client`; the version lives in `gradle.properties`.
+Java 14 client library for the [LIFX HTTP API](https://api.developer.lifx.com/), built with Gradle (wrapper pins Gradle 8.14.3). Published as `com.github.gilbertotcc.lifx:lifx-client`; the version lives in `gradle.properties`.
+
+Gradle itself can run on any JVM 8–24, but compilation and tests use a Java 14 toolchain (`java.toolchain` in `build.gradle`); if no JDK 14 is installed, the foojay resolver plugin (`settings.gradle`) auto-provisions one into `~/.gradle/jdks`. Checkstyle is pinned to 8.27 because newer versions reject `config/checkstyle/checkstyle.xml`.
 
 ## Commands
 
@@ -19,7 +21,7 @@ Java 14 client library for the [LIFX HTTP API](https://api.developer.lifx.com/),
 ./gradlew jacocoTestReport      # HTML report in build/reports/jacocoHtml
 ```
 
-CI (CircleCI) runs `./gradlew check coveralls sonarqube`; pushes to `master` trigger `gradle release` (Gradle Release Plugin → Bintray upload, then auto-merge `master` back into `develop`).
+CI (CircleCI) runs `./gradlew check coveralls sonarqube`; pushes to `master` trigger `gradle release` (Gradle Release Plugin, then auto-merge `master` back into `develop`). No remote publishing repository is configured; `maven-publish` provides `publishToMavenLocal`.
 
 `*IntegrationTest*` classes are excluded from `test`. `LifxClientTestIntegrationTest` hits the real LIFX cloud and needs `IT_ACCESS_TOKEN`; no Gradle task currently runs it.
 

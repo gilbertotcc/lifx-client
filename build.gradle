@@ -1,21 +1,22 @@
 import net.researchgate.release.cli.Executor
 
 plugins {
-  id 'java'
+  id 'java-library'
   id 'groovy'
-  id 'maven'
   id 'jacoco'
   id 'checkstyle'
-  id 'com.jfrog.bintray' version '1.8.4'
   id 'maven-publish'
-  id 'com.adarshr.test-logger' version '1.6.0'
-  id 'net.researchgate.release' version '2.8.1'
-  id 'com.github.kt3k.coveralls' version '2.8.2'
-  id "org.sonarqube" version "3.0"
+  id 'com.adarshr.test-logger' version '4.0.0'
+  id 'net.researchgate.release' version '3.1.0'
+  id 'com.github.kt3k.coveralls' version '2.12.2'
+  id "org.sonarqube" version "4.4.1.3373"
 }
 
-sourceCompatibility = JavaVersion.VERSION_14
-targetCompatibility = JavaVersion.VERSION_14
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(14)
+  }
+}
 
 repositories {
   mavenCentral()
@@ -24,68 +25,60 @@ repositories {
 
 dependencies {
   // RETROFIT
-  compile 'com.squareup.retrofit2:retrofit:2.8.1'
-  compile 'com.squareup.retrofit2:converter-jackson:2.8.1'
+  api 'com.squareup.retrofit2:retrofit:2.8.1'
+  api 'com.squareup.retrofit2:converter-jackson:2.8.1'
 
   // JACKSON
-  compile 'com.fasterxml.jackson.core:jackson-core:2.10.0'
-  compile 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
-  compile 'com.fasterxml.jackson.core:jackson-annotations:2.10.0'
-  compile 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.10.0'
-  compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.0'
-  compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0'
+  api 'com.fasterxml.jackson.core:jackson-core:2.10.0'
+  api 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+  api 'com.fasterxml.jackson.core:jackson-annotations:2.10.0'
+  api 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.10.0'
+  api 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.0'
+  api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0'
 
   // COMMON
   annotationProcessor 'org.projectlombok:lombok:1.18.12'
   compileOnly 'org.projectlombok:lombok:1.18.12'
-  compile 'io.vavr:vavr:0.10.0'
-  compile 'org.slf4j:slf4j-api:1.7.25'
-  compile 'org.apache.commons:commons-lang3:3.7'
-  compile 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+  api 'io.vavr:vavr:0.10.0'
+  api 'org.slf4j:slf4j-api:1.7.25'
+  api 'org.apache.commons:commons-lang3:3.7'
+  api 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
   // LOGGING
-  compile 'ch.qos.logback:logback-classic:1.+'
+  api 'ch.qos.logback:logback-classic:1.+'
 
   // TEST
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
   testCompileOnly 'org.projectlombok:lombok:1.18.12'
   testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
-  testCompile 'com.tngtech.archunit:archunit-junit5-api:0.12.0'
-  testRuntime 'com.tngtech.archunit:archunit-junit5-engine:0.12.0'
-  testCompile 'org.skyscreamer:jsonassert:1.5.0'
-  testCompile 'org.mockito:mockito-core:2.23.4'
-  testCompile 'com.github.tomakehurst:wiremock:2.18.0'
-  testCompile 'org.codehaus.groovy:groovy-all:2.4.15'
-  testCompile 'org.spockframework:spock-core:1.2-groovy-2.4'
-  testRuntime 'net.bytebuddy:byte-buddy:1.8.21'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.5.2'
+  testImplementation 'com.tngtech.archunit:archunit-junit5-api:0.12.0'
+  testRuntimeOnly 'com.tngtech.archunit:archunit-junit5-engine:0.12.0'
+  testImplementation 'org.skyscreamer:jsonassert:1.5.0'
+  testImplementation 'org.mockito:mockito-core:2.23.4'
+  testImplementation 'com.github.tomakehurst:wiremock:2.18.0'
+  testImplementation 'org.codehaus.groovy:groovy-all:2.4.15'
+  testImplementation 'org.spockframework:spock-core:1.2-groovy-2.4'
+  testRuntimeOnly 'net.bytebuddy:byte-buddy:1.8.21'
 }
 
-java {
-  archivesBaseName = 'lifx-client'
-}
-
-ext {
-  jacocoMergedReport = file("$buildDir/jacoco/mergeTest.exec")
-}
-
-task jacocoMergeTestReport(type: JacocoMerge) {
-  executionData tasks.withType(Test)
-  destinationFile = jacocoMergedReport
+base {
+  archivesName = 'lifx-client'
 }
 
 jacocoTestReport {
-  dependsOn jacocoMergeTestReport
-  executionData jacocoMergedReport
+  dependsOn tasks.withType(Test)
+  executionData tasks.withType(Test)
   reports {
-    xml.enabled true
-    csv.enabled false
-    html.enabled true
-    html.destination file("${buildDir}/reports/jacocoHtml")
+    xml.required = true
+    csv.required = false
+    html.required = true
+    html.outputLocation = file("${buildDir}/reports/jacocoHtml")
   }
 }
 
 coveralls {
-  jacocoReportPath 'build/reports/jacoco/test/jacocoTestReport.xml'
+  jacocoReportPath = 'build/reports/jacoco/test/jacocoTestReport.xml'
 }
 
 tasks.coveralls {
@@ -93,6 +86,8 @@ tasks.coveralls {
 }
 
 task spockTest(type: Test, description: 'Runs tests written in Spock.', group: LifecycleBasePlugin.VERIFICATION_GROUP) {
+  testClassesDirs = sourceSets.test.output.classesDirs
+  classpath = sourceSets.test.runtimeClasspath
   useJUnit()
 }
 
@@ -108,6 +103,10 @@ test.finalizedBy jacocoTestReport
 
 // CHECKSTYLE
 
+checkstyle {
+  toolVersion = '8.27'
+}
+
 checkstyleMain.source = "src/main/java"
 checkstyleTest.source = "src/test/java"
 
@@ -121,7 +120,6 @@ ext {
   sonarProjectKey = 'gilbertotcc_lifx-client'
   sonarOrganization = 'gilbertotcc-github'
   testSources = 'src/test/groovy,src/test/java'
-  jacocoMergedReport = file("$buildDir/jacoco/mergeTest.exec")
   generatedTestSourcesDir = 'generated-test-sources'
 }
 
@@ -154,8 +152,6 @@ release {
   newVersionCommitMessage = '[Gradle Release Plugin] - new version commit [skip ci]: '
 }
 
-afterReleaseBuild.dependsOn bintrayUpload
-
 commitNewVersion {
   doLast {
     logger.info("Merging and pushing branch 'master' to 'develop' after release.")
@@ -170,20 +166,3 @@ commitNewVersion {
   }
 }
 
-bintray {
-  user = System.getenv('BINTRAY_USERNAME')
-  key = System.getenv('BINTRAY_API_KEY')
-  publish = true
-  publications = ['maven']
-  pkg {
-    repo = 'lifx'
-    name = 'lifx-client'
-    desc = 'Java client to consume LIFX HTTP API'
-    licenses = ['BSD 2-Clause']
-    websiteUrl = 'https://github.com/gilbertotcc/lifx-client'
-    vcsUrl = 'https://github.com/gilbertotcc/lifx-client.git'
-    githubRepo = 'gilbertotcc/lifx-client'
-    githubReleaseNotesFile = 'README.md'
-    issueTrackerUrl = 'https://github.com/gilbertotcc/lifx-client/issues'
-  }
-}
