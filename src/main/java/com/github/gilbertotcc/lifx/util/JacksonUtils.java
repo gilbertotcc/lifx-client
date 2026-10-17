@@ -1,16 +1,18 @@
 package com.github.gilbertotcc.lifx.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.experimental.UtilityClass;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @UtilityClass
 public class JacksonUtils {
 
-  public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-    .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-    .registerModule(new JavaTimeModule())
-    .registerModule(new Jdk8Module());
+  public static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
+    .changeDefaultPropertyInclusion(inclusion ->
+      JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL))
+    // Jackson 3 enables it by default: keep reading null primitives (e.g. a missing kelvin) as 0, like 2.x
+    .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+    .build();
 }

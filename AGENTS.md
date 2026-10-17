@@ -75,8 +75,10 @@ one `operations.*Command`/`*Query` per endpoint → Retrofit `api.LifxApi` → w
   `LifxCallException`) and I/O failures into `LifxCallException`.
 - **HTTP setup**: `LifxClientImpl.createNewClientFor(baseUrl, token)` builds Retrofit with `LifxOkHttpClientFactory`
   (bearer auth + logging interceptor), a `StringConverterFactory` that renders `LightSelector` path params via
-  `LightSelectorConverter`, and Jackson using the shared `util.JacksonUtils.OBJECT_MAPPER`. The `baseUrl` overload
-  exists for tests (WireMock).
+  `LightSelectorConverter`, and Jackson 3 using the shared `util.JacksonUtils.OBJECT_MAPPER`. Retrofit has no Jackson
+  3 converter, so `impl.JacksonConverterFactory` is in-house; it wraps Jackson's unchecked `JacksonException` in
+  `IOException` so `CallExecutor` still reports (de)serialization failures as `LifxCallException`. The `baseUrl`
+  overload exists for tests (WireMock).
 - **Models** (`models/`): Lombok-based DTOs plus the selector hierarchy (`LightSelector`, `CombinableLightSelector`,
   `RandomizableLightSelector`, multi-zone selectors), created via the `Selectors` factory. Custom Jackson
   (de)serializers live in `models/serializer` and `models/deserializer`.

@@ -1,19 +1,17 @@
 package com.github.gilbertotcc.lifx.models.serializer;
 
-import java.io.IOException;
 import java.time.Duration;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-public class DurationSerializer extends JsonSerializer<Duration> {
+public class DurationSerializer extends ValueSerializer<Duration> {
 
   @Override
   public void serialize(final Duration duration,
                         final JsonGenerator jsonGenerator,
-                        final SerializerProvider serializerProvider)
-    throws IOException {
+                        final SerializationContext serializationContext) {
     final double durationInSeconds = (double) duration.getSeconds();
     jsonGenerator.writeNumber(durationInSeconds);
   }

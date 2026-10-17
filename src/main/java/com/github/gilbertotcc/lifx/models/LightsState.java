@@ -3,10 +3,10 @@ package com.github.gilbertotcc.lifx.models;
 import java.time.Duration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.gilbertotcc.lifx.models.serializer.LightSelectorSerializer;
 import lombok.Builder;
 import lombok.Getter;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 @Getter
 public class LightsState extends AbstractState {

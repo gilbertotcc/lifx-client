@@ -1,19 +1,16 @@
 package com.github.gilbertotcc.lifx.models.serializer;
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import com.github.gilbertotcc.lifx.models.Cycle;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-public class DirectionSerializer extends JsonSerializer<Cycle.Direction> {
+public class DirectionSerializer extends ValueSerializer<Cycle.Direction> {
 
   @Override
   public void serialize(final Cycle.Direction direction,
                         final JsonGenerator jsonGenerator,
-                        final SerializerProvider serializerProvider)
-    throws IOException {
+                        final SerializationContext serializationContext) {
     jsonGenerator.writeString(direction.label);
   }
 }

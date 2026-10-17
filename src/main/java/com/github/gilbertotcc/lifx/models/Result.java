@@ -3,13 +3,13 @@ package com.github.gilbertotcc.lifx.models;
 import static java.lang.String.format;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.gilbertotcc.lifx.models.deserializer.ResultStatusDeserializer;
 import io.vavr.collection.Stream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
