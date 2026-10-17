@@ -39,7 +39,7 @@ dependencies {
   api 'com.squareup.retrofit2:retrofit:3.0.0'
 
   // JACKSON (3.x keeps jackson-annotations on the 2.x line; the BOM pins the matching version)
-  api platform('tools.jackson:jackson-bom:3.1.7')
+  api platform('tools.jackson:jackson-bom:3.2.3')
   api 'tools.jackson.core:jackson-core'
   api 'tools.jackson.core:jackson-databind'
   api 'com.fasterxml.jackson.core:jackson-annotations'
