@@ -9,13 +9,29 @@ plugins {
 
 java {
   toolchain {
-    languageVersion = JavaLanguageVersion.of(14)
+    languageVersion = JavaLanguageVersion.of(25)
   }
+}
+
+// Minimum Java version the published library supports
+def minJava = 17
+
+tasks.withType(JavaCompile).configureEach {
+  options.release = minJava
+}
+
+tasks.withType(GroovyCompile).configureEach {
+  sourceCompatibility = "$minJava"
+  targetCompatibility = "$minJava"
 }
 
 repositories {
   mavenCentral()
   mavenLocal()
+}
+
+configurations {
+  mockitoAgent
 }
 
 dependencies {
@@ -32,8 +48,8 @@ dependencies {
   api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0'
 
   // COMMON
-  annotationProcessor 'org.projectlombok:lombok:1.18.12'
-  compileOnly 'org.projectlombok:lombok:1.18.12'
+  annotationProcessor 'org.projectlombok:lombok:1.18.48'
+  compileOnly 'org.projectlombok:lombok:1.18.48'
   api 'io.vavr:vavr:0.10.0'
   api 'org.slf4j:slf4j-api:1.7.25'
   api 'org.apache.commons:commons-lang3:3.18.0'
@@ -43,22 +59,28 @@ dependencies {
   api 'ch.qos.logback:logback-classic:1.6.5'
 
   // TEST
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
-  testCompileOnly 'org.projectlombok:lombok:1.18.12'
-  testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.5.2'
-  testImplementation 'com.tngtech.archunit:archunit-junit5-api:0.12.0'
-  testRuntimeOnly 'com.tngtech.archunit:archunit-junit5-engine:0.12.0'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.48'
+  testCompileOnly 'org.projectlombok:lombok:1.18.48'
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.14.4'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.14.4'
+  testImplementation 'com.tngtech.archunit:archunit-junit5-api:1.5.1'
+  testRuntimeOnly 'com.tngtech.archunit:archunit-junit5-engine:1.5.1'
   testImplementation 'org.skyscreamer:jsonassert:1.5.0'
-  testImplementation 'org.mockito:mockito-core:2.23.4'
+  testImplementation 'org.mockito:mockito-core:5.24.0'
+  mockitoAgent('org.mockito:mockito-core:5.24.0') {
+    transitive = false
+  }
   testImplementation 'com.github.tomakehurst:wiremock:2.18.0'
-  testImplementation 'org.codehaus.groovy:groovy-all:2.4.21'
-  testImplementation 'org.spockframework:spock-core:1.2-groovy-2.4'
-  testRuntimeOnly 'net.bytebuddy:byte-buddy:1.8.21'
+  testImplementation 'org.apache.groovy:groovy:4.0.33'
+  testImplementation 'org.spockframework:spock-core:2.5-groovy-4.0'
 }
 
 base {
   archivesName = 'lifx-client'
+}
+
+jacoco {
+  toolVersion = '0.8.15'
 }
 
 jacocoTestReport {
@@ -69,25 +91,39 @@ jacocoTestReport {
     xml.required = true
     csv.required = false
     html.required = true
-    html.outputLocation = file("${buildDir}/reports/jacocoHtml")
+    html.outputLocation = layout.buildDirectory.dir('reports/jacocoHtml')
   }
 }
 
 task spockTest(type: Test, description: 'Runs tests written in Spock.', group: LifecycleBasePlugin.VERIFICATION_GROUP) {
   testClassesDirs = sourceSets.test.output.classesDirs
   classpath = sourceSets.test.runtimeClasspath
-  useJUnit()
+  useJUnitPlatform {
+    includeEngines 'spock'
+  }
 }
 
 check.dependsOn spockTest
 
 test {
-  useJUnitPlatform()
+  useJUnitPlatform {
+    includeEngines 'junit-jupiter', 'archunit'
+  }
   // Exclude integration tests
   exclude '**/*IntegrationTest*'
 }
 
-tasks.withType(Test).configureEach { finalizedBy jacocoTestReport }
+// JVM that runs the tests: ./gradlew check -PtestJavaVersion=17
+def testJava = providers.gradleProperty('testJavaVersion').map { it as int }.getOrElse(25)
+
+tasks.withType(Test).configureEach {
+  javaLauncher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(testJava)
+  }
+  // Load Mockito's inline mock maker as an agent instead of self-attaching (JEP 451)
+  jvmArgs "-javaagent:${configurations.mockitoAgent.asPath}"
+  finalizedBy jacocoTestReport
+}
 
 // CHECKSTYLE
 

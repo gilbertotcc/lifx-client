@@ -4,6 +4,8 @@ Java client to consume [LIFX HTTP API](https://api.developer.lifx.com/).
 
 ## Usage
 
+The library requires Java 17 or later.
+
 Build the library and install it into the local Maven repository with `./gradlew publishToMavenLocal`, then add
 `mavenLocal()` to the repositories of your `build.gradle` file and include the `lifx-client` dependency as shown below.
 

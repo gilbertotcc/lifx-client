@@ -15,20 +15,28 @@ concurrency:
 
 jobs:
   build:
-    name: Build
+    name: Build (tests on JDK ${{ matrix.test-java }})
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        # The library is compiled with the JDK 25 toolchain for --release 17, so tests run on the oldest and newest JDK
+        test-java: [17, 25]
     permissions:
       contents: read
       pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
-      - name: Set up JDK 21 to run Gradle
+      - name: Set up the test JDK and JDK 25 for Gradle and the toolchain
         uses: actions/setup-java@v6.1.0
         with:
           distribution: temurin
-          java-version: 21
+          # The last JDK listed becomes the default, so Gradle runs on 25
+          java-version: |
+            ${{ matrix.test-java }}
+            25
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6.4.0
         with:
@@ -37,7 +45,7 @@ jobs:
             notifications
             jdks
       - name: Run checks
-        run: ./gradlew check --continue
+        run: ./gradlew check --continue -PtestJavaVersion=${{ matrix.test-java }}
       - name: Report test results
         if: always()
         uses: mikepenz/action-junit-report@v6.6.1
@@ -49,7 +57,8 @@ jobs:
           fail_on_failure: false
           require_tests: true
       - name: Report code coverage
-        if: always() && github.event_name == 'pull_request'
+        # Coverage is the same on every leg, so comment from one only
+        if: always() && github.event_name == 'pull_request' && matrix.test-java == 25
         continue-on-error: true
         uses: madrapps/jacoco-report@v1.8.0
         with:

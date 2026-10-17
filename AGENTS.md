@@ -4,12 +4,18 @@ This file provides guidance to AI coding agents working with code in this reposi
 
 ## Project
 
-Java 14 client library for the [LIFX HTTP API](https://api.developer.lifx.com/), built with Gradle (wrapper pins
-Gradle 8.14.3). Published as `com.github.gilbertotcc.lifx:lifx-client`; the version lives in `gradle.properties`.
+Java 17+ client library for the [LIFX HTTP API](https://api.developer.lifx.com/), built with Gradle (wrapper pins
+Gradle 9.8.1). Published as `com.github.gilbertotcc.lifx:lifx-client`; the version lives in `gradle.properties`.
 
-Gradle itself can run on any JVM 8–24, but compilation and tests use a Java 14 toolchain (`java.toolchain` in
-`build.gradle`); if no JDK 14 is installed, the foojay resolver plugin (`settings.gradle`) auto-provisions one into
-`~/.gradle/jdks`. Checkstyle is pinned to 8.27 because newer versions reject `config/checkstyle/checkstyle.xml`.
+Gradle itself needs a JVM 17 or later. Compilation and tests use a JDK 25 toolchain (`java.toolchain` in
+`build.gradle`), while main and test classes are compiled with `--release 17` (`minJava` in `build.gradle`), so the
+published library runs on Java 17+. Gradle auto-detects installed JDKs, SDKMAN ones included; if none matches, the
+foojay resolver plugin (`settings.gradle`) auto-provisions it into `~/.gradle/jdks`. Checkstyle is pinned to 8.27
+because newer versions reject `config/checkstyle/checkstyle.xml`.
+
+`.sdkmanrc` pins the JDK for [SDKMAN](https://sdkman.io/): `sdk env install` installs it, `sdk env` switches the
+current shell to it and `sdk env clear` reverts. Set `sdkman_auto_env=true` in `~/.sdkman/etc/config` to switch
+automatically on `cd`.
 
 ## Commands
 
@@ -17,21 +23,27 @@ Gradle itself can run on any JVM 8–24, but compilation and tests use a Java 14
 ./gradlew build                 # compile, checkstyle, all tests
 ./gradlew check                 # checkstyle + JUnit 5 tests (`test`) + Spock specs (`spockTest`)
 ./gradlew test                  # JUnit 5 tests only (Java, src/test/java)
-./gradlew spockTest             # Spock specs only (Groovy, src/test/groovy, run on the JUnit 4 runner)
+./gradlew spockTest             # Spock specs only (Groovy, src/test/groovy, run on the JUnit Platform)
 ./gradlew test --tests 'com.github.gilbertotcc.lifx.operations.ListLightsQueryTest'
 ./gradlew spockTest --tests 'com.github.gilbertotcc.lifx.models.SelectorsSpec'
 ./gradlew checkstyleMain checkstyleTest
 ./gradlew test spockTest        # also writes the JaCoCo report (HTML in build/reports/jacocoHtml)
+./gradlew check -PtestJavaVersion=17  # run the tests on another JVM (default 25)
 ```
 
-CI runs on GitHub Actions: the `Build` job (`.github/workflows/ci.yml`) runs `./gradlew check --continue` on pull
-requests to and pushes to `main`, and reports test results and JaCoCo coverage on pull requests. Workflows reference
-actions by version tag (`@vX.Y.Z`), not commit SHA; Dependabot (`.github/dependabot.yml`) updates them weekly in one
-grouped pull request.
+`test` runs only the `junit-jupiter` and `archunit` engines, `spockTest` only the `spock` engine (Spock 2.5 on
+Groovy 4.0). `-PtestJavaVersion=<N>` chooses the JVM both tasks run on, while compilation stays on the toolchain.
+Mockito is loaded as a `-javaagent` through the `mockitoAgent` configuration.
+
+CI runs on GitHub Actions: the `Build` job (`.github/workflows/ci.yml`) is a matrix over `test-java: [17, 25]` that
+installs that JDK plus 25 (Gradle runs on 25) and runs `./gradlew check --continue -PtestJavaVersion=<N>` on pull
+requests to and pushes to `main`. It reports test results on pull requests, and JaCoCo coverage from the 25 leg only.
+Workflows reference actions by version tag (`@vX.Y.Z`), not commit SHA; Dependabot (`.github/dependabot.yml`) updates
+them weekly in one grouped pull request.
 
 Dependabot also updates Gradle dependencies, plugins and the wrapper weekly, after a 7-day cooldown: minor and patch
 updates in one grouped pull request, majors separately (grouped per family, such as Jackson or JUnit). Upgrades that
-need a migration (Checkstyle, Spock/Groovy, Gradle 9, JUnit 6) are ignored; each ignore rule in
+need a migration (Checkstyle, and Spock/Groovy line changes) are ignored; each ignore rule in
 `.github/dependabot.yml` states its reason and when to remove it.
 
 No remote publishing repository is configured; `maven-publish` provides `publishToMavenLocal`.
@@ -75,7 +87,8 @@ one `operations.*Command`/`*Query` per endpoint → Retrofit `api.LifxApi` → w
 ArchUnit tests in `src/test/java/.../arch` fail the build if violated:
 
 - Classes in `..lifx.models` may only depend on `models` itself, `java.lang`, `java.time`, `java.util..`, `java.io`,
-  and `io.vavr..` (not Jackson, Retrofit, Lombok runtime types, etc.). Note: `models.serializer`/`deserializer`/
+  and `io.vavr..` (not Jackson, Retrofit, Lombok runtime types, etc.); dependencies that come from annotations are
+  ignored, since ArchUnit 1.x counts them but the rule targets code. Note: `models.serializer`/`deserializer`/
   `converter` are subpackages, so they are not covered by this rule.
 - No `System.out`/`System.err`, no generic exceptions thrown, no `java.util.logging` (use SLF4J via Lombok `@Slf4j`).
 
