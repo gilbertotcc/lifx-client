@@ -40,7 +40,7 @@ dependencies {
   api 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
   // LOGGING
-  api 'ch.qos.logback:logback-classic:1.+'
+  api 'ch.qos.logback:logback-classic:1.6.5'
 
   // TEST
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
