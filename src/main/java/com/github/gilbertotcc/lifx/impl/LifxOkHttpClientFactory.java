@@ -35,6 +35,10 @@ class LifxOkHttpClientFactory {
     };
   }
 
+  /**
+   * Creates an interceptor that logs HTTP requests and responses, including bodies,
+   * with {@code Authorization} header values redacted.
+   */
   private static Interceptor loggingInterceptor(final HttpLoggingInterceptor.Logger logger) {
     HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(logger);
     httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
