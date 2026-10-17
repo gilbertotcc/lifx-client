@@ -3,11 +3,6 @@ package com.github.gilbertotcc.lifx.exception;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.Collections.unmodifiableList;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -22,9 +17,11 @@ public enum LifxErrorType {
   NOT_PROCESSABLE_ENTITY(422, "Missing or malformed parameters."),
   UPGRADE_REQUIRED(426, "HTTP was used to make the request instead of HTTPS."),
   TOO_MANY_REQUESTS(429, "The request exceeded a rate limit. See the Rate Limits section."),
-  SERVER_ERROR(asList(500, 502, 503, 523), "Something went wrong on LIFX's end."),
-  UNKNOWN(emptyList(), "Unknown error.");
+  SERVER_ERROR(List.of(500, 502, 503, 523), "Something went wrong on LIFX's end."),
+  UNKNOWN(List.of(), "Unknown error.");
 
+  // Always an unmodifiable List.of(...), which Error Prone cannot tell apart from a mutable List
+  @SuppressWarnings("ImmutableEnumChecker")
   @NonNull
   final List<Integer> httpCodes;
 
@@ -33,7 +30,7 @@ public enum LifxErrorType {
 
   LifxErrorType(final Integer httpCode,
                 final String reason) {
-    this.httpCodes = unmodifiableList(singletonList(httpCode));
+    this.httpCodes = List.of(httpCode);
     this.reason = reason;
   }
 

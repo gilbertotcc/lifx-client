@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 import lombok.AllArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 
@@ -14,7 +15,7 @@ public class StringConverterFactory<T> extends Converter.Factory {
   private final Converter<T, String> converter;
 
   @Override
-  public Converter<T, String> stringConverter(final Type type,
+  public @Nullable Converter<T, String> stringConverter(final Type type,
                                               final Annotation[] annotations,
                                               final Retrofit retrofit) {
     final Class<?> rawType = getRawType(type);

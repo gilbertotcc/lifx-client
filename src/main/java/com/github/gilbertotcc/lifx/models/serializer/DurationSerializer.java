@@ -12,7 +12,7 @@ public class DurationSerializer extends ValueSerializer<Duration> {
   public void serialize(final Duration duration,
                         final JsonGenerator jsonGenerator,
                         final SerializationContext serializationContext) {
-    final double durationInSeconds = (double) duration.getSeconds();
+    final double durationInSeconds = (double) duration.toSeconds();
     jsonGenerator.writeNumber(durationInSeconds);
   }
 }

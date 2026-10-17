@@ -6,28 +6,31 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.gilbertotcc.lifx.models.serializer.DurationSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.annotation.JsonSerialize;
 
 @Getter
+@ToString
 @AllArgsConstructor
 abstract class AbstractVariableEffect {
 
   @JsonProperty("color")
-  private String color;
+  private @Nullable String color;
 
   @JsonProperty("from_color")
-  private String fromColor;
+  private @Nullable String fromColor;
 
   @JsonProperty("period")
   @JsonSerialize(using = DurationSerializer.class)
-  private Duration period;
+  private @Nullable Duration period;
 
   @JsonProperty("cycles")
-  private Double cycles;
+  private @Nullable Double cycles;
 
   @JsonProperty("persist")
-  Boolean persistEffect;
+  @Nullable Boolean persistEffect;
 
   @JsonProperty("power_on")
-  Boolean powerOn;
+  @Nullable Boolean powerOn;
 }

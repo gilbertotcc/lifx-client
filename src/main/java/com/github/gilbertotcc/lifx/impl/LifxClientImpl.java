@@ -36,10 +36,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
+import org.jspecify.annotations.Nullable;
 import retrofit2.Retrofit;
 
 import java.util.List;
-import java.util.Objects;
 
 import static io.vavr.control.Validation.invalid;
 import static io.vavr.control.Validation.valid;
@@ -92,7 +92,9 @@ public class LifxClientImpl implements LifxClient {
     return createNewClientFor(LIFX_BASE_URL, accessToken);
   }
 
-  static Validation<IllegalArgumentException, Object> validate(String baseUrl, String accessToken) {
+  // The valid value is null: only the validation errors matter
+  static Validation<IllegalArgumentException, @Nullable Object> validate(@Nullable String baseUrl,
+                                                                         @Nullable String accessToken) {
     return Validation.combine(
       notNull("baseUrl", baseUrl),
       notNull("accessToken", accessToken))
@@ -100,8 +102,8 @@ public class LifxClientImpl implements LifxClient {
       .mapError(errors -> new IllegalArgumentException(errors.collect(joining(", "))));
   }
 
-  static <T> Validation<String, T> notNull(String parameterName, T value) {
-    return Objects.isNull(value) ? invalid(format("%s is null", parameterName)) : valid(value);
+  static <T> Validation<String, T> notNull(String parameterName, @Nullable T value) {
+    return value == null ? invalid(format("%s is null", parameterName)) : valid(value);
   }
 
   @Override

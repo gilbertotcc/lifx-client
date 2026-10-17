@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.annotation.JsonDeserialize;
 
 @Getter
@@ -32,12 +33,12 @@ public class Result {
   }
 
   @JsonProperty("id")
-  private String id;
+  private @Nullable String id;
 
   @JsonProperty("label")
-  private String label;
+  private @Nullable String label;
 
   @JsonProperty("status")
   @JsonDeserialize(using = ResultStatusDeserializer.class)
-  private Status status;
+  private @Nullable Status status;
 }

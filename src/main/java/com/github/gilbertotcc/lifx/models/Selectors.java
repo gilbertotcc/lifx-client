@@ -7,6 +7,8 @@ import static java.lang.String.format;
 import lombok.AllArgsConstructor;
 import lombok.experimental.UtilityClass;
 
+// The deprecated aliases are not annotated with @InlineMe: that would put error_prone_annotations on the API
+@SuppressWarnings("InlineMeSuggester")
 @UtilityClass
 public class Selectors {
 

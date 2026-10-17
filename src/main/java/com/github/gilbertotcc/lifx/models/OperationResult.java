@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.Nullable;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -20,15 +21,15 @@ public class OperationResult {
   public static class Operation {
 
     @JsonProperty("selector")
-    private String selector;
+    private @Nullable String selector;
   }
 
   @JsonProperty("operation")
-  private Operation operation;
+  private @Nullable Operation operation;
 
   @JsonProperty("results")
   private List<Result> results = Collections.emptyList();
 
   @JsonProperty("error")
-  private String error;
+  private @Nullable String error;
 }

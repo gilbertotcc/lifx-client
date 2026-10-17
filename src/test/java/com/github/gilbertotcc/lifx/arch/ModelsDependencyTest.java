@@ -33,7 +33,7 @@ class ModelsDependencyTest {
   }
 
   @ArchTest
-  private static ArchRule MODELS_SHOULD_NOT_DEPEND_ON_OTHER_CLASSES =
+  static final ArchRule MODELS_SHOULD_NOT_DEPEND_ON_OTHER_CLASSES =
     notTestClassesThat()
       .resideInAPackage(MODELS_PACKAGE)
       .should(onlyHaveDependenciesWhere(annotationDependency().or(dependencyTarget(resideInAnyPackage(

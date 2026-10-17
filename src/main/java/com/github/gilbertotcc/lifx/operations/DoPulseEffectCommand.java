@@ -9,8 +9,6 @@ import com.github.gilbertotcc.lifx.models.Result;
 import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class DoPulseEffectCommand
 
     log.info("Do pulse effect with {}. Settings: {}",
       lightSelector.identifier(),
-      ReflectionToStringBuilder.toString(pulseEffect, ToStringStyle.JSON_STYLE));
+      pulseEffect);
     return new CallExecutor<>(lifxApi.pulseEffect(lightSelector, pulseEffect)).execute()
       .map(response -> {
         var results = response.getResults();

@@ -7,6 +7,7 @@ import com.github.gilbertotcc.lifx.models.serializer.DirectionSerializer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.annotation.JsonSerialize;
 
 @Getter
@@ -27,13 +28,14 @@ public class Cycle {
   private List<State> states;
 
   @JsonProperty("defaults")
-  private State defaultState;
+  private @Nullable State defaultState;
 
   @JsonProperty("direction")
   @JsonSerialize(using = DirectionSerializer.class)
-  private Direction direction;
+  private @Nullable Direction direction;
 
-  public static Cycle of(final List<State> states, final State defaultState, final Direction direction) {
+  public static Cycle of(final List<State> states, final @Nullable State defaultState,
+                         final @Nullable Direction direction) {
     return new Cycle(states, defaultState, direction);
   }
 }

@@ -8,6 +8,7 @@ import com.github.gilbertotcc.lifx.models.deserializer.PowerDeserializer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.annotation.JsonDeserialize;
 
 @Getter
@@ -34,10 +35,10 @@ public class Light {
   public static class Group {
 
     @JsonProperty("id")
-    private String id;
+    private @Nullable String id;
 
     @JsonProperty("name")
-    private String name;
+    private @Nullable String name;
   }
 
   @Getter
@@ -45,10 +46,10 @@ public class Light {
   public static class Location {
 
     @JsonProperty("id")
-    private String id;
+    private @Nullable String id;
 
     @JsonProperty("name")
-    private String name;
+    private @Nullable String name;
   }
 
   @Getter
@@ -82,55 +83,55 @@ public class Light {
     }
 
     @JsonProperty("name")
-    private String name;
+    private @Nullable String name;
 
     @JsonProperty("company")
-    private String company;
+    private @Nullable String company;
 
     @JsonProperty("identifier")
-    private String identifier;
+    private @Nullable String identifier;
 
     @JsonProperty("capabilities")
-    private Capabilities capabilities;
+    private @Nullable Capabilities capabilities;
   }
 
   @JsonProperty("id")
-  private String id;
+  private @Nullable String id;
 
   @JsonProperty("uuid")
-  private String uuid;
+  private @Nullable String uuid;
 
   @JsonProperty("label")
-  private String label;
+  private @Nullable String label;
 
   @JsonProperty("connected")
   private boolean connected;
 
   @JsonProperty("power")
   @JsonDeserialize(using = PowerDeserializer.class)
-  private Power power;
+  private @Nullable Power power;
 
   @JsonProperty("color")
-  private Color color;
+  private @Nullable Color color;
 
   @JsonProperty("infrared")
-  private String infrared;
+  private @Nullable String infrared;
 
   @JsonProperty("brightness")
   private double brightness;
 
   @JsonProperty("group")
-  private Group group;
+  private @Nullable Group group;
 
   @JsonProperty("location")
-  private Location location;
+  private @Nullable Location location;
 
   @JsonProperty("last_seen")
-  private ZonedDateTime lastSeen;
+  private @Nullable ZonedDateTime lastSeen;
 
   @JsonProperty("seconds_since_seen")
   private int secondsSinceSeen;
 
   @JsonProperty("product")
-  private Product product;
+  private @Nullable Product product;
 }

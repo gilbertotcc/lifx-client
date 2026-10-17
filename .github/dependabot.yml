@@ -69,10 +69,10 @@ updates:
         patterns:
           - '*'
     ignore:
-      # Each Spock version names its Groovy line (2.5-groovy-4.0), so Dependabot could propose another line's variant.
+      # Each Spock version names its Groovy line (2.5-groovy-5.0), so Dependabot could propose another line's variant.
       # Remove when Spock and Groovy are upgraded together to the next Groovy line.
       - dependency-name: 'org.spockframework:*'
-      # Groovy must match Spock's groovy-4.0 variant, so only 4.0.x patch updates are safe.
+      # Groovy must match Spock's groovy-5.0 variant, so only 5.0.x patch updates are safe.
       # Remove when Spock and Groovy are upgraded together to the next Groovy line.
       - dependency-name: 'org.apache.groovy:*'
         update-types:

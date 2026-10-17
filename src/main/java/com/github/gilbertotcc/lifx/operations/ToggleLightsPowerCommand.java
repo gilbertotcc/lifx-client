@@ -23,7 +23,7 @@ public class ToggleLightsPowerCommand
     var lightSelector = input.getLightSelector();
     var duration = input.getDuration();
 
-    log.info("Toggle lights power of {} in {} seconds", lightSelector.identifier(), duration.getSeconds());
+    log.info("Toggle lights power of {} in {} seconds", lightSelector.identifier(), duration.toSeconds());
     return new CallExecutor<>(lifxApi.togglePower(lightSelector, TogglePower.in(duration))).execute()
       .map(response -> {
         var results = response.getResults();
