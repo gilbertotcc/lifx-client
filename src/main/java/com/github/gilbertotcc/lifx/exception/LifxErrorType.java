@@ -28,6 +28,11 @@ public enum LifxErrorType {
   @NonNull
   final String reason;
 
+  /**
+   * Associates an error type with a single HTTP status code and its reason.
+   *
+   * @throws NullPointerException if {@code httpCode} is null
+   */
   LifxErrorType(final Integer httpCode,
                 final String reason) {
     this.httpCodes = List.of(httpCode);

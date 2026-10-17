@@ -11,6 +11,10 @@ import org.jspecify.annotations.Nullable;
 @ToString(callSuper = true)
 public class PulseEffect extends AbstractVariableEffect {
 
+  /**
+   * Creates pulse-effect settings without local validation or defaults.
+   * Null settings are omitted by the client's JSON mapper; the period is serialized in whole seconds.
+   */
   @Builder
   public PulseEffect(final @Nullable String color,
                      final @Nullable String fromColor,

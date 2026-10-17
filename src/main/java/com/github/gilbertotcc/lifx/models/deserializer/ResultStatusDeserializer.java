@@ -10,6 +10,13 @@ import tools.jackson.databind.ValueDeserializer;
 
 public class ResultStatusDeserializer extends ValueDeserializer<Result.Status> {
 
+  /**
+   * Reads a case-sensitive result status label without trimming whitespace.
+   *
+   * @return the matching status, or null for null or blank parser text
+   * @throws IllegalArgumentException if the nonblank text is not a known status label
+   * @throws tools.jackson.core.JacksonException if reading the token text fails
+   */
   @Override
   public Result.@Nullable Status deserialize(final JsonParser jsonParser,
                                              final DeserializationContext deserializationContext) {

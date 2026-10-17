@@ -92,6 +92,12 @@ public class LifxClientImpl implements LifxClient {
     return createNewClientFor(LIFX_BASE_URL, accessToken);
   }
 
+  /**
+   * Checks the URL and token for null, without validating their contents.
+   *
+   * @return a valid null value, or an invalid result containing an {@link IllegalArgumentException} whose
+   *     message lists all null parameters in URL-then-token order
+   */
   // The valid value is null: only the validation errors matter
   static Validation<IllegalArgumentException, @Nullable Object> validate(@Nullable String baseUrl,
                                                                          @Nullable String accessToken) {
@@ -102,6 +108,11 @@ public class LifxClientImpl implements LifxClient {
       .mapError(errors -> new IllegalArgumentException(errors.collect(joining(", "))));
   }
 
+  /**
+   * Returns a valid value when non-null, or an invalid result with the message "parameterName is null".
+   *
+   * @param parameterName the name to substitute into the error message
+   */
   static <T> Validation<String, T> notNull(String parameterName, @Nullable T value) {
     return value == null ? invalid(format("%s is null", parameterName)) : valid(value);
   }

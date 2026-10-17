@@ -154,6 +154,9 @@ tasks.withType(Test).configureEach {
   // Load Mockito's inline mock maker as an agent instead of self-attaching (JEP 451)
   // The configuration is captured outside the closure and resolved only when the arguments are needed
   jvmArgumentProviders.add(new CommandLineArgumentProvider() {
+    /**
+     * Supplies the JVM argument that loads Mockito's agent for tests.
+     */
     @Override
     Iterable<String> asArguments() {
       ["-javaagent:${mockitoAgentFiles.asPath}".toString()]
