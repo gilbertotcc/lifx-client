@@ -40,19 +40,19 @@ dependencies {
   api 'com.squareup.retrofit2:converter-jackson:3.0.0'
 
   // JACKSON
-  api 'com.fasterxml.jackson.core:jackson-core:2.18.11'
-  api 'com.fasterxml.jackson.core:jackson-databind:2.18.11'
-  api 'com.fasterxml.jackson.core:jackson-annotations:2.18.11'
-  api 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.10.0'
-  api 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.0'
-  api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0'
+  api 'com.fasterxml.jackson.core:jackson-core:2.22.3'
+  api 'com.fasterxml.jackson.core:jackson-databind:2.22.3'
+  api 'com.fasterxml.jackson.core:jackson-annotations:2.22.3'
+  api 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.22.3'
+  api 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.22.3'
+  api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.3'
 
   // COMMON
   annotationProcessor 'org.projectlombok:lombok:1.18.48'
   compileOnly 'org.projectlombok:lombok:1.18.48'
   api 'io.vavr:vavr:1.0.1'
   api 'org.slf4j:slf4j-api:1.7.25'
-  api 'org.apache.commons:commons-lang3:3.18.0'
+  api 'org.apache.commons:commons-lang3:3.21.0'
   api 'com.squareup.okhttp3:logging-interceptor:5.5.0'
 
   // LOGGING
@@ -65,7 +65,7 @@ dependencies {
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.14.4'
   testImplementation 'com.tngtech.archunit:archunit-junit5-api:1.5.1'
   testRuntimeOnly 'com.tngtech.archunit:archunit-junit5-engine:1.5.1'
-  testImplementation 'org.skyscreamer:jsonassert:1.5.0'
+  testImplementation 'org.skyscreamer:jsonassert:1.5.3'
   testImplementation 'org.mockito:mockito-core:5.24.0'
   mockitoAgent('org.mockito:mockito-core:5.24.0') {
     transitive = false
