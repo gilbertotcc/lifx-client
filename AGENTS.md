@@ -10,8 +10,7 @@ Gradle 9.8.1). Published as `com.github.gilbertotcc.lifx:lifx-client`; the versi
 Gradle itself needs a JVM 17 or later. Compilation and tests use a JDK 25 toolchain (`java.toolchain` in
 `build.gradle`), while main and test classes are compiled with `--release 17` (`minJava` in `build.gradle`), so the
 published library runs on Java 17+. Gradle auto-detects installed JDKs, SDKMAN ones included; if none matches, the
-foojay resolver plugin (`settings.gradle`) auto-provisions it into `~/.gradle/jdks`. Checkstyle is pinned to 8.27
-because newer versions reject `config/checkstyle/checkstyle.xml`.
+foojay resolver plugin (`settings.gradle`) auto-provisions it into `~/.gradle/jdks`.
 
 `.sdkmanrc` pins the JDK for [SDKMAN](https://sdkman.io/): `sdk env install` installs it, `sdk env` switches the
 current shell to it and `sdk env clear` reverts. Set `sdkman_auto_env=true` in `~/.sdkman/etc/config` to switch
@@ -43,7 +42,7 @@ them weekly in one grouped pull request.
 
 Dependabot also updates Gradle dependencies, plugins and the wrapper weekly, after a 7-day cooldown: minor and patch
 updates in one grouped pull request, majors separately (grouped per family, such as Jackson or JUnit). Upgrades that
-need a migration (Checkstyle, and Spock/Groovy line changes) are ignored; each ignore rule in
+need a migration (Spock/Groovy line changes) are ignored; each ignore rule in
 `.github/dependabot.yml` states its reason and when to remove it.
 
 No remote publishing repository is configured; `maven-publish` provides `publishToMavenLocal`.

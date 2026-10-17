@@ -2,7 +2,7 @@ package com.github.gilbertotcc.lifx.models;
 
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.deserializeJson;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.List;

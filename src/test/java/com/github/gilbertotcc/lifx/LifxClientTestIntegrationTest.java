@@ -13,22 +13,22 @@ import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
 import com.github.gilbertotcc.lifx.operations.ValidateColorInput;
 import io.vavr.control.Try;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
 import static com.github.gilbertotcc.lifx.models.Selectors.all;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 class LifxClientTestIntegrationTest {
 
   private static LifxClient lifxClient;
@@ -36,7 +36,7 @@ class LifxClientTestIntegrationTest {
   private static String lightId = null;
   private static Power lightPower = null;
 
-  @BeforeClass
+  @BeforeAll
   public static void initLifxClient() {
     String accessToken = Optional.ofNullable(System.getenv("IT_ACCESS_TOKEN"))
       .filter(StringUtils::isNotBlank)
@@ -44,7 +44,7 @@ class LifxClientTestIntegrationTest {
     lifxClient = LifxClient.newLifxClientFor(accessToken);
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownITs() {
     // TODO Reset the light state
   }
