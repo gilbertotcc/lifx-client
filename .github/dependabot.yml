@@ -67,9 +67,6 @@ updates:
         patterns:
           - '*'
     ignore:
-      # Checkstyle 8.27 is the last version that accepts config/checkstyle/checkstyle.xml.
-      # Remove when the Checkstyle configuration is migrated.
-      - dependency-name: com.puppycrawl.tools:checkstyle
       # Each Spock version names its Groovy line (2.5-groovy-4.0), so Dependabot could propose another line's variant.
       # Remove when Spock and Groovy are upgraded together to the next Groovy line.
       - dependency-name: 'org.spockframework:*'

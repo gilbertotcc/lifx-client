@@ -128,7 +128,7 @@ tasks.withType(Test).configureEach {
 // CHECKSTYLE
 
 checkstyle {
-  toolVersion = '8.27'
+  toolVersion = '14.3.0'
 }
 
 checkstyleMain.source = "src/main/java"
