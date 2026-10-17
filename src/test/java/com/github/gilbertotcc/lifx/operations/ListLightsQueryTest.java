@@ -1,5 +1,6 @@
 package com.github.gilbertotcc.lifx.operations;
 
+import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.models.Light;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +14,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ListLightsQueryTest extends OperationsTestFixtures {
 
@@ -28,5 +31,17 @@ class ListLightsQueryTest extends OperationsTestFixtures {
     final List<Light> lights = AUTHORIZED_CLIENT.listLights(listLightsInput).get().getLights();
 
     assertEquals(1, lights.size());
+  }
+
+  @Test
+  void listLightsShouldFailForMalformedResponseBody() {
+    wireMockServer.stubFor(get(urlEqualTo("/v1/lights/all"))
+      .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
+      .willReturn(aResponse().withBody("not json")));
+
+    final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
+
+    assertTrue(result.isLeft());
+    assertInstanceOf(LifxCallException.class, result.getLeft());
   }
 }

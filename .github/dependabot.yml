@@ -33,6 +33,8 @@ updates:
     groups:
       jackson:
         patterns:
+          - 'tools.jackson*'
+          # jackson-annotations stays on the 2.x group id in Jackson 3
           - 'com.fasterxml.jackson*'
         update-types:
           - major

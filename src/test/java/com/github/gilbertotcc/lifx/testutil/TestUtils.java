@@ -6,11 +6,10 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 import lombok.experimental.UtilityClass;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 @UtilityClass
 public final class TestUtils {
@@ -27,15 +26,15 @@ public final class TestUtils {
     }
   }
 
-  public static <T> T deserializeJson(final String json, Class<T> clazz) throws IOException {
+  public static <T> T deserializeJson(final String json, Class<T> clazz) {
     return OBJECT_MAPPER_INSTANCE.readValue(json, clazz);
   }
 
-  public static <T> T deserializeJson(final String json, TypeReference<T> typeReference) throws IOException {
+  public static <T> T deserializeJson(final String json, TypeReference<T> typeReference) {
     return OBJECT_MAPPER_INSTANCE.readValue(json, typeReference);
   }
 
-  public static <T> String serializeObject(final T object) throws JsonProcessingException {
+  public static <T> String serializeObject(final T object) {
     return OBJECT_MAPPER_INSTANCE.writeValueAsString(object);
   }
 }
