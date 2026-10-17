@@ -25,9 +25,14 @@ Gradle itself can run on any JVM 8–24, but compilation and tests use a Java 14
 ```
 
 CI runs on GitHub Actions: the `Build` job (`.github/workflows/ci.yml`) runs `./gradlew check --continue` on pull
-requests to and pushes to `main`, and reports test results and JaCoCo coverage on pull requests. CircleCI
-(`.circleci/`) still runs in parallel until it is retired. Workflows reference actions by version tag (`@vX.Y.Z`),
-not commit SHA; Dependabot (`.github/dependabot.yml`) updates them weekly in one grouped pull request.
+requests to and pushes to `main`, and reports test results and JaCoCo coverage on pull requests. Workflows reference
+actions by version tag (`@vX.Y.Z`), not commit SHA; Dependabot (`.github/dependabot.yml`) updates them weekly in one
+grouped pull request.
+
+Dependabot also updates Gradle dependencies, plugins and the wrapper weekly, after a 7-day cooldown: minor and patch
+updates in one grouped pull request, majors separately (grouped per family, such as Jackson or JUnit). Upgrades that
+need a migration (Checkstyle, Spock/Groovy, Gradle 9, JUnit 6) are ignored; each ignore rule in
+`.github/dependabot.yml` states its reason and when to remove it.
 
 No remote publishing repository is configured; `maven-publish` provides `publishToMavenLocal`.
 

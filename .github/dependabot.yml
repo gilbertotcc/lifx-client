@@ -9,3 +9,88 @@ updates:
       github-actions:
         patterns:
           - '*'
+
+  # Dependencies and plugins in build.gradle and settings.gradle, and the Gradle wrapper
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Europe/Rome
+    # Propose new releases only once they are a week old; security updates are not delayed
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - java
+    # Gradle doesn't support prefix-development, so every pull request is `build(deps): ...`
+    commit-message:
+      prefix: build
+      include: scope
+    # A dependency joins the first group it matches, so the per-family major groups come before the catch-all
+    groups:
+      jackson:
+        patterns:
+          - 'com.fasterxml.jackson*'
+        update-types:
+          - major
+      retrofit:
+        patterns:
+          - 'com.squareup.retrofit2:*'
+        update-types:
+          - major
+      okhttp:
+        patterns:
+          - 'com.squareup.okhttp3:*'
+        update-types:
+          - major
+      junit:
+        patterns:
+          - 'org.junit*'
+        update-types:
+          - major
+      archunit:
+        patterns:
+          - 'com.tngtech.archunit:*'
+        update-types:
+          - major
+      minor-and-patch:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+      security:
+        applies-to: security-updates
+        patterns:
+          - '*'
+    ignore:
+      # Checkstyle 8.27 is the last version that accepts config/checkstyle/checkstyle.xml.
+      # Remove when the Checkstyle configuration is migrated.
+      - dependency-name: com.puppycrawl.tools:checkstyle
+      # Gradle 9 needs Java 17 to run Gradle and removes APIs this build still uses.
+      # Remove when Gradle is upgraded to 9.
+      - dependency-name: gradle-wrapper
+        versions:
+          - '[9,)'
+      # foojay-resolver 1.x is compiled for Java 17 and targets Gradle 9.
+      # Remove when Gradle is upgraded to 9.
+      - dependency-name: 'org.gradle.toolchains.foojay-resolver-convention*'
+        versions:
+          - '[1,)'
+      # JUnit 6 (Jupiter and Platform) needs Java 17, but the toolchain is Java 14.
+      # Remove when the Java toolchain is upgraded to 17 or later.
+      - dependency-name: 'org.junit*'
+        versions:
+          - '[6,)'
+      # Each Spock 1.x release is built for one Groovy line, so leaving 1.2-groovy-2.4 is a migration.
+      # Remove when the Spock 2 migration is done.
+      - dependency-name: 'org.spockframework:*'
+      # Groovy must match Spock's groovy-2.4 variant, so only 2.4.x patch updates are safe.
+      # Remove when the Spock 2 migration is done.
+      - dependency-name: 'org.codehaus.groovy:*'
+        update-types:
+          - version-update:semver-minor
+          - version-update:semver-major
