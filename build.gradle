@@ -24,9 +24,9 @@ dependencies {
   api 'com.squareup.retrofit2:converter-jackson:2.8.1'
 
   // JACKSON
-  api 'com.fasterxml.jackson.core:jackson-core:2.10.0'
-  api 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
-  api 'com.fasterxml.jackson.core:jackson-annotations:2.10.0'
+  api 'com.fasterxml.jackson.core:jackson-core:2.18.11'
+  api 'com.fasterxml.jackson.core:jackson-databind:2.18.11'
+  api 'com.fasterxml.jackson.core:jackson-annotations:2.18.11'
   api 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.10.0'
   api 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.0'
   api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0'
@@ -36,7 +36,7 @@ dependencies {
   compileOnly 'org.projectlombok:lombok:1.18.12'
   api 'io.vavr:vavr:0.10.0'
   api 'org.slf4j:slf4j-api:1.7.25'
-  api 'org.apache.commons:commons-lang3:3.7'
+  api 'org.apache.commons:commons-lang3:3.18.0'
   api 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
   // LOGGING
@@ -52,7 +52,7 @@ dependencies {
   testImplementation 'org.skyscreamer:jsonassert:1.5.0'
   testImplementation 'org.mockito:mockito-core:2.23.4'
   testImplementation 'com.github.tomakehurst:wiremock:2.18.0'
-  testImplementation 'org.codehaus.groovy:groovy-all:2.4.15'
+  testImplementation 'org.codehaus.groovy:groovy-all:2.4.21'
   testImplementation 'org.spockframework:spock-core:1.2-groovy-2.4'
   testRuntimeOnly 'net.bytebuddy:byte-buddy:1.8.21'
 }
