@@ -38,6 +38,7 @@ class LifxOkHttpClientFactory {
   private static Interceptor loggingInterceptor(final HttpLoggingInterceptor.Logger logger) {
     HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(logger);
     httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    httpLoggingInterceptor.redactHeader("Authorization");
     return httpLoggingInterceptor;
   }
 }
