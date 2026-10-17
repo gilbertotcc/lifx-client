@@ -51,12 +51,12 @@ dependencies {
   annotationProcessor 'org.projectlombok:lombok:1.18.48'
   compileOnly 'org.projectlombok:lombok:1.18.48'
   api 'io.vavr:vavr:1.0.1'
-  api 'org.slf4j:slf4j-api:1.7.25'
+  implementation 'org.slf4j:slf4j-api:2.0.20'
   api 'org.apache.commons:commons-lang3:3.21.0'
   api 'com.squareup.okhttp3:logging-interceptor:5.5.0'
 
   // LOGGING
-  api 'ch.qos.logback:logback-classic:1.6.5'
+  testRuntimeOnly 'ch.qos.logback:logback-classic:1.6.5'
 
   // TEST
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.48'
