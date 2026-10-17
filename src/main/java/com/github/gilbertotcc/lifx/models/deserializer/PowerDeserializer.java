@@ -10,6 +10,13 @@ import tools.jackson.databind.ValueDeserializer;
 
 public class PowerDeserializer extends ValueDeserializer<Power> {
 
+  /**
+   * Reads a case-sensitive power label without trimming whitespace.
+   *
+   * @return the matching power, or null for null or blank parser text
+   * @throws IllegalArgumentException if the nonblank text is not a known power label
+   * @throws tools.jackson.core.JacksonException if reading the token text fails
+   */
   @Override
   public @Nullable Power deserialize(final JsonParser jsonParser,
                                      final DeserializationContext deserializationContext) {

@@ -16,6 +16,10 @@ public class LightsState extends AbstractState {
   @JsonSerialize(using = LightSelectorSerializer.class)
   private LightSelector lightSelector;
 
+  /**
+   * Creates a state update for the selected lights without local validation or defaults.
+   * Null state properties are omitted from JSON; the transition duration is serialized in whole seconds.
+   */
   @Builder
   public LightsState(final LightSelector lightSelector,
                      final @Nullable Power power,

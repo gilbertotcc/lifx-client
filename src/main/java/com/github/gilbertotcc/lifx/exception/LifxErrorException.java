@@ -19,6 +19,13 @@ public class LifxErrorException extends RuntimeException {
   private final @Nullable LifxErrorType type;
   private final @Nullable Error error;
 
+  /**
+   * Builds an exception from the HTTP status and JSON error body, consuming the body.
+   * Unmapped status codes use {@link LifxErrorType#UNKNOWN}.
+   *
+   * @return an exception containing the parsed error, or a fresh "Unknown error" exception with null type
+   *     and error if the body is absent, cannot be read, or cannot be parsed
+   */
   public static LifxErrorException from(Response<?> response) {
     return Try.of(() -> {
       var errorType = LifxErrorType.byHttpCode(response.code()).orElse(LifxErrorType.UNKNOWN);

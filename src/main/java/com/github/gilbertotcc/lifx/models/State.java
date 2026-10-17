@@ -13,6 +13,10 @@ import org.jspecify.annotations.Nullable;
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class State extends AbstractState {
 
+  /**
+   * Creates a state update without local validation or defaults.
+   * Null properties are omitted from JSON; the transition duration is serialized in whole seconds.
+   */
   @Builder
   public State(final @Nullable Power power,
                final @Nullable String color,
