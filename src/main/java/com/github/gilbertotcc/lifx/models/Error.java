@@ -15,13 +15,13 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Error implements Serializable {
 
-  private static final long serialVersionUID = -790843377907574526L; //NOSONAR
+  private static final long serialVersionUID = -790843377907574526L;
 
   @Getter
   @NoArgsConstructor
   public static class ErrorDetail implements Serializable {
 
-    private static final long serialVersionUID = -7071300361893825402L; //NOSONAR
+    private static final long serialVersionUID = -7071300361893825402L;
 
     @JsonProperty("field")
     private String field;
@@ -34,5 +34,5 @@ public class Error implements Serializable {
   private String errorMessage;
 
   @JsonProperty("errors")
-  private List<ErrorDetail> details  = Collections.emptyList(); //NOSONAR
+  private List<ErrorDetail> details  = Collections.emptyList();
 }

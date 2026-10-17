@@ -9,7 +9,7 @@ import com.tngtech.archunit.lang.syntax.elements.ClassesThat;
 import com.tngtech.archunit.lang.syntax.elements.GivenClassesConjunction;
 
 @AnalyzeClasses(packages = "com.github.gilbertotcc.lifx")
-class ModelsDependencyTest { //NOSONAR
+class ModelsDependencyTest {
 
   private static final String MODELS_PACKAGE = "..lifx.models";
 
