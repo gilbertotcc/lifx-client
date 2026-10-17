@@ -12,9 +12,14 @@ Gradle itself needs a JVM 17 or later. Compilation and tests use a JDK 25 toolch
 published library runs on Java 17+. Gradle auto-detects installed JDKs, SDKMAN ones included; if none matches, the
 foojay resolver plugin (`settings.gradle`) auto-provisions it into `~/.gradle/jdks`.
 
-`.sdkmanrc` pins the JDK for [SDKMAN](https://sdkman.io/): `sdk env install` installs it, `sdk env` switches the
-current shell to it and `sdk env clear` reverts. Set `sdkman_auto_env=true` in `~/.sdkman/etc/config` to switch
-automatically on `cd`.
+Dependency and plugin versions live in the version catalog `gradle/libs.versions.toml` (except the foojay plugin in
+`settings.gradle` and the Checkstyle/JaCoCo `toolVersion`s in `build.gradle`). `gradle.properties` enables the
+configuration cache and the build cache, so build logic must stay configuration-cache compatible (lazy
+`tasks.register`/`tasks.named`, no `Project` access at execution time).
+
+`.sdkmanrc` pins the JDK for [SDKMAN](https://sdkman.io/) (Temurin, as in CI): `sdk env install` installs it,
+`sdk env` switches the current shell to it and `sdk env clear` reverts. Set `sdkman_auto_env=true` in
+`~/.sdkman/etc/config` to switch automatically on `cd`.
 
 ## Commands
 
@@ -31,7 +36,7 @@ automatically on `cd`.
 ```
 
 `test` runs only the `junit-jupiter` and `archunit` engines, `spockTest` only the `spock` engine (Spock 2.5 on
-Groovy 4.0). `-PtestJavaVersion=<N>` chooses the JVM both tasks run on, while compilation stays on the toolchain.
+Groovy 5.0). `-PtestJavaVersion=<N>` chooses the JVM both tasks run on, while compilation stays on the toolchain.
 Mockito is loaded as a `-javaagent` through the `mockitoAgent` configuration.
 
 CI runs on GitHub Actions: the `Build` job (`.github/workflows/ci.yml`) is a matrix over `test-java: [17, 25]` that
@@ -44,6 +49,9 @@ Dependabot also updates Gradle dependencies, plugins and the wrapper weekly, aft
 updates in one grouped pull request, majors separately (grouped per family, such as Jackson or JUnit). Upgrades that
 need a migration (Spock/Groovy line changes) are ignored; each ignore rule in
 `.github/dependabot.yml` states its reason and when to remove it.
+
+WireMock is on a 4.0.0 beta on purpose: 3.13.2 pulls a vulnerable handlebars and Jetty 11. Move to 4.x GA once
+released (see the comment in `gradle/libs.versions.toml`).
 
 No remote publishing repository is configured; `maven-publish` provides `publishToMavenLocal`.
 
@@ -92,6 +100,16 @@ ArchUnit tests in `src/test/java/.../arch` fail the build if violated:
   ignored, since ArchUnit 1.x counts them but the rule targets code. Note: `models.serializer`/`deserializer`/
   `converter` are subpackages, so they are not covered by this rule.
 - No `System.out`/`System.err`, no generic exceptions thrown, no `java.util.logging` (use SLF4J via Lombok `@Slf4j`).
+
+The compiler also fails the build on:
+
+- Any `javac` lint warning (`-Xlint:all -Werror`; only `processing` is excluded) and any Error Prone finding, in main
+  and test code.
+- NullAway errors in main code. Every main package has a `package-info.java` annotated with JSpecify `@NullMarked`
+  (add one to new packages), so types are non-null unless annotated `@Nullable`. Lombok copies the annotations to
+  generated code (`lombok.addNullAnnotations = jspecify`).
+
+Suppress a check only when unavoidable, with a comment giving the reason.
 
 Style: 2-space indent, 120-char lines, no star imports, braces always required (Checkstyle config in
 `config/checkstyle/`). `lombok.config` sets `accessors.fluent = false` (getters are `getX()`).

@@ -53,7 +53,7 @@ class CallExecutorTest {
     Request request = new Request.Builder().get().url("http://localhost:8080/test").build();
     String errorResponseBody = TestUtils.loadJsonFromFile("/json/response_body/error_response.json");
     Response<String> response = Response.error(
-      404, ResponseBody.create(MediaType.parse("application/json"), errorResponseBody));
+      404, ResponseBody.create(errorResponseBody, MediaType.get("application/json")));
     when(callMock.request()).thenReturn(request);
     when(callMock.execute()).thenReturn(response);
 

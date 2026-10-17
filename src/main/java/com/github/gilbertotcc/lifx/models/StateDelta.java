@@ -7,32 +7,35 @@ import com.github.gilbertotcc.lifx.models.serializer.DurationSerializer;
 import com.github.gilbertotcc.lifx.models.serializer.PowerSerializer;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.annotation.JsonSerialize;
 
 @Getter
+@ToString
 @Builder
 public class StateDelta {
 
   @JsonProperty("power")
   @JsonSerialize(using = PowerSerializer.class)
-  private Power power;
+  private @Nullable Power power;
 
   @JsonProperty("duration")
   @JsonSerialize(using = DurationSerializer.class)
-  private Duration duration;
+  private @Nullable Duration duration;
 
   @JsonProperty("infrared")
-  private Double infrared;
+  private @Nullable Double infrared;
 
   @JsonProperty("hue")
-  private Double hue;
+  private @Nullable Double hue;
 
   @JsonProperty("saturation")
-  private Double saturation;
+  private @Nullable Double saturation;
 
   @JsonProperty("brightness")
-  private Double brightness;
+  private @Nullable Double brightness;
 
   @JsonProperty("kelvin")
-  private Double kelvin;
+  private @Nullable Double kelvin;
 }

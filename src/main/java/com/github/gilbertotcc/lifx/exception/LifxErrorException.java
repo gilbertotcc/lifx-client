@@ -4,29 +4,36 @@ import static com.github.gilbertotcc.lifx.util.JacksonUtils.OBJECT_MAPPER;
 import static java.lang.String.format;
 
 import com.github.gilbertotcc.lifx.models.Error;
-import io.vavr.Tuple2;
 import io.vavr.control.Try;
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 import retrofit2.Response;
+
+import java.util.Objects;
 
 @Getter
 public class LifxErrorException extends RuntimeException {
 
   private static final long serialVersionUID = -1185407732054355941L;
 
-  private static final LifxErrorException GENERIC_LIFX_ERROR = new LifxErrorException();
+  private final @Nullable LifxErrorType type;
+  private final @Nullable Error error;
 
-  private final LifxErrorType type;
-  private final Error error;
-
+  /**
+   * Builds an exception from the HTTP status and JSON error body, consuming the body.
+   * Unmapped status codes use {@link LifxErrorType#UNKNOWN}.
+   *
+   * @return an exception containing the parsed error, or a fresh "Unknown error" exception with null type
+   *     and error if the body is absent, cannot be read, or cannot be parsed
+   */
   public static LifxErrorException from(Response<?> response) {
-    return Try.of(() -> new Tuple2<>(response.code(), response.errorBody()))
-      .mapTry(tuple -> {
-        var errorType = LifxErrorType.byHttpCode(tuple._1).orElse(LifxErrorType.UNKNOWN);
-        var error = OBJECT_MAPPER.readerFor(Error.class).<Error>readValue(tuple._2.string());
-        return new LifxErrorException(errorType, error);
-      })
-      .getOrElse(GENERIC_LIFX_ERROR);
+    return Try.of(() -> {
+      var errorType = LifxErrorType.byHttpCode(response.code()).orElse(LifxErrorType.UNKNOWN);
+      var errorBody = Objects.requireNonNull(response.errorBody());
+      var error = OBJECT_MAPPER.readerFor(Error.class).<Error>readValue(errorBody.string());
+      return new LifxErrorException(errorType, error);
+    })
+      .getOrElse(LifxErrorException::new);
   }
 
   public LifxErrorException(final LifxErrorType type, final Error error) {

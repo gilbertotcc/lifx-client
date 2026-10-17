@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.gilbertotcc.lifx.models.serializer.LightSelectorSerializer;
 import lombok.Builder;
 import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.annotation.JsonSerialize;
 
 @Getter
@@ -15,14 +16,18 @@ public class LightsState extends AbstractState {
   @JsonSerialize(using = LightSelectorSerializer.class)
   private LightSelector lightSelector;
 
+  /**
+   * Creates a state update for the selected lights without local validation or defaults.
+   * Null state properties are omitted from JSON; the transition duration is serialized in whole seconds.
+   */
   @Builder
   public LightsState(final LightSelector lightSelector,
-                     final Power power,
-                     final String color,
-                     final Double brightness,
-                     final Duration duration,
-                     final Double infrared,
-                     final Boolean fast) {
+                     final @Nullable Power power,
+                     final @Nullable String color,
+                     final @Nullable Double brightness,
+                     final @Nullable Duration duration,
+                     final @Nullable Double infrared,
+                     final @Nullable Boolean fast) {
     super(power, color, brightness, duration, infrared, fast);
     this.lightSelector = lightSelector;
   }

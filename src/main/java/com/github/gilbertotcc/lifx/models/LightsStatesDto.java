@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;
+import org.jspecify.annotations.Nullable;
 
 @Getter
 @Builder
@@ -19,7 +20,7 @@ public class LightsStatesDto {
   private List<LightsState> lightsStates;
 
   @JsonProperty("defaults")
-  private State defaultState;
+  private @Nullable State defaultState;
 
   @JsonProperty("fast")
   private boolean fast;

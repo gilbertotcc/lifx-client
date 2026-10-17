@@ -1,10 +1,13 @@
+import net.ltgt.gradle.errorprone.CheckSeverity
+
 plugins {
   id 'java-library'
   id 'groovy'
   id 'jacoco'
   id 'checkstyle'
   id 'maven-publish'
-  id 'com.adarshr.test-logger' version '4.0.0'
+  alias(libs.plugins.test.logger)
+  alias(libs.plugins.errorprone)
 }
 
 java {
@@ -18,6 +21,26 @@ def minJava = 17
 
 tasks.withType(JavaCompile).configureEach {
   options.release = minJava
+  // -processing: the annotations of Retrofit, Jackson and JSpecify are read at runtime or by Error Prone, so no
+  // annotation processor claims them, and javac would warn about every one of them
+  options.compilerArgs.addAll(['-Xlint:all', '-Xlint:-processing', '-Werror'])
+}
+
+tasks.named('compileJava', JavaCompile) {
+  options.errorprone {
+    disableWarningsInGeneratedCode = true
+    check('NullAway', CheckSeverity.ERROR)
+    // Only code in @NullMarked scopes is checked
+    option('NullAway:OnlyNullMarked', 'true')
+    option('NullAway:JSpecifyMode', 'true')
+  }
+}
+
+// Error Prone stays on for tests, but NullAway is main-code only
+tasks.named('compileTestJava', JavaCompile) {
+  options.errorprone {
+    check('NullAway', CheckSeverity.OFF)
+  }
 }
 
 tasks.withType(GroovyCompile).configureEach {
@@ -27,7 +50,6 @@ tasks.withType(GroovyCompile).configureEach {
 
 repositories {
   mavenCentral()
-  mavenLocal()
 }
 
 configurations {
@@ -36,40 +58,45 @@ configurations {
 
 dependencies {
   // RETROFIT
-  api 'com.squareup.retrofit2:retrofit:3.0.0'
+  api libs.retrofit
 
   // JACKSON (3.x keeps jackson-annotations on the 2.x line; the BOM pins the matching version)
-  api platform('tools.jackson:jackson-bom:3.2.3')
-  api 'tools.jackson.core:jackson-core'
-  api 'tools.jackson.core:jackson-databind'
-  api 'com.fasterxml.jackson.core:jackson-annotations'
+  api platform(libs.jackson.bom)
+  api libs.jackson.core
+  api libs.jackson.databind
+  api libs.jackson.annotations
 
   // COMMON
-  annotationProcessor 'org.projectlombok:lombok:1.18.48'
-  compileOnly 'org.projectlombok:lombok:1.18.48'
-  api 'io.vavr:vavr:1.0.1'
-  implementation 'org.slf4j:slf4j-api:2.0.20'
-  api 'org.apache.commons:commons-lang3:3.21.0'
-  api 'com.squareup.okhttp3:logging-interceptor:5.5.0'
+  annotationProcessor libs.lombok
+  compileOnly libs.lombok
+  api libs.vavr
+  api libs.jspecify
+  implementation libs.slf4j.api
+  implementation libs.logging.interceptor
+
+  // STATIC ANALYSIS
+  errorprone libs.errorprone.core
+  errorprone libs.nullaway
 
   // LOGGING
-  testRuntimeOnly 'ch.qos.logback:logback-classic:1.6.5'
+  testRuntimeOnly libs.logback.classic
 
   // TEST
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.48'
-  testCompileOnly 'org.projectlombok:lombok:1.18.48'
-  testImplementation 'org.junit.jupiter:junit-jupiter:6.1.3'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.1.3'
-  testImplementation 'com.tngtech.archunit:archunit-junit5-api:1.5.1'
-  testRuntimeOnly 'com.tngtech.archunit:archunit-junit5-engine:1.5.1'
-  testImplementation 'org.skyscreamer:jsonassert:1.5.3'
-  testImplementation 'org.mockito:mockito-core:5.24.0'
-  mockitoAgent('org.mockito:mockito-core:5.24.0') {
+  testImplementation platform(libs.junit.bom)
+  testAnnotationProcessor libs.lombok
+  testCompileOnly libs.lombok
+  testImplementation libs.junit.jupiter
+  testRuntimeOnly libs.junit.platform.launcher
+  testImplementation libs.archunit.api
+  testRuntimeOnly libs.archunit.engine
+  testImplementation libs.jsonassert
+  testImplementation libs.mockito.core
+  mockitoAgent(libs.mockito.core) {
     transitive = false
   }
-  testImplementation 'org.wiremock:wiremock:4.0.0-beta.40'
-  testImplementation 'org.apache.groovy:groovy:4.0.33'
-  testImplementation 'org.spockframework:spock-core:2.5-groovy-4.0'
+  testImplementation libs.wiremock
+  testImplementation libs.groovy
+  testImplementation libs.spock.core
 }
 
 base {
@@ -80,10 +107,11 @@ jacoco {
   toolVersion = '0.8.15'
 }
 
-jacocoTestReport {
+tasks.named('jacocoTestReport', JacocoReport) {
   // Run after, not depend on, the tests: a failing test must not skip the report
   mustRunAfter tasks.withType(Test)
-  executionData tasks.withType(Test)
+  // Test tasks are named, not collected: a TaskCollection would be iterated eagerly while the task graph is built
+  executionData tasks.named('test').get(), tasks.named('spockTest').get()
   reports {
     xml.required = true
     csv.required = false
@@ -92,7 +120,9 @@ jacocoTestReport {
   }
 }
 
-task spockTest(type: Test, description: 'Runs tests written in Spock.', group: LifecycleBasePlugin.VERIFICATION_GROUP) {
+tasks.register('spockTest', Test) {
+  description = 'Runs tests written in Spock.'
+  group = LifecycleBasePlugin.VERIFICATION_GROUP
   testClassesDirs = sourceSets.test.output.classesDirs
   classpath = sourceSets.test.runtimeClasspath
   useJUnitPlatform {
@@ -100,9 +130,11 @@ task spockTest(type: Test, description: 'Runs tests written in Spock.', group: L
   }
 }
 
-check.dependsOn spockTest
+tasks.named('check') {
+  dependsOn tasks.named('spockTest')
+}
 
-test {
+tasks.named('test', Test) {
   useJUnitPlatform {
     includeEngines 'junit-jupiter', 'archunit'
   }
@@ -113,13 +145,24 @@ test {
 // JVM that runs the tests: ./gradlew check -PtestJavaVersion=17
 def testJava = providers.gradleProperty('testJavaVersion').map { it as int }.getOrElse(25)
 
+def mockitoAgentFiles = configurations.mockitoAgent
+
 tasks.withType(Test).configureEach {
   javaLauncher = javaToolchains.launcherFor {
     languageVersion = JavaLanguageVersion.of(testJava)
   }
   // Load Mockito's inline mock maker as an agent instead of self-attaching (JEP 451)
-  jvmArgs "-javaagent:${configurations.mockitoAgent.asPath}"
-  finalizedBy jacocoTestReport
+  // The configuration is captured outside the closure and resolved only when the arguments are needed
+  jvmArgumentProviders.add(new CommandLineArgumentProvider() {
+    /**
+     * Supplies the JVM argument that loads Mockito's agent for tests.
+     */
+    @Override
+    Iterable<String> asArguments() {
+      ["-javaagent:${mockitoAgentFiles.asPath}".toString()]
+    }
+  })
+  finalizedBy tasks.named('jacocoTestReport')
 }
 
 // CHECKSTYLE

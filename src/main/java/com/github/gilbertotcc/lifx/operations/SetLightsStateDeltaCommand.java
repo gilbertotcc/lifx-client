@@ -7,8 +7,6 @@ import com.github.gilbertotcc.lifx.models.Result;
 import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
@@ -19,13 +17,19 @@ public class SetLightsStateDeltaCommand
 
   private final LifxApi lifxApi;
 
+  /**
+   * Synchronously requests relative state changes for the selected lights.
+   *
+   * @return per-light results on the right, or a call exception on the left for HTTP or I/O failures
+   * @throws NullPointerException if a successful response has no body
+   */
   @Override
   public Either<LifxCallException, CommandOutput<List<Result>>> execute(SetLightsStateDeltaInput input) {
     var lightSelector = input.getLightSelector();
     var stateDelta = input.getStateDelta();
 
     log.info("Set lights state delta of {} to {}",
-      lightSelector.identifier(), ReflectionToStringBuilder.toString(stateDelta, ToStringStyle.JSON_STYLE));
+      lightSelector.identifier(), stateDelta);
     return new CallExecutor<>(lifxApi.setLightsStateDelta(lightSelector, stateDelta)).execute()
       .map(response -> {
         var results = response.getResults();

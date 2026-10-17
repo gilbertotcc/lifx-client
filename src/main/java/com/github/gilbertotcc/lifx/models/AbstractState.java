@@ -8,30 +8,33 @@ import com.github.gilbertotcc.lifx.models.serializer.DurationSerializer;
 import com.github.gilbertotcc.lifx.models.serializer.PowerSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.annotation.JsonSerialize;
 
 @Getter
+@ToString
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 abstract class AbstractState {
 
   @JsonProperty("power")
   @JsonSerialize(using = PowerSerializer.class)
-  private Power power;
+  private @Nullable Power power;
 
   @JsonProperty("color")
-  private String color;
+  private @Nullable String color;
 
   @JsonProperty("brightness")
-  private Double brightness;
+  private @Nullable Double brightness;
 
   @JsonProperty("duration")
   @JsonSerialize(using = DurationSerializer.class)
-  private Duration duration;
+  private @Nullable Duration duration;
 
   @JsonProperty("infrared")
-  private Double infrared;
+  private @Nullable Double infrared;
 
   @JsonProperty("fast")
-  private Boolean fast;
+  private @Nullable Boolean fast;
 }

@@ -9,10 +9,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.Nullable;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
+// Renaming the class to avoid the clash with java.lang.Error would break the public API
+@SuppressWarnings("AvoidCommonTypeNames")
 public class Error implements Serializable {
 
   private static final long serialVersionUID = -790843377907574526L;
@@ -24,15 +27,19 @@ public class Error implements Serializable {
     private static final long serialVersionUID = -7071300361893825402L;
 
     @JsonProperty("field")
-    private String field;
+    private @Nullable String field;
 
+    // List is not Serializable, but Jackson always fills it with an ArrayList
+    @SuppressWarnings("serial")
     @JsonProperty("message")
-    private List<String> messages;
+    private @Nullable List<String> messages;
   }
 
   @JsonProperty("error")
-  private String errorMessage;
+  private @Nullable String errorMessage;
 
+  // List is not Serializable, but the values used (Jackson's ArrayList, Collections.emptyList()) are
+  @SuppressWarnings("serial")
   @JsonProperty("errors")
   private List<ErrorDetail> details  = Collections.emptyList();
 }

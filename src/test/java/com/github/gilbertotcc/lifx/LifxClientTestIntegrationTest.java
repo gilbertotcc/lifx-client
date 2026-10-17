@@ -12,7 +12,6 @@ import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
 import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
 import com.github.gilbertotcc.lifx.operations.ValidateColorInput;
 import io.vavr.control.Try;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -39,7 +38,7 @@ class LifxClientTestIntegrationTest {
   @BeforeAll
   public static void initLifxClient() {
     String accessToken = Optional.ofNullable(System.getenv("IT_ACCESS_TOKEN"))
-      .filter(StringUtils::isNotBlank)
+      .filter(value -> !value.isBlank())
       .get();
     lifxClient = LifxClient.newLifxClientFor(accessToken);
   }
