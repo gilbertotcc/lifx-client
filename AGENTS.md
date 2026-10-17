@@ -21,11 +21,15 @@ Gradle itself can run on any JVM 8–24, but compilation and tests use a Java 14
 ./gradlew test --tests 'com.github.gilbertotcc.lifx.operations.ListLightsQueryTest'
 ./gradlew spockTest --tests 'com.github.gilbertotcc.lifx.models.SelectorsSpec'
 ./gradlew checkstyleMain checkstyleTest
-./gradlew jacocoTestReport      # HTML report in build/reports/jacocoHtml
+./gradlew test spockTest        # also writes the JaCoCo report (HTML in build/reports/jacocoHtml)
 ```
 
-CI (CircleCI) runs `./gradlew check`. No remote publishing repository is configured; `maven-publish` provides
-`publishToMavenLocal`.
+CI runs on GitHub Actions: the `Build` job (`.github/workflows/ci.yml`) runs `./gradlew check --continue` on pull
+requests to and pushes to `main`, and reports test results and JaCoCo coverage on pull requests. CircleCI
+(`.circleci/`) still runs in parallel until it is retired. Workflows reference actions by version tag (`@vX.Y.Z`),
+not commit SHA; Dependabot (`.github/dependabot.yml`) updates them weekly in one grouped pull request.
+
+No remote publishing repository is configured; `maven-publish` provides `publishToMavenLocal`.
 
 `*IntegrationTest*` classes are excluded from `test`. `LifxClientTestIntegrationTest` hits the real LIFX cloud and
 needs `IT_ACCESS_TOKEN`; no Gradle task currently runs it.

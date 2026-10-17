@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1
+      - name: Set up JDK 21 to run Gradle
+        uses: actions/setup-java@v6.1.0
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6.4.0
+        with:
+          gradle-home-cache-includes: |
+            caches
+            notifications
+            jdks
+      - name: Run checks
+        run: ./gradlew check --continue
+      - name: Report test results
+        if: always()
+        uses: mikepenz/action-junit-report@v6.6.1
+        with:
+          report_paths: build/test-results/**/TEST-*.xml
+          annotate_only: true
+          detailed_summary: true
+          include_passed: false
+          fail_on_failure: false
+          require_tests: true
+      - name: Report code coverage
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: madrapps/jacoco-report@v1.8.0
+        with:
+          paths: build/reports/jacoco/test/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Code coverage
+          min-coverage-overall: 80
+          min-coverage-changed-files: 80
+          update-comment: true
+          # Fork pull requests get a read-only token, so they can't comment.
+          comment-type: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'both' || 'summary' }}

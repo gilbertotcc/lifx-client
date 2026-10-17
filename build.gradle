@@ -62,7 +62,8 @@ base {
 }
 
 jacocoTestReport {
-  dependsOn tasks.withType(Test)
+  // Run after, not depend on, the tests: a failing test must not skip the report
+  mustRunAfter tasks.withType(Test)
   executionData tasks.withType(Test)
   reports {
     xml.required = true
@@ -86,7 +87,7 @@ test {
   exclude '**/*IntegrationTest*'
 }
 
-test.finalizedBy jacocoTestReport
+tasks.withType(Test).configureEach { finalizedBy jacocoTestReport }
 
 // CHECKSTYLE
 
