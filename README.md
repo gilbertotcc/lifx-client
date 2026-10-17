@@ -3,22 +3,19 @@
 Java client to consume [LIFX HTTP API](https://api.developer.lifx.com/).
 
 [![Coverage Status](https://coveralls.io/repos/github/gilbertotcc/lifx-client/badge.svg?branch=develop)](https://coveralls.io/github/gilbertotcc/lifx-client?branch=develop)
-[![Download](https://api.bintray.com/packages/gilbertotcc/lifx/lifx-client/images/download.svg?version=2.0.1) ](https://bintray.com/gilbertotcc/lifx/lifx-client/2.0.1/link)
 
 ## Usage
 
-Library artifactory is published on Bintray. In order to use it, add the `lifx` Bintray repository to your `build
-.settings` Gradle file and include the `lifx-client` dependency as shown below.
+Build the library and install it into the local Maven repository with `./gradlew publishToMavenLocal`, then add
+`mavenLocal()` to the repositories of your `build.gradle` file and include the `lifx-client` dependency as shown below.
 
 ```groovy
 repositories {
-  maven {
-    url  "https://dl.bintray.com/gilbertotcc/lifx"
-  }
+  mavenLocal()
 }
 
 dependencies {
-  compile 'com.github.gilbertotcc.lifx:lifx-client:<VERSION>'
+  implementation 'com.github.gilbertotcc.lifx:lifx-client:<VERSION>'
 }
 ```
 
