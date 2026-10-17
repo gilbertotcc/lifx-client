@@ -21,7 +21,7 @@ Gradle itself can run on any JVM 8–24, but compilation and tests use a Java 14
 ./gradlew test --tests 'com.github.gilbertotcc.lifx.operations.ListLightsQueryTest'
 ./gradlew spockTest --tests 'com.github.gilbertotcc.lifx.models.SelectorsSpec'
 ./gradlew checkstyleMain checkstyleTest
-./gradlew jacocoTestReport      # HTML report in build/reports/jacocoHtml
+./gradlew test spockTest        # also writes the JaCoCo report (HTML in build/reports/jacocoHtml)
 ```
 
 CI (CircleCI) runs `./gradlew check`. No remote publishing repository is configured; `maven-publish` provides
