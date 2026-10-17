@@ -1,0 +1,5 @@
+# URLs excluded from the lychee check, one regular expression per line.
+# Precede each entry with a dated comment explaining why it is excluded, e.g.:
+#
+# On YYYY-MM-DD the host returned 403 to GitHub Actions; the page loads fine locally
+# https://example.com/page

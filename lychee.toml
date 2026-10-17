@@ -1,0 +1,10 @@
+# Check URLs in Markdown files only. Paths ignored by .gitignore are skipped by default.
+extensions = ["md"]
+
+# Agent skills installed with skills.sh are third-party content.
+exclude_path = ["(^|/)\\.claude/"]
+
+# Keep slow hosts from making the check flaky.
+timeout = 30
+max_retries = 2
+max_concurrency = 10
