@@ -53,7 +53,7 @@ dependencies {
   api 'io.vavr:vavr:0.10.0'
   api 'org.slf4j:slf4j-api:1.7.25'
   api 'org.apache.commons:commons-lang3:3.18.0'
-  api 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+  api 'com.squareup.okhttp3:logging-interceptor:5.5.0'
 
   // LOGGING
   api 'ch.qos.logback:logback-classic:1.6.5'
