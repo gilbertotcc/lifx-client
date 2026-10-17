@@ -22,8 +22,8 @@ public class StringConverterFactory<T> extends Converter.Factory {
    */
   @Override
   public @Nullable Converter<T, String> stringConverter(final Type type,
-                                              final Annotation[] annotations,
-                                              final Retrofit retrofit) {
+                                                        final Annotation[] annotations,
+                                                        final Retrofit retrofit) {
     final Class<?> rawType = getRawType(type);
     return sourceType.equals(rawType) ? converter : null;
   }
