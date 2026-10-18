@@ -69,8 +69,9 @@ lychee .                        # check URLs in Markdown files (config: lychee.t
 ```
 
 GitHub Actions (`.github/workflows/check-markdown.yml`) runs both on pull requests that touch Markdown files or their
-configuration. Both tools skip `.claude/` (third-party skills managed through `skills-lock.json`) and git-ignored
-files. Every `.lycheeignore` entry needs a dated comment explaining why the URL is excluded.
+configuration. Both tools skip the third-party skill `.claude/skills/caveman-commit/` (managed through
+`skills-lock.json`) and git-ignored files; first-party guidance under `.claude/` is checked. Every `.lycheeignore`
+entry needs a dated comment explaining why the URL is excluded.
 
 ## Architecture
 
@@ -80,7 +81,8 @@ one `operations.*Command`/`*Query` per endpoint → Retrofit `api.LifxApi` → w
 - **Operations** (`operations/`): each endpoint is an `Operation<I, O>` with its own `*Input` / `*Output` (or
   generic `CommandOutput<T>`) class. Naming: `*Query` for reads, `*Command` for writes. Adding an endpoint means:
   method in `LifxApi`, new Input/Command(+Output) in `operations`, wiring in `LifxClientImpl.createNewClientFor`, and a
-  method on `LifxClient`.
+  method on `LifxClient`. Full procedure: `.claude/skills/lifx-operation/SKILL.md` (plain Markdown, usable by
+  any agent); file conventions: `.claude/rules/operations.md`.
 - **Error handling**: no exceptions are thrown to callers — every client method returns vavr
   `Either<LifxCallException, T>`. `CallExecutor` turns non-2xx responses into a `LifxCallException` whose cause is a
   `LifxErrorException` (carrying the `LifxErrorType`), and I/O failures into `LifxCallException`.
