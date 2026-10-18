@@ -2,8 +2,6 @@
 
 package com.github.gilbertotcc.lifx.models;
 
-import static java.lang.String.format;
-
 import lombok.AllArgsConstructor;
 import lombok.experimental.UtilityClass;
 
@@ -102,7 +100,7 @@ public class Selectors {
 
     @Override
     public String identifier() {
-      return format("label:%s", label);
+      return "label:%s".formatted(label);
     }
   }
 
@@ -114,7 +112,7 @@ public class Selectors {
 
     @Override
     public String identifier() {
-      return format("id:%s", id);
+      return "id:%s".formatted(id);
     }
   }
 
@@ -126,7 +124,7 @@ public class Selectors {
 
     @Override
     public String identifier() {
-      return format("group_id:%s", groupId);
+      return "group_id:%s".formatted(groupId);
     }
   }
 
@@ -138,7 +136,7 @@ public class Selectors {
 
     @Override
     public String identifier() {
-      return format("group:%s", group);
+      return "group:%s".formatted(group);
     }
   }
 
@@ -150,7 +148,7 @@ public class Selectors {
 
     @Override
     public String identifier() {
-      return format("location_id:%s", locationId);
+      return "location_id:%s".formatted(locationId);
     }
   }
 
@@ -162,7 +160,7 @@ public class Selectors {
 
     @Override
     public String identifier() {
-      return format("location:%s", location);
+      return "location:%s".formatted(location);
     }
   }
 
@@ -174,7 +172,7 @@ public class Selectors {
 
     @Override
     public String identifier() {
-      return format("scene_id:%s", sceneId);
+      return "scene_id:%s".formatted(sceneId);
     }
   }
 }

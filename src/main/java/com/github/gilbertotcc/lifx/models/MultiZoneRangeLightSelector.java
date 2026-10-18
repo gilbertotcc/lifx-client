@@ -1,7 +1,5 @@
 package com.github.gilbertotcc.lifx.models;
 
-import static java.lang.String.format;
-
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -14,6 +12,6 @@ public class MultiZoneRangeLightSelector implements LightSelector, CombinableLig
 
   @Override
   public String identifier() {
-    return format("%s|%d-%d", selector.identifier(), rangeStart, rangeEnd);
+    return "%s|%d-%d".formatted(selector.identifier(), rangeStart, rangeEnd);
   }
 }

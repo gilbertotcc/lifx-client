@@ -1,7 +1,6 @@
 package com.github.gilbertotcc.lifx.exception;
 
 import static com.github.gilbertotcc.lifx.util.JacksonUtils.OBJECT_MAPPER;
-import static java.lang.String.format;
 
 import com.github.gilbertotcc.lifx.models.Error;
 import io.vavr.control.Try;
@@ -39,7 +38,7 @@ public class LifxErrorException extends RuntimeException {
   }
 
   public LifxErrorException(final LifxErrorType type, final Error error) {
-    super(format("Error %s (%s): %s", type.name(), type.reason, error.getErrorMessage()));
+    super("Error %s (%s): %s".formatted(type.name(), type.reason, error.getErrorMessage()));
     this.type = type;
     this.error = error;
   }
