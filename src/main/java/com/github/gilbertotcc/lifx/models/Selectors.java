@@ -82,7 +82,7 @@ public class Selectors {
   }
 
   public record AllSelector()
-    implements LightSelector, RandomizableLightSelector, MultiZoneEnabledLightSelector {
+    implements RandomizableLightSelector, MultiZoneEnabledLightSelector {
 
     @Override
     public String identifier() {
@@ -91,7 +91,7 @@ public class Selectors {
   }
 
   public record LabelSelector(String label)
-    implements LightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
+    implements CombinableLightSelector, MultiZoneEnabledLightSelector {
 
     @Override
     public String identifier() {
@@ -100,7 +100,7 @@ public class Selectors {
   }
 
   public record IdSelector(String id)
-    implements LightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
+    implements CombinableLightSelector, MultiZoneEnabledLightSelector {
 
     @Override
     public String identifier() {
@@ -109,7 +109,7 @@ public class Selectors {
   }
 
   public record GroupIdSelector(String groupId)
-    implements LightSelector, RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
+    implements RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
 
     @Override
     public String identifier() {
@@ -118,7 +118,7 @@ public class Selectors {
   }
 
   public record GroupSelector(String group)
-    implements LightSelector, RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
+    implements RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
 
     @Override
     public String identifier() {
@@ -127,7 +127,7 @@ public class Selectors {
   }
 
   public record LocationIdSelector(String locationId)
-    implements LightSelector, RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
+    implements RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
 
     @Override
     public String identifier() {
@@ -136,7 +136,7 @@ public class Selectors {
   }
 
   public record LocationSelector(String location)
-    implements LightSelector, RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
+    implements RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
 
     @Override
     public String identifier() {
@@ -145,7 +145,7 @@ public class Selectors {
   }
 
   public record SceneIdSelector(String sceneId)
-    implements LightSelector, RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
+    implements RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
 
     @Override
     public String identifier() {
