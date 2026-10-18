@@ -175,6 +175,12 @@ tasks.withType(Test).configureEach {
   }
 }
 
+// Claude Code sets CLAUDECODE in its shell: hiding passed tests there keeps agent output short, while CI and
+// terminals still list every test
+testlogger {
+  showPassed = !providers.environmentVariable('CLAUDECODE').isPresent()
+}
+
 // Mockito and the coverage report concern the unit tests only
 tasks.withType(Test).matching { it.name in ['test', 'spockTest'] }.configureEach {
   // Load Mockito's inline mock maker as an agent instead of self-attaching (JEP 451)
