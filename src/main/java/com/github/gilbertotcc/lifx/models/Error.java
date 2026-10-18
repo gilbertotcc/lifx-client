@@ -1,5 +1,6 @@
 package com.github.gilbertotcc.lifx.models;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -18,12 +19,14 @@ import org.jspecify.annotations.Nullable;
 @SuppressWarnings("AvoidCommonTypeNames")
 public class Error implements Serializable {
 
+  @Serial
   private static final long serialVersionUID = -790843377907574526L;
 
   @Getter
   @NoArgsConstructor
   public static class ErrorDetail implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -7071300361893825402L;
 
     @JsonProperty("field")
