@@ -2,14 +2,8 @@ package com.github.gilbertotcc.lifx.models;
 
 import java.util.Set;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
-public class MultiZoneLightSelector implements LightSelector, CombinableLightSelector {
-
-  private MultiZoneEnabledLightSelector selector;
-
-  private Set<Integer> zones;
+public record MultiZoneLightSelector(MultiZoneEnabledLightSelector selector, Set<Integer> zones)
+  implements LightSelector, CombinableLightSelector {
 
   @Override
   public String identifier() {

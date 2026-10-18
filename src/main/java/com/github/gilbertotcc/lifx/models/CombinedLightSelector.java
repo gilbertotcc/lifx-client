@@ -4,15 +4,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import lombok.Builder;
-import lombok.Getter;
 import lombok.Singular;
 
 @Builder
-@Getter
-public class CombinedLightSelector implements LightSelector, CombinableLightSelector {
-
-  @Singular
-  private Set<CombinableLightSelector> selectors;
+public record CombinedLightSelector(@Singular Set<CombinableLightSelector> selectors)
+  implements LightSelector, CombinableLightSelector {
 
   @Override
   public String identifier() {

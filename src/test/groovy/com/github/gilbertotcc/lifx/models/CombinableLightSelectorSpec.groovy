@@ -19,4 +19,12 @@ class CombinableLightSelectorSpec extends Specification {
     then:
     combinedSelector.identifier() == "id:id1,id:id2,id:id3"
   }
+
+  def "combining equal selectors should collapse duplicates"() {
+    when:
+    CombinedLightSelector combinedSelector = Selectors.byLabel("a").and(Selectors.byLabel("a"))
+
+    then:
+    combinedSelector.identifier() == "label:a"
+  }
 }

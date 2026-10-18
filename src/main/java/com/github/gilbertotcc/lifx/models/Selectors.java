@@ -2,7 +2,6 @@
 
 package com.github.gilbertotcc.lifx.models;
 
-import lombok.AllArgsConstructor;
 import lombok.experimental.UtilityClass;
 
 // The deprecated aliases are not annotated with @InlineMe: that would put error_prone_annotations on the API
@@ -82,8 +81,7 @@ public class Selectors {
     return bySceneId(sceneId);
   }
 
-  @AllArgsConstructor
-  public static final class AllSelector
+  public record AllSelector()
     implements LightSelector, RandomizableLightSelector, MultiZoneEnabledLightSelector {
 
     @Override
@@ -92,11 +90,8 @@ public class Selectors {
     }
   }
 
-  @AllArgsConstructor
-  public static final class LabelSelector
+  public record LabelSelector(String label)
     implements LightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
-
-    private String label;
 
     @Override
     public String identifier() {
@@ -104,11 +99,8 @@ public class Selectors {
     }
   }
 
-  @AllArgsConstructor
-  public static final class IdSelector
+  public record IdSelector(String id)
     implements LightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
-
-    private String id;
 
     @Override
     public String identifier() {
@@ -116,11 +108,8 @@ public class Selectors {
     }
   }
 
-  @AllArgsConstructor
-  public static final class GroupIdSelector
+  public record GroupIdSelector(String groupId)
     implements LightSelector, RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
-
-    private String groupId;
 
     @Override
     public String identifier() {
@@ -128,11 +117,8 @@ public class Selectors {
     }
   }
 
-  @AllArgsConstructor
-  public static final class GroupSelector
+  public record GroupSelector(String group)
     implements LightSelector, RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
-
-    private String group;
 
     @Override
     public String identifier() {
@@ -140,11 +126,8 @@ public class Selectors {
     }
   }
 
-  @AllArgsConstructor
-  public static final class LocationIdSelector
+  public record LocationIdSelector(String locationId)
     implements LightSelector, RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
-
-    private String locationId;
 
     @Override
     public String identifier() {
@@ -152,11 +135,8 @@ public class Selectors {
     }
   }
 
-  @AllArgsConstructor
-  public static final class LocationSelector
+  public record LocationSelector(String location)
     implements LightSelector, RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
-
-    private String location;
 
     @Override
     public String identifier() {
@@ -164,11 +144,8 @@ public class Selectors {
     }
   }
 
-  @AllArgsConstructor
-  public static final class SceneIdSelector
+  public record SceneIdSelector(String sceneId)
     implements LightSelector, RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
-
-    private String sceneId;
 
     @Override
     public String identifier() {

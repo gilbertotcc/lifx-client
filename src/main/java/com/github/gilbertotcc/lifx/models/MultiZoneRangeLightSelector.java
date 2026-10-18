@@ -1,14 +1,7 @@
 package com.github.gilbertotcc.lifx.models;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
-public class MultiZoneRangeLightSelector implements LightSelector, CombinableLightSelector {
-
-  private MultiZoneEnabledLightSelector selector;
-
-  private int rangeStart;
-  private int rangeEnd;
+public record MultiZoneRangeLightSelector(MultiZoneEnabledLightSelector selector, int rangeStart, int rangeEnd)
+  implements LightSelector, CombinableLightSelector {
 
   @Override
   public String identifier() {
