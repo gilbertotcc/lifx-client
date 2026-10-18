@@ -30,7 +30,7 @@ public class LifxErrorException extends RuntimeException {
    */
   public static LifxErrorException from(Response<?> response) {
     return Try.of(() -> {
-      var errorType = LifxErrorType.byHttpCode(response.code()).orElse(LifxErrorType.UNKNOWN);
+      var errorType = LifxErrorType.byHttpCode(response.code());
       var errorBody = Objects.requireNonNull(response.errorBody());
       var error = OBJECT_MAPPER.readerFor(Error.class).<Error>readValue(errorBody.string());
       return new LifxErrorException(errorType, error);
