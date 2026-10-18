@@ -4,15 +4,20 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.gilbertotcc.lifx.models.serializer.DirectionSerializer;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.annotation.JsonSerialize;
 
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Cycle {
+public record Cycle(
+  @JsonProperty("states")
+  List<State> states,
+
+  @JsonProperty("defaults")
+  @Nullable State defaultState,
+
+  @JsonProperty("direction")
+  @JsonSerialize(using = DirectionSerializer.class)
+  @Nullable Direction direction
+) {
 
   public enum Direction {
     FORWARD("forward"), BACKWARD("backward");
@@ -23,16 +28,6 @@ public class Cycle {
       this.label = label;
     }
   }
-
-  @JsonProperty("states")
-  private List<State> states;
-
-  @JsonProperty("defaults")
-  private @Nullable State defaultState;
-
-  @JsonProperty("direction")
-  @JsonSerialize(using = DirectionSerializer.class)
-  private @Nullable Direction direction;
 
   /**
    * Creates cycle settings, retaining the supplied state list without copying or validating it.

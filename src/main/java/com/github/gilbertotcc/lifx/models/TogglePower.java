@@ -4,15 +4,15 @@ import java.time.Duration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.gilbertotcc.lifx.models.serializer.DurationSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import tools.jackson.databind.annotation.JsonSerialize;
 
-@Getter
-@AllArgsConstructor(staticName = "in")
-public class TogglePower {
-
+public record TogglePower(
   @JsonProperty("duration")
   @JsonSerialize(using = DurationSerializer.class)
-  private Duration duration;
+  Duration duration
+) {
+
+  public static TogglePower in(final Duration duration) {
+    return new TogglePower(duration);
+  }
 }
