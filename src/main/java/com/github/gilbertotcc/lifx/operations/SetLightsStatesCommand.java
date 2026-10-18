@@ -27,7 +27,7 @@ public class SetLightsStatesCommand
     log.info("Set lights states of {}", lightSelectorListOf(input));
     return new CallExecutor<>(lifxApi.setLightsStates(input)).execute()
       .map(response -> {
-        var results = response.getResults();
+        var results = response.results();
         return new CommandOutput<>(results);
       });
   }

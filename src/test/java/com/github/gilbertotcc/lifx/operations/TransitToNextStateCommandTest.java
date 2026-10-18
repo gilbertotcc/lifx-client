@@ -34,7 +34,7 @@ class TransitToNextStateCommandTest extends OperationsTestFixtures {
       Cycle.Direction.FORWARD);
 
     var input = new TransitToNextStateInput(all(), cycle);
-    final List<Result> results = AUTHORIZED_CLIENT.transitToNextState(input).get().getResult();
+    final List<Result> results = AUTHORIZED_CLIENT.transitToNextState(input).get().result();
 
     assertEquals(1, results.size());
   }

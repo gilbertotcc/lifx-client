@@ -35,7 +35,7 @@ public class DoPulseEffectCommand
       pulseEffect);
     return new CallExecutor<>(lifxApi.pulseEffect(lightSelector, pulseEffect)).execute()
       .map(response -> {
-        var results = response.getResults();
+        var results = response.results();
         return new CommandOutput<>(results);
       });
   }

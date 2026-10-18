@@ -84,7 +84,7 @@ class LifxClientIntegrationTest {
 
     State state = State.builder().power(originalPower).duration(Duration.ZERO).build();
     var input = new SetLightsStateInput(Selectors.byId(lightId), state);
-    assertSingleOkResult(lightId, assertRight(lifxClient.setLightsState(input)).getResult());
+    assertSingleOkResult(lightId, assertRight(lifxClient.setLightsState(input)).result());
 
     // The listing can lag behind commands
     Power power = null;
@@ -112,7 +112,7 @@ class LifxClientIntegrationTest {
     var input = new SetLightsStateInput(Selectors.byId(lightId), state);
 
     lightChanged = true;
-    List<Result> results = assertRight(lifxClient.setLightsState(input)).getResult();
+    List<Result> results = assertRight(lifxClient.setLightsState(input)).result();
 
     assertSingleOkResult(lightId, results);
   }
@@ -124,7 +124,7 @@ class LifxClientIntegrationTest {
     var input = new ToggleLightsPowerInput(Selectors.byId(lightId), TOGGLE_DURATION);
 
     lightChanged = true;
-    List<Result> results = assertRight(lifxClient.toggleLightsPower(input)).getResult();
+    List<Result> results = assertRight(lifxClient.toggleLightsPower(input)).result();
 
     assertSingleOkResult(lightId, results);
   }
@@ -132,7 +132,7 @@ class LifxClientIntegrationTest {
   @Test
   void validateGreenColorShouldSucceed() {
     var input = new ValidateColorInput("green");
-    Color color = assertRight(lifxClient.validateColor(input)).getColor();
+    Color color = assertRight(lifxClient.validateColor(input)).color();
 
     assertEquals(120, color.hue(), 0.001);
     assertEquals(1, color.saturation(), 0.001);

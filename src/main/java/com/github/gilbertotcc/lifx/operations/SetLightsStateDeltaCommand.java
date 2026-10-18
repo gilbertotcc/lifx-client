@@ -32,7 +32,7 @@ public class SetLightsStateDeltaCommand
       lightSelector.identifier(), stateDelta);
     return new CallExecutor<>(lifxApi.setLightsStateDelta(lightSelector, stateDelta)).execute()
       .map(response -> {
-        var results = response.getResults();
+        var results = response.results();
         return new CommandOutput<>(results);
       });
   }

@@ -90,9 +90,10 @@ one `operations.*Command`/`*Query` per endpoint → Retrofit `api.LifxApi` → w
   3 converter, so `impl.JacksonConverterFactory` is in-house; it wraps Jackson's unchecked `JacksonException` in
   `IOException` so `CallExecutor` still reports (de)serialization failures as `LifxCallException`. The `baseUrl`
   overload exists for tests (WireMock).
-- **Models** (`models/`): Lombok-based DTOs plus the selector hierarchy (`LightSelector`, `CombinableLightSelector`,
-  `RandomizableLightSelector`, multi-zone selectors), created via the `Selectors` factory. Custom Jackson
-  (de)serializers live in `models/serializer` and `models/deserializer`.
+- **Models** (`models/`): DTOs, mostly records (the `State` and effect hierarchies stay Lombok classes, since records
+  can't extend), plus the selector hierarchy (`LightSelector`, `CombinableLightSelector`, `RandomizableLightSelector`,
+  multi-zone selectors), created via the `Selectors` factory. Custom Jackson (de)serializers live in
+  `models/serializer` and `models/deserializer`.
 
 ## Enforced rules
 
@@ -115,7 +116,8 @@ The compiler also fails the build on:
 Suppress a check only when unavoidable, with a comment giving the reason.
 
 Style: 2-space indent, 120-char lines, no star imports, braces always required (Checkstyle config in
-`config/checkstyle/`). `lombok.config` sets `accessors.fluent = false` (getters are `getX()`).
+`config/checkstyle/`). Immutable data carriers are records (accessors are `x()`); `lombok.config` sets
+`accessors.fluent = false`, so the remaining Lombok getters are `getX()`.
 
 ## Tests
 

@@ -34,7 +34,7 @@ public class DoBreatheEffectCommand
       lightSelector.identifier(), breatheEffect);
     return new CallExecutor<>(lifxApi.breatheEffect(lightSelector, breatheEffect)).execute()
       .map(response -> {
-        var results = response.getResults();
+        var results = response.results();
         return new CommandOutput<>(results);
       });
   }
