@@ -37,7 +37,7 @@ tasks.named('compileJava', JavaCompile) {
 }
 
 // Error Prone stays on for tests, but NullAway is main-code only
-tasks.named('compileTestJava', JavaCompile) {
+tasks.withType(JavaCompile).matching { it.name in ['compileTestJava', 'compileIntegrationTestJava'] }.configureEach {
   options.errorprone {
     check('NullAway', CheckSeverity.OFF)
   }
@@ -138,8 +138,30 @@ tasks.named('test', Test) {
   useJUnitPlatform {
     includeEngines 'junit-jupiter', 'archunit'
   }
-  // Exclude integration tests
-  exclude '**/*IntegrationTest*'
+}
+
+// Tests against the real LIFX cloud (needs LIFX_PAT); not part of check, which only compiles and checkstyles them
+testing {
+  suites {
+    integrationTest(JvmTestSuite) {
+      // Adds JUnit Jupiter and the platform launcher at the catalog's JUnit version
+      useJUnitJupiter(libs.versions.junit.bom)
+      dependencies {
+        implementation project()
+        runtimeOnly libs.logback.classic
+      }
+      targets.all {
+        testTask.configure {
+          description = 'Runs the integration tests against the real LIFX cloud.'
+          // The outcome depends on a live service, not only on the inputs
+          outputs.upToDateWhen { false }
+          jacoco {
+            enabled = false
+          }
+        }
+      }
+    }
+  }
 }
 
 // JVM that runs the tests: ./gradlew check -PtestJavaVersion=17
@@ -151,6 +173,10 @@ tasks.withType(Test).configureEach {
   javaLauncher = javaToolchains.launcherFor {
     languageVersion = JavaLanguageVersion.of(testJava)
   }
+}
+
+// Mockito and the coverage report concern the unit tests only
+tasks.withType(Test).matching { it.name in ['test', 'spockTest'] }.configureEach {
   // Load Mockito's inline mock maker as an agent instead of self-attaching (JEP 451)
   // The configuration is captured outside the closure and resolved only when the arguments are needed
   jvmArgumentProviders.add(new CommandLineArgumentProvider() {
