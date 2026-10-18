@@ -2,16 +2,21 @@ package com.github.gilbertotcc.lifx.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.gilbertotcc.lifx.models.deserializer.ResultStatusDeserializer;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.annotation.JsonDeserialize;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Result {
+public record Result(
+  @JsonProperty("id")
+  @Nullable String id,
+
+  @JsonProperty("label")
+  @Nullable String label,
+
+  @JsonProperty("status")
+  @JsonDeserialize(using = ResultStatusDeserializer.class)
+  @Nullable Status status
+) {
 
   @AllArgsConstructor
   public enum Status {
@@ -31,14 +36,4 @@ public class Result {
       };
     }
   }
-
-  @JsonProperty("id")
-  private @Nullable String id;
-
-  @JsonProperty("label")
-  private @Nullable String label;
-
-  @JsonProperty("status")
-  @JsonDeserialize(using = ResultStatusDeserializer.class)
-  private @Nullable Status status;
 }

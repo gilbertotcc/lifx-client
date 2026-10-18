@@ -1,14 +1,12 @@
 package com.github.gilbertotcc.lifx.operations;
 
 import com.github.gilbertotcc.lifx.models.Light;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@RequiredArgsConstructor
-@Getter
-public class ListLightsOutput {
+public record ListLightsOutput(List<Light> lights) {
 
-  private final List<Light> lights;
+  public ListLightsOutput {
+    lights = List.copyOf(lights);
+  }
 }

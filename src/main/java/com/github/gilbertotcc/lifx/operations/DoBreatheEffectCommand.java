@@ -27,8 +27,8 @@ public class DoBreatheEffectCommand
    */
   @Override
   public Either<LifxCallException, CommandOutput<List<Result>>> execute(DoBreatheEffectInput input) {
-    LightSelector lightSelector = input.getLightSelector();
-    BreatheEffect breatheEffect = input.getBreatheEffect();
+    LightSelector lightSelector = input.lightSelector();
+    BreatheEffect breatheEffect = input.breatheEffect();
 
     log.info("Do breathe effect with {}. Settings: {}",
       lightSelector.identifier(), breatheEffect);
