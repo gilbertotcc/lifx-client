@@ -21,7 +21,7 @@ allowed-tools:
 
 # Add or change a LIFX operation
 
-Paths below are relative to `src/main/java/com/github/gilbertotcc/lifx/` unless they start with `src/` or `.claude/`.
+Paths below are relative to `src/main/java/com/github/gilbertotcc/lifx/` unless they start with `src/`.
 
 ## 1. Scope
 
@@ -41,21 +41,23 @@ Paths below are relative to `src/main/java/com/github/gilbertotcc/lifx/` unless 
 
 ## 3. New operation, in dependency order
 
-Follow [.claude/rules/operations.md](../../rules/operations.md) for class layout, logging, Javadoc and naming.
+Follow the [operations rule](../../rules/operations.md) for class layout, logging, Javadoc and naming.
 
 1. **Models** in `models/`: the request body and any new response type. Reuse `ResultsDto<Result>` for writes that
    return `results[]`. Add custom (de)serializers in `models/serializer` or `models/deserializer` only when Jackson
    annotations can't express the wire format. A new package needs a `@NullMarked` `package-info.java`.
-2. **`api/LifxApi`**: one method with the HTTP verb annotation, a `/v1/...` path, `@Path("selector") LightSelector`,
-   `@Query` or `@Body` parameters, and a `Call<...>` type matching the `2XX` schema.
+2. **`api/LifxApi`**: one method with the HTTP verb annotation, a `/v1/...` path, `@Path("selector") LightSelector` only
+   when the path has `{selector}` (other path params, such as Activate Scene's `{scene_uuid}`, get their own `@Path`
+   with a plain type like `UUID`), `@Query` or `@Body` parameters, and a `Call<...>` type matching the `2XX` schema.
 3. **Operation** in `operations/`: the `*Input` record, the `*Command` (write) or `*Query` (read) implementing
    `Operation<I, O>`, and an `*Output` record only when `CommandOutput<T>` doesn't fit.
 4. **`LifxClient`**: a method `Either<LifxCallException, O> name(NameInput input)`.
 5. **`impl/LifxClientImpl`**: it uses a private Lombok `@RequiredArgsConstructor`, so constructor arguments follow
    field order.
    1. Add a `private final` field at the end of the `// Operations` block.
-   2. Add `new NameCommand(lifxApi)` at the same position in the `new LifxClientImpl(...)` call in
-      `createNewClientFor(baseUrl, accessToken)`, so the field list and the argument list stay in the same order.
+   2. Add `new NameCommand(lifxApi)` (or `new NameQuery(lifxApi)` for a read) at the same position in the
+      `new LifxClientImpl(...)` call in `createNewClientFor(baseUrl, accessToken)`, so the field list and the argument
+      list stay in the same order.
    3. Add an `@Override` method that delegates to `field.execute(input)`.
 6. **Tests and fixtures** per [testing.md](testing.md).
 

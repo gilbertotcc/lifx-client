@@ -11,10 +11,13 @@ paths:
 
 - Naming: `*Query` for reads, `*Command` for writes, with `*Input` / `*Output` beside them.
 - Class shape: `@Slf4j @RequiredArgsConstructor`, `private final LifxApi lifxApi`, `implements Operation<I, O>`.
-  `execute` calls `log.info` once (selector `identifier()` plus key inputs), then
+  `execute` calls `log.info` once with the key inputs: the selector's `identifier()` when the endpoint has one
+  (`ListLightsQuery`), otherwise the identifying input (`ValidateColorQuery` logs the color string). Then it runs
   `new CallExecutor<>(lifxApi.x(...)).execute().map(...)`. See `ListLightsQuery` and `SetLightsStateCommand`.
-- Input: a record, with `LightSelector` for selector params (`TransitToNextStateInput`). Exception: an input that is
-  the wire body extends its model DTO (`SetLightsStatesInput extends LightsStatesDto`).
+- Input: a record. A `{selector}` path param is a `LightSelector` (`TransitToNextStateInput`); other params use plain
+  types (`ValidateColorInput` holds a `String`; a `{scene_uuid}` would be a `UUID`). Endpoints such as List Scenes
+  have no selector at all. Exception: an input that is the wire body extends its model DTO
+  (`SetLightsStatesInput extends LightsStatesDto`).
 - Output: writes reuse `CommandOutput<List<Result>>`, or `CommandOutput<List<OperationResult>>` for
   `SetLightsStatesCommand`; unwrap `ResultsDto` with `response.results()`. Reads get their own record, with
   `List.copyOf` in the compact constructor for lists (`ListLightsOutput`).
@@ -35,8 +38,8 @@ paths:
   body, so `@return` says "the parsed color on the right, possibly null if a successful response has no body, or a
   call exception on the left ...". Match the wording to what the `.map` does with a null body.
 - `LifxClient` and `LifxClientImpl` change together: the interface method returns `Either<LifxCallException, O>`;
-  the impl gets a field under `// Operations`, a delegating `@Override`, and a `new XxxCommand(lifxApi)` argument in
-  `createNewClientFor`. Field order must equal constructor argument order (private Lombok
-  `@RequiredArgsConstructor`).
+  the impl gets a field under `// Operations`, a delegating `@Override`, and a `new XxxCommand(lifxApi)` /
+  `new XxxQuery(lifxApi)` argument in `createNewClientFor`. Field order must equal constructor argument order
+  (private Lombok `@RequiredArgsConstructor`).
 - For a whole new endpoint or a signature change, follow the `lifx-operation` skill
   (`.claude/skills/lifx-operation/SKILL.md`).
