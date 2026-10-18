@@ -27,8 +27,8 @@ public class ToggleLightsPowerCommand
    */
   @Override
   public Either<LifxCallException, CommandOutput<List<Result>>> execute(ToggleLightsPowerInput input) {
-    var lightSelector = input.getLightSelector();
-    var duration = input.getDuration();
+    var lightSelector = input.lightSelector();
+    var duration = input.duration();
 
     log.info("Toggle lights power of {} in {} seconds", lightSelector.identifier(), duration.toSeconds());
     return new CallExecutor<>(lifxApi.togglePower(lightSelector, TogglePower.in(duration))).execute()
