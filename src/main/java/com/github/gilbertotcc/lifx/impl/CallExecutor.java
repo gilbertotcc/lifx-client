@@ -15,6 +15,13 @@ public class CallExecutor<T> {
 
   private final Call<T> call;
 
+  /**
+   * Synchronously executes the HTTP call.
+   *
+   * @return the response body on the right, possibly null for a successful response without a body;
+   *     otherwise a {@link LifxCallException} on the left, wrapping a call execution failure or a
+   *     {@link LifxErrorException} for a non-2xx response
+   */
   public Either<LifxCallException, T> execute() {
     return Try.of(call::execute)
       .toEither()

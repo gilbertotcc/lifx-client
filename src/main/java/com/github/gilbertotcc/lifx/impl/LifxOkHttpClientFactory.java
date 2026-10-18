@@ -24,6 +24,9 @@ class LifxOkHttpClientFactory {
 
   // Define interceptors
 
+  /**
+   * Creates an interceptor that adds the supplied token as a Bearer Authorization header to each request.
+   */
   private static Interceptor accessTokenInterceptor(final String accessToken) {
     return chain -> {
       final Request authRequest = chain.request().newBuilder()

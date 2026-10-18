@@ -19,6 +19,11 @@ public enum LifxErrorType {
   @NonNull
   final String reason;
 
+  /**
+   * Finds the error type for an HTTP status code.
+   *
+   * @return the mapped type, or {@link #UNKNOWN} for any unmapped code
+   */
   public static LifxErrorType byHttpCode(final int httpCode) {
     return switch (httpCode) {
       case 400                -> BAD_REQUEST;

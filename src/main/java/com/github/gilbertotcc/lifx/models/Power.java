@@ -11,6 +11,14 @@ public enum Power {
 
   public final String label;
 
+  /**
+   * Resolves an exact, case-sensitive power label without trimming whitespace.
+   *
+   * @param label {@code "on" or "off"}
+   * @return the matching power
+   * @throws IllegalArgumentException if the label is unrecognized
+   * @throws NullPointerException if the label is null
+   */
   public static Power byLabel(final String label) {
     return switch (label) {
       case "on"  -> ON;
