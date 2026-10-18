@@ -31,14 +31,31 @@ class JacksonUtilsTest {
 
   @Test
   void deserializeNullPrimitiveShouldFail() {
-    String json = "{\"id\":\"1234\",\"color\":{\"hue\":120.0,\"saturation\":1.0,\"kelvin\":null}}";
+    String json = """
+      {
+        "id": "1234",
+        "color": {
+          "hue": 120.0,
+          "saturation": 1.0,
+          "kelvin": null
+        }
+      }
+      """;
 
     assertThrows(JacksonException.class, () -> deserializeJson(json, Light.class));
   }
 
   @Test
   void deserializeMissingPrimitiveShouldUseDefaultValue() {
-    String json = "{\"id\":\"1234\",\"color\":{\"hue\":120.0,\"saturation\":1.0}}";
+    String json = """
+      {
+        "id": "1234",
+        "color": {
+          "hue": 120.0,
+          "saturation": 1.0
+        }
+      }
+      """;
 
     Light light = deserializeJson(json, Light.class);
 
