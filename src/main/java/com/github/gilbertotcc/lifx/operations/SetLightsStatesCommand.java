@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.joining;
 @Slf4j
 @RequiredArgsConstructor
 public class SetLightsStatesCommand
-  implements Operation<SetLightsStatesInput, CommandOutput<List<OperationResult>>, LifxCallException> {
+  implements Operation<SetLightsStatesInput, CommandOutput<List<OperationResult>>> {
 
   private final LifxApi lifxApi;
 

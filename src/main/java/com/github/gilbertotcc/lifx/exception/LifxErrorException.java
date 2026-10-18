@@ -2,7 +2,7 @@ package com.github.gilbertotcc.lifx.exception;
 
 import static com.github.gilbertotcc.lifx.util.JacksonUtils.OBJECT_MAPPER;
 
-import com.github.gilbertotcc.lifx.models.Error;
+import com.github.gilbertotcc.lifx.models.ErrorModel;
 import io.vavr.control.Try;
 import lombok.Getter;
 import org.jspecify.annotations.Nullable;
@@ -17,40 +17,41 @@ public class LifxErrorException extends RuntimeException {
   @Serial
   private static final long serialVersionUID = -1185407732054355941L;
 
-  private final @Nullable LifxErrorType type;
-  private final @Nullable Error error;
+  private final LifxErrorType type;
+  private final @Nullable ErrorModel errorModel;
 
   /**
    * Builds an exception from the HTTP status and JSON error body, consuming the body.
    * Unmapped status codes use {@link LifxErrorType#UNKNOWN}.
    *
-   * @return an exception containing the parsed error, or a fresh "Unknown error" exception with null type
-   *     and error if the body is absent, cannot be read, or cannot be parsed
+   * @return an exception with the type mapped from the status code, and a null error model if the body is absent,
+   *     cannot be read, or cannot be parsed
    */
   public static LifxErrorException from(Response<?> response) {
-    return Try.of(() -> {
-      var errorType = LifxErrorType.byHttpCode(response.code());
+    var errorType = LifxErrorType.byHttpCode(response.code());
+    var errorModel = Try.of(() -> {
       var errorBody = Objects.requireNonNull(response.errorBody());
-      var error = OBJECT_MAPPER.readerFor(Error.class).<Error>readValue(errorBody.string());
-      return new LifxErrorException(errorType, error);
-    })
-      .getOrElse(LifxErrorException::new);
+      return OBJECT_MAPPER.readerFor(ErrorModel.class).<ErrorModel>readValue(errorBody.string());
+    }).getOrNull();
+
+    return new LifxErrorException(errorType, errorModel);
   }
 
   /**
    * Creates an exception retaining the error type and parsed error, with both summarized in its message.
+   * The parsed error may be null, and then only the type is summarized.
    *
-   * @throws NullPointerException if the type or error is null
+   * @throws NullPointerException if the type is null
    */
-  public LifxErrorException(final LifxErrorType type, final Error error) {
-    super("Error %s (%s): %s".formatted(type.name(), type.reason, error.errorMessage()));
+  public LifxErrorException(final LifxErrorType type, final @Nullable ErrorModel errorModel) {
+    super(message(type, errorModel));
     this.type = type;
-    this.error = error;
+    this.errorModel = errorModel;
   }
 
-  private LifxErrorException() {
-    super("Unknown error");
-    this.type = null;
-    this.error = null;
+  private static String message(final LifxErrorType type, final @Nullable ErrorModel errorModel) {
+    var summary = "Error %s (%s)".formatted(type.name(), type.reason);
+    var errorMessage = errorModel == null ? null : errorModel.errorMessage();
+    return errorMessage == null ? summary : "%s: %s".formatted(summary, errorMessage);
   }
 }

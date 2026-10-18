@@ -77,7 +77,7 @@ files. Every `.lycheeignore` entry needs a dated comment explaining why the URL 
 Request flow: `LifxClient` (public interface, factory `LifxClient.newLifxClientFor(token)`) → `impl.LifxClientImpl` →
 one `operations.*Command`/`*Query` per endpoint → Retrofit `api.LifxApi` → wrapped by `impl.CallExecutor`.
 
-- **Operations** (`operations/`): each endpoint is an `Operation<I, O, E>` with its own `*Input` / `*Output` (or
+- **Operations** (`operations/`): each endpoint is an `Operation<I, O>` with its own `*Input` / `*Output` (or
   generic `CommandOutput<T>`) class. Naming: `*Query` for reads, `*Command` for writes. Adding an endpoint means:
   method in `LifxApi`, new Input/Command(+Output) in `operations`, wiring in `LifxClientImpl.createNewClientFor`, and a
   method on `LifxClient`.

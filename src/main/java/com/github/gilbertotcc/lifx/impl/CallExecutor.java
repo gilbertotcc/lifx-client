@@ -25,9 +25,12 @@ public class CallExecutor<T> {
   public Either<LifxCallException, T> execute() {
     return Try.of(call::execute)
       .toEither()
-      .filterOrElse(Response::isSuccessful, LifxErrorException::from)
+      .mapLeft(throwable -> LifxCallException.with(call, throwable))
+      .filterOrElse(
+        Response::isSuccessful,
+        errorResponse -> LifxCallException.with(call, LifxErrorException.from(errorResponse))
+      )
       .map(Response::body)
-      .mapLeft(error -> LifxCallException.with(call, error))
       .peekLeft(error -> log.error("Call {} failed with error: {}", call.request(), error.getMessage()));
   }
 }

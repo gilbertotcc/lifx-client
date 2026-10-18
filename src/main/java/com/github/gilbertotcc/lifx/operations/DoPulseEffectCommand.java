@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class DoPulseEffectCommand
-  implements Operation<DoPulseEffectInput, CommandOutput<List<Result>>, LifxCallException> {
+  implements Operation<DoPulseEffectInput, CommandOutput<List<Result>>> {
 
   private final LifxApi lifxApi;
 

@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ValidateColorQuery implements Operation<ValidateColorInput, ValidateColorOutput, LifxCallException> {
+public class ValidateColorQuery implements Operation<ValidateColorInput, ValidateColorOutput> {
 
   private final LifxApi lifxApi;
 

@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ListLightsQuery implements Operation<ListLightsInput, ListLightsOutput, LifxCallException> {
+public class ListLightsQuery implements Operation<ListLightsInput, ListLightsOutput> {
 
   private final LifxApi lifxApi;
 
