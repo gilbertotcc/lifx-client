@@ -61,8 +61,8 @@ class CallExecutorTest {
     LifxErrorException cause = (LifxErrorException) exception.getCause();
 
     assertEquals(LifxErrorType.NOT_FOUND, cause.getType());
-    assertEquals("color is missing", cause.getError().getErrorMessage());
-    assertEquals("color", cause.getError().getDetails().get(0).getField());
-    assertEquals("is missing", cause.getError().getDetails().get(0).getMessages().get(0));
+    assertEquals("color is missing", cause.getError().errorMessage());
+    assertEquals("color", cause.getError().details().get(0).field());
+    assertEquals("is missing", cause.getError().details().get(0).messages().get(0));
   }
 }

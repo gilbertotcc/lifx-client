@@ -17,10 +17,10 @@ class ErrorTest {
     String json = loadJsonFromFile(JSON_FILE);
     Error error = deserializeJson(json, Error.class);
 
-    assertEquals("color is missing", error.getErrorMessage());
-    assertEquals(1, error.getDetails().size());
-    Error.ErrorDetail errorDetail = error.getDetails().get(0);
-    assertEquals("color", errorDetail.getField());
-    assertEquals("is missing", errorDetail.getMessages().get(0));
+    assertEquals("color is missing", error.errorMessage());
+    assertEquals(1, error.details().size());
+    Error.ErrorDetail errorDetail = error.details().get(0);
+    assertEquals("color", errorDetail.field());
+    assertEquals("is missing", errorDetail.messages().get(0));
   }
 }

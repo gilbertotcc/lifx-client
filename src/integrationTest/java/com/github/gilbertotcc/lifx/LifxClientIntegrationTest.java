@@ -65,12 +65,12 @@ class LifxClientIntegrationTest {
     lifxClient.listLights(ListLightsInput.ALL_LIGHTS)
       .fold(error -> List.<Light>of(), ListLightsOutput::lights)
       .stream()
-      .filter(Light::isConnected)
-      .filter(light -> light.getId() != null && light.getPower() != null)
+      .filter(Light::connected)
+      .filter(light -> light.id() != null && light.power() != null)
       .findFirst()
       .ifPresent(light -> {
-        lightId = light.getId();
-        originalPower = light.getPower();
+        lightId = light.id();
+        originalPower = light.power();
       });
   }
 
@@ -100,7 +100,7 @@ class LifxClientIntegrationTest {
   void listLightsShouldSucceed() {
     List<Light> lights = assertRight(lifxClient.listLights(ListLightsInput.ALL_LIGHTS)).lights();
 
-    assertEquals(lights.size(), lights.stream().map(Light::getId).distinct().count(), "Light ids are not unique");
+    assertEquals(lights.size(), lights.stream().map(Light::id).distinct().count(), "Light ids are not unique");
     lights.forEach(LifxClientIntegrationTest::assertWellFormed);
   }
 
@@ -158,7 +158,7 @@ class LifxClientIntegrationTest {
     var input = new ListLightsInput(Selectors.byId(lightId));
     return assertRight(lifxClient.listLights(input)).lights().stream()
       .findFirst()
-      .map(Light::getPower)
+      .map(Light::power)
       .orElse(null);
   }
 
@@ -180,27 +180,27 @@ class LifxClientIntegrationTest {
   }
 
   private static void assertWellFormed(final Light light) {
-    assertNotNull(light.getId(), "Light without id");
-    assertAll("light " + light.getId(),
-      () -> assertFalse(light.getId().isBlank(), "id is blank"),
-      () -> assertNotNull(light.getLabel(), "label"),
-      () -> assertNotNull(light.getPower(), "power"),
-      () -> assertBetween(0, 1, light.getBrightness(), "brightness"),
-      () -> assertColor(light.getColor()),
-      () -> assertNotNull(light.getGroup(), "group"),
-      () -> assertNotNull(light.getLocation(), "location"),
-      () -> assertNotNull(light.getProduct(), "product"),
-      () -> assertNotNull(light.getLastSeen(), "last_seen"),
-      () -> assertTrue(light.getSecondsSinceSeen() >= 0, "seconds_since_seen is negative"));
+    assertNotNull(light.id(), "Light without id");
+    assertAll("light " + light.id(),
+      () -> assertFalse(light.id().isBlank(), "id is blank"),
+      () -> assertNotNull(light.label(), "label"),
+      () -> assertNotNull(light.power(), "power"),
+      () -> assertBetween(0, 1, light.brightness(), "brightness"),
+      () -> assertColor(light.color()),
+      () -> assertNotNull(light.group(), "group"),
+      () -> assertNotNull(light.location(), "location"),
+      () -> assertNotNull(light.product(), "product"),
+      () -> assertNotNull(light.lastSeen(), "last_seen"),
+      () -> assertTrue(light.secondsSinceSeen() >= 0, "seconds_since_seen is negative"));
   }
 
   private static void assertColor(final Light.Color color) {
     assertNotNull(color, "color");
     assertAll("color",
-      () -> assertBetween(0, 360, color.getHue(), "hue"),
-      () -> assertBetween(0, 1, color.getSaturation(), "saturation"),
+      () -> assertBetween(0, 360, color.hue(), "hue"),
+      () -> assertBetween(0, 1, color.saturation(), "saturation"),
       // Kelvin range documented by the LIFX API
-      () -> assertBetween(1500, 9000, color.getKelvin(), "kelvin"));
+      () -> assertBetween(1500, 9000, color.kelvin(), "kelvin"));
   }
 
   private static void assertBetween(final double min, final double max, final double actual, final String name) {

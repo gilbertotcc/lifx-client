@@ -38,7 +38,7 @@ public class LifxErrorException extends RuntimeException {
   }
 
   public LifxErrorException(final LifxErrorType type, final Error error) {
-    super("Error %s (%s): %s".formatted(type.name(), type.reason, error.getErrorMessage()));
+    super("Error %s (%s): %s".formatted(type.name(), type.reason, error.errorMessage()));
     this.type = type;
     this.error = error;
   }

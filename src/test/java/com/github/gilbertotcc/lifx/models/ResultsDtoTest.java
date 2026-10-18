@@ -40,11 +40,11 @@ class ResultsDtoTest {
 
     assertEquals(2, resultsDto.getResults().size());
     OperationResult operationResult0 = resultsDto.getResults().get(0);
-    assertEquals("[selector 1]", operationResult0.getOperation().getSelector());
-    assertEquals(2, operationResult0.getResults().size());
+    assertEquals("[selector 1]", operationResult0.operation().selector());
+    assertEquals(2, operationResult0.results().size());
     OperationResult operationResult1 = resultsDto.getResults().get(1);
-    assertEquals("[selector 2]", operationResult1.getOperation().getSelector());
-    assertTrue(operationResult1.getResults().isEmpty());
-    assertEquals("not found", operationResult1.getError());
+    assertEquals("[selector 2]", operationResult1.operation().selector());
+    assertTrue(operationResult1.results().isEmpty());
+    assertEquals("not found", operationResult1.error());
   }
 }
