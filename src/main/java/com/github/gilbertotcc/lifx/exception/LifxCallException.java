@@ -4,8 +4,11 @@ import static java.lang.String.format;
 
 import retrofit2.Call;
 
+import java.io.Serial;
+
 public class LifxCallException extends RuntimeException {
 
+  @Serial
   private static final long serialVersionUID = 8909863162390335463L;
 
   public static LifxCallException with(final Call<?> call, final Throwable cause) {

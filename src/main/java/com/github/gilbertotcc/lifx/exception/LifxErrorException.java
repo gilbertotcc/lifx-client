@@ -9,11 +9,13 @@ import lombok.Getter;
 import org.jspecify.annotations.Nullable;
 import retrofit2.Response;
 
+import java.io.Serial;
 import java.util.Objects;
 
 @Getter
 public class LifxErrorException extends RuntimeException {
 
+  @Serial
   private static final long serialVersionUID = -1185407732054355941L;
 
   private final @Nullable LifxErrorType type;
