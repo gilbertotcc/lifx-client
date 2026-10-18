@@ -1,7 +1,5 @@
 package com.github.gilbertotcc.lifx.models;
 
-import static java.lang.String.format;
-
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -17,6 +15,6 @@ public class MultiZoneLightSelector implements LightSelector, CombinableLightSel
   public String identifier() {
     return zones.stream()
       .map(Object::toString)
-      .reduce(selector.identifier(), (multiZoneSelector, zone) -> format("%s|%s", multiZoneSelector, zone));
+      .reduce(selector.identifier(), "%s|%s"::formatted);
   }
 }

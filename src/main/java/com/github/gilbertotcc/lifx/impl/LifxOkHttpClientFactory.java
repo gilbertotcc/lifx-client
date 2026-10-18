@@ -1,7 +1,5 @@
 package com.github.gilbertotcc.lifx.impl;
 
-import static java.lang.String.format;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import okhttp3.Interceptor;
@@ -29,7 +27,7 @@ class LifxOkHttpClientFactory {
   private static Interceptor accessTokenInterceptor(final String accessToken) {
     return chain -> {
       final Request authRequest = chain.request().newBuilder()
-        .addHeader("Authorization", format("Bearer %s", accessToken))
+        .addHeader("Authorization", "Bearer %s".formatted(accessToken))
         .build();
       return chain.proceed(authRequest);
     };

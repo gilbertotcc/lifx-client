@@ -43,7 +43,6 @@ import java.util.List;
 
 import static io.vavr.control.Validation.invalid;
 import static io.vavr.control.Validation.valid;
-import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
 @Slf4j
@@ -114,7 +113,7 @@ public class LifxClientImpl implements LifxClient {
    * @param parameterName the name to substitute into the error message
    */
   static <T> Validation<String, T> notNull(String parameterName, @Nullable T value) {
-    return value == null ? invalid(format("%s is null", parameterName)) : valid(value);
+    return value == null ? invalid("%s is null".formatted(parameterName)) : valid(value);
   }
 
   @Override

@@ -1,7 +1,5 @@
 package com.github.gilbertotcc.lifx.exception;
 
-import static java.lang.String.format;
-
 import retrofit2.Call;
 
 import java.io.Serial;
@@ -13,7 +11,7 @@ public class LifxCallException extends RuntimeException {
 
   public static LifxCallException with(final Call<?> call, final Throwable cause) {
     return new LifxCallException(
-      format("Call %s %s failed with cause %s", call.request().method(), call.request().url(), cause.getMessage()),
+      "Call %s %s failed with cause %s".formatted(call.request().method(), call.request().url(), cause.getMessage()),
       cause
     );
   }
