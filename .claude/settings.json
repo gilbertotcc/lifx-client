@@ -12,7 +12,7 @@
       "WebFetch(domain:api.developer.lifx.com)"
     ],
     "ask": [
-      "Bash(./gradlew integrationTest*)",
+      "Bash(./gradlew *integrationTest*)",
       "Bash(git push*)"
     ],
     "deny": [
