@@ -26,6 +26,7 @@ public class LifxErrorException extends RuntimeException {
    *
    * @return an exception with the type mapped from the status code, and a null error model if the body is absent,
    *     cannot be read, or cannot be parsed
+   * @throws NullPointerException if the response is null
    */
   public static LifxErrorException from(Response<?> response) {
     var errorType = LifxErrorType.byHttpCode(response.code());
@@ -38,8 +39,8 @@ public class LifxErrorException extends RuntimeException {
   }
 
   /**
-   * Creates an exception retaining the error type and parsed error, with both summarized in its message.
-   * The parsed error may be null, and then only the type is summarized.
+   * Creates an exception retaining the error type and parsed error.
+   * The message includes the type and reason, plus the parsed error message when non-null.
    *
    * @throws NullPointerException if the type is null
    */
@@ -49,6 +50,11 @@ public class LifxErrorException extends RuntimeException {
     this.errorModel = errorModel;
   }
 
+  /**
+   * Formats the error type and reason, appending the parsed error message when non-null.
+   *
+   * @throws NullPointerException if the type is null
+   */
   private static String message(final LifxErrorType type, final @Nullable ErrorModel errorModel) {
     var summary = "Error %s (%s)".formatted(type.name(), type.reason);
     var errorMessage = errorModel == null ? null : errorModel.errorMessage();
