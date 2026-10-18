@@ -1,11 +1,6 @@
 package com.github.gilbertotcc.lifx.models;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
-public class RandomLightSelector implements LightSelector {
-
-  private RandomizableLightSelector selector;
+public record RandomLightSelector(RandomizableLightSelector selector) implements LightSelector {
 
   @Override
   public String identifier() {
