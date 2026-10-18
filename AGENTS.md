@@ -6,20 +6,10 @@ This file provides guidance to AI coding agents working with code in this reposi
 
 Java 17+ client library for the [LIFX HTTP API](https://api.developer.lifx.com/), built with Gradle (wrapper pins
 Gradle 9.8.1). Published as `com.github.gilbertotcc.lifx:lifx-client`; the version lives in `gradle.properties`.
+Compiled with a JDK 25 toolchain for `--release 17`.
 
-Gradle itself needs a JVM 17 or later. Compilation and tests use a JDK 25 toolchain (`java.toolchain` in
-`build.gradle`), while main and test classes are compiled with `--release 17` (`minJava` in `build.gradle`), so the
-published library runs on Java 17+. Gradle auto-detects installed JDKs, SDKMAN ones included; if none matches, the
-foojay resolver plugin (`settings.gradle`) auto-provisions it into `~/.gradle/jdks`.
-
-Dependency and plugin versions live in the version catalog `gradle/libs.versions.toml` (except the foojay plugin in
-`settings.gradle` and the Checkstyle/JaCoCo `toolVersion`s in `build.gradle`). `gradle.properties` enables the
-configuration cache and the build cache, so build logic must stay configuration-cache compatible (lazy
-`tasks.register`/`tasks.named`, no `Project` access at execution time).
-
-`.sdkmanrc` pins the JDK for [SDKMAN](https://sdkman.io/) (Temurin, as in CI): `sdk env install` installs it,
-`sdk env` switches the current shell to it and `sdk env clear` reverts. Set `sdkman_auto_env=true` in
-`~/.sdkman/etc/config` to switch automatically on `cd`.
+Build logic, toolchains, CI, Dependabot and dependency pins: `.claude/rules/build-and-ci.md` (loads automatically when
+you open build files).
 
 ## Commands
 
@@ -36,42 +26,10 @@ configuration cache and the build cache, so build logic must stay configuration-
 ./gradlew integrationTest       # live LIFX cloud test (src/integrationTest), needs LIFX_PAT; not part of check
 ```
 
-`test` runs only the `junit-jupiter` and `archunit` engines, `spockTest` only the `spock` engine (Spock 2.5 on
-Groovy 5.0). `-PtestJavaVersion=<N>` chooses the JVM both tasks run on, while compilation stays on the toolchain.
-Mockito is loaded as a `-javaagent` through the `mockitoAgent` configuration.
+`integrationTest` hits the real LIFX cloud with `LIFX_PAT` and switches a real light; never run it unless asked.
+`check` (and CI) only compiles and checkstyles it.
 
-CI runs on GitHub Actions: the `Build` job (`.github/workflows/ci.yml`) is a matrix over `test-java: [17, 25]` that
-installs that JDK plus 25 (Gradle runs on 25) and runs `./gradlew check --continue -PtestJavaVersion=<N>` on pull
-requests to and pushes to `main`. It reports test results on pull requests, and JaCoCo coverage from the 25 leg only.
-Workflows reference actions by version tag (`@vX.Y.Z`), not commit SHA; Dependabot (`.github/dependabot.yml`) updates
-them weekly in one grouped pull request.
-
-Dependabot also updates Gradle dependencies, plugins and the wrapper weekly, after a 7-day cooldown: minor and patch
-updates in one grouped pull request, majors separately (grouped per family, such as Jackson or JUnit). Upgrades that
-need a migration (Spock/Groovy line changes) are ignored; each ignore rule in
-`.github/dependabot.yml` states its reason and when to remove it.
-
-WireMock is on a 4.0.0 beta on purpose: 3.13.2 pulls a vulnerable handlebars and Jetty 11. Move to 4.x GA once
-released (see the comment in `gradle/libs.versions.toml`).
-
-No remote publishing repository is configured; `maven-publish` provides `publishToMavenLocal`.
-
-`LifxClientIntegrationTest` lives in its own JVM test suite (`src/integrationTest`) and runs only through
-`integrationTest`: it hits the real LIFX cloud with the token in `LIFX_PAT` and changes the power of a real light,
-restoring it at the end. `check` (and so CI) compiles and checkstyles it but never runs it. The suite gets neither
-the Mockito agent nor JaCoCo.
-
-### Markdown checks
-
-```bash
-npx markdownlint-cli2           # lint Markdown files (config: .markdownlint-cli2.yaml)
-lychee .                        # check URLs in Markdown files (config: lychee.toml, ignore list: .lycheeignore)
-```
-
-GitHub Actions (`.github/workflows/check-markdown.yml`) runs both on pull requests that touch Markdown files or their
-configuration. Both tools skip the third-party skill `.claude/skills/caveman-commit/` (managed through
-`skills-lock.json`) and git-ignored files; first-party guidance under `.claude/` is checked. Every `.lycheeignore`
-entry needs a dated comment explaining why the URL is excluded.
+Markdown lint and link checks: `.claude/rules/markdown.md`.
 
 ## Architecture
 
@@ -127,3 +85,18 @@ JSON fixtures for request/response bodies are under `src/test/resources/json/`; 
 `operations/OperationsTestFixtures` and `testutil/TestUtils`. HTTP is mocked with WireMock, JSON compared with
 JSONAssert. The live test in `src/integrationTest` shares nothing with `src/test`: it has its own classpath (the
 library, JUnit Jupiter, Logback) and its own `logback-test.xml`.
+
+## Agent workflow
+
+- Run Gradle as `./gradlew <task> --console=plain`. When Claude Code runs it (env `CLAUDECODE` set), test-logger hides
+  passed tests, so a green `check` prints about 1 KB and a failure shows the test, assertion and line. Don't add `-q`:
+  it also hides the failing test's details.
+- Run the targeted `--tests` first, then the full `./gradlew check --console=plain` once before finishing.
+- Commits: Conventional Commits (`type(scope): summary`); breaking changes use `!` and a `BREAKING CHANGE:` footer. A
+  `Co-Authored-By` trailer that the harness requires is kept: the third-party `caveman-commit` skill's "no AI
+  attribution" rule gives way to it.
+
+## Compact instructions
+
+When compacting, keep: the endpoint or task in progress, spec mismatches found, files changed, failing test names with
+their first error line, and decisions still open. Drop passing test output and file contents that can be re-read.
