@@ -1,17 +1,12 @@
 ---
 name: lifx-operation
 description: >-
-  Add a new LIFX HTTP API endpoint to this lifx-client library, or change an existing operation's request, response
-  or signature: the Retrofit method in LifxApi, the *Command/*Query class with its *Input/*Output records, the models,
-  the LifxClient/LifxClientImpl wiring and the WireMock tests. Checks the endpoint against the LIFX OpenAPI reference
-  at api.developer.lifx.com first.
-when_to_use: >-
-  The user asks to add, support, implement, update or fix a LIFX endpoint, effect or API call in this client, e.g.
-  "add Effects Off", "support the Clean endpoint", "implement the Morph effect", "implement the Sunset effect from
-  the LIFX API", "add List Scenes / Activate Scene", "the scenes response changed", "SetLightsStateCommand sends the
-  wrong field". Missing endpoints include Move, Morph, Flame, Clouds, Sunrise and Sunset effects, Effects Off, List
-  Scenes, Activate Scene and Clean. Invoke it before exploring the code or delegating to a subagent. Not for build,
-  dependency, CI or README work.
+  Add or change a LIFX HTTP API endpoint (operation) in this client: the LifxApi Retrofit method, the *Command/*Query
+  with its *Input/*Output records, models, LifxClient/LifxClientImpl wiring and WireMock tests. Checks the LIFX
+  OpenAPI reference first. Use when asked e.g. "add Effects Off", "implement the Sunset effect", "add List Scenes /
+  Activate Scene", "the scenes response changed", "SetLightsStateCommand sends the wrong field"; covers effects,
+  scenes, Clean. Invoke it before exploring the code or delegating to a subagent. Not for build, dependency, CI or
+  README work.
 argument-hint: "<endpoint title or reference slug>"
 allowed-tools:
   - WebFetch(domain:api.developer.lifx.com)
@@ -32,8 +27,7 @@ Paths below are relative to `src/main/java/com/github/gilbertotcc/lifx/` unless 
 ## 2. Spec first
 
 1. Your first WebFetch must be `https://api.developer.lifx.com/llms.txt`. Take the page URL from that index; never
-   build it from the endpoint name (Sunset is `sunrise-effect-copy.md`, Sunrise is `clouds-effect-copy.md`, Clouds is
-   `flame-effect-copy.md`).
+   build it from the endpoint name (some slugs are shifted; see the table in [spec-lookup.md](spec-lookup.md)).
 2. Follow [spec-lookup.md](spec-lookup.md) to extract method, path, parameters, request body and `2XX` schema from
    that page.
 3. For a change, compare the spec with the current `LifxApi` method, its body/response models and the `*Input` record.
@@ -41,7 +35,9 @@ Paths below are relative to `src/main/java/com/github/gilbertotcc/lifx/` unless 
 
 ## 3. New operation, in dependency order
 
-Follow the [operations rule](../../rules/operations.md) for class layout, logging, Javadoc and naming.
+Follow the [operations rule](../../rules/operations.md) for class layout, logging, Javadoc and naming. It loads
+automatically when a file under `operations/`, `LifxApi`, `LifxClient` or `LifxClientImpl` is opened; read it only if
+it is not already in context.
 
 1. **Models** in `models/`: the request body and any new response type. Reuse `ResultsDto<Result>` for writes that
    return `results[]`. Add custom (de)serializers in `models/serializer` or `models/deserializer` only when Jackson
@@ -73,8 +69,10 @@ Follow the [operations rule](../../rules/operations.md) for class layout, loggin
 
 ## 5. Verify
 
-1. Run the operation's test: `./gradlew test --tests 'com.github.gilbertotcc.lifx.operations.<Name>Test'`.
-2. Run `./gradlew check` (Error Prone, NullAway, `-Werror`, Checkstyle, ArchUnit, JUnit and Spock). Fix every
-   finding; suppress one only when unavoidable, with a comment giving the reason.
+1. Run the operation's test:
+   `./gradlew test --tests 'com.github.gilbertotcc.lifx.operations.<Name>Test' --console=plain`.
+2. Run `./gradlew check --console=plain` (Error Prone, NullAway, `-Werror`, Checkstyle, ArchUnit, JUnit and
+   Spock). Fix every finding; suppress one only when unavoidable, with a comment giving the reason. Don't add `-q`:
+   it hides the failing test's name and assertion.
 3. Don't run `./gradlew integrationTest` unless the user asks: it switches real lights.
 4. Report the endpoint, the files changed, any spec mismatches found and whether the change is breaking.
