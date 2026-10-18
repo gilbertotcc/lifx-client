@@ -27,6 +27,14 @@ public record Result(
 
     public final String label;
 
+    /**
+     * Resolves an exact, case-sensitive result status label without trimming whitespace.
+     *
+     * @param label {@code "ok", "timed_out", or "offline"}
+     * @return the matching result status
+     * @throws IllegalArgumentException if the label is unrecognized
+     * @throws NullPointerException if the label is null
+     */
     public static Status byLabel(final String label) {
       return switch (label) {
         case "ok"        -> OK;

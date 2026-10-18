@@ -37,6 +37,11 @@ public class LifxErrorException extends RuntimeException {
       .getOrElse(LifxErrorException::new);
   }
 
+  /**
+   * Creates an exception retaining the error type and parsed error, with both summarized in its message.
+   *
+   * @throws NullPointerException if the type or error is null
+   */
   public LifxErrorException(final LifxErrorType type, final Error error) {
     super("Error %s (%s): %s".formatted(type.name(), type.reason, error.errorMessage()));
     this.type = type;
