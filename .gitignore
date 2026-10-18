@@ -198,3 +198,6 @@ gradle-app.setting
 # End of https://www.gitignore.io/api/java,linux,macos,gradle,windows,intellij+all
 
 .env
+
+# Git worktrees created by Claude Code
+.claude/worktrees/
