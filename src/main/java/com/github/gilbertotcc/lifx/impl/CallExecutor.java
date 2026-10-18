@@ -9,12 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.io.IOException;
-
-import static io.vavr.API.$;
-import static io.vavr.API.Case;
-import static io.vavr.Predicates.instanceOf;
-
 @Slf4j
 @AllArgsConstructor
 public class CallExecutor<T> {
@@ -26,7 +20,7 @@ public class CallExecutor<T> {
       .toEither()
       .filterOrElse(Response::isSuccessful, LifxErrorException::from)
       .map(Response::body)
-      .mapLeft(Case($(instanceOf(IOException.class)), error -> LifxCallException.with(call, error)))
+      .mapLeft(error -> LifxCallException.with(call, error))
       .peekLeft(error -> log.error("Call {} failed with error: {}", call.request(), error.getMessage()));
   }
 }
