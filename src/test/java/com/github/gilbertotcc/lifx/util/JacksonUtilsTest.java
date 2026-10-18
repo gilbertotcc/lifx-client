@@ -59,6 +59,6 @@ class JacksonUtilsTest {
 
     Light light = deserializeJson(json, Light.class);
 
-    assertEquals(0, light.getColor().getKelvin());
+    assertEquals(0, light.color().kelvin());
   }
 }

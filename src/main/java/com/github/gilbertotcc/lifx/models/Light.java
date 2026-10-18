@@ -5,133 +5,118 @@ import java.time.ZonedDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.gilbertotcc.lifx.models.deserializer.PowerDeserializer;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.annotation.JsonDeserialize;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Light {
-
-  @Getter
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  public static class Color {
-
-    @JsonProperty("hue")
-    private double hue;
-
-    @JsonProperty("saturation")
-    private double saturation;
-
-    @JsonProperty("kelvin")
-    private int kelvin;
-  }
-
-  @Getter
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  public static class Group {
-
-    @JsonProperty("id")
-    private @Nullable String id;
-
-    @JsonProperty("name")
-    private @Nullable String name;
-  }
-
-  @Getter
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  public static class Location {
-
-    @JsonProperty("id")
-    private @Nullable String id;
-
-    @JsonProperty("name")
-    private @Nullable String name;
-  }
-
-  @Getter
-  @NoArgsConstructor
-  public static class Product {
-
-    @Getter
-    @NoArgsConstructor
-    public static class Capabilities {
-
-      @JsonProperty("has_color")
-      private boolean hasColor;
-
-      @JsonProperty("has_variable_color_temp")
-      private boolean hasVariableColorTemperature;
-
-      @JsonProperty("min_kelvin")
-      private int minKelvin;
-
-      @JsonProperty("max_kelvin")
-      private int maxKelvin;
-
-      @JsonProperty("has_ir")
-      private boolean hasIr;
-
-      @JsonProperty("has_chain")
-      private boolean hasChain;
-
-      @JsonProperty("has_multizone")
-      private boolean hasMultizone;
-    }
-
-    @JsonProperty("name")
-    private @Nullable String name;
-
-    @JsonProperty("company")
-    private @Nullable String company;
-
-    @JsonProperty("identifier")
-    private @Nullable String identifier;
-
-    @JsonProperty("capabilities")
-    private @Nullable Capabilities capabilities;
-  }
-
+public record Light(
   @JsonProperty("id")
-  private @Nullable String id;
+  @Nullable String id,
 
   @JsonProperty("uuid")
-  private @Nullable String uuid;
+  @Nullable String uuid,
 
   @JsonProperty("label")
-  private @Nullable String label;
+  @Nullable String label,
 
   @JsonProperty("connected")
-  private boolean connected;
+  boolean connected,
 
   @JsonProperty("power")
   @JsonDeserialize(using = PowerDeserializer.class)
-  private @Nullable Power power;
+  @Nullable Power power,
 
   @JsonProperty("color")
-  private @Nullable Color color;
+  @Nullable Color color,
 
   @JsonProperty("infrared")
-  private @Nullable String infrared;
+  @Nullable String infrared,
 
   @JsonProperty("brightness")
-  private double brightness;
+  double brightness,
 
   @JsonProperty("group")
-  private @Nullable Group group;
+  @Nullable Group group,
 
   @JsonProperty("location")
-  private @Nullable Location location;
+  @Nullable Location location,
 
   @JsonProperty("last_seen")
-  private @Nullable ZonedDateTime lastSeen;
+  @Nullable ZonedDateTime lastSeen,
 
   @JsonProperty("seconds_since_seen")
-  private int secondsSinceSeen;
+  int secondsSinceSeen,
 
   @JsonProperty("product")
-  private @Nullable Product product;
+  @Nullable Product product
+) {
+
+  public record Color(
+    @JsonProperty("hue")
+    double hue,
+
+    @JsonProperty("saturation")
+    double saturation,
+
+    @JsonProperty("kelvin")
+    int kelvin
+  ) {
+  }
+
+  public record Group(
+    @JsonProperty("id")
+    @Nullable String id,
+
+    @JsonProperty("name")
+    @Nullable String name
+  ) {
+  }
+
+  public record Location(
+    @JsonProperty("id")
+    @Nullable String id,
+
+    @JsonProperty("name")
+    @Nullable String name
+  ) {
+  }
+
+  public record Product(
+    @JsonProperty("name")
+    @Nullable String name,
+
+    @JsonProperty("company")
+    @Nullable String company,
+
+    @JsonProperty("identifier")
+    @Nullable String identifier,
+
+    @JsonProperty("capabilities")
+    @Nullable Capabilities capabilities
+  ) {
+
+    public record Capabilities(
+      @JsonProperty("has_color")
+      boolean hasColor,
+
+      @JsonProperty("has_variable_color_temp")
+      boolean hasVariableColorTemperature,
+
+      @JsonProperty("min_kelvin")
+      int minKelvin,
+
+      @JsonProperty("max_kelvin")
+      int maxKelvin,
+
+      @JsonProperty("has_ir")
+      boolean hasIr,
+
+      @JsonProperty("has_chain")
+      boolean hasChain,
+
+      @JsonProperty("has_multizone")
+      boolean hasMultizone
+    ) {
+    }
+  }
 }

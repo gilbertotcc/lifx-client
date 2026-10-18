@@ -1,35 +1,32 @@
 package com.github.gilbertotcc.lifx.models;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.jspecify.annotations.Nullable;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OperationResult {
-
-  @Getter
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  @JsonIgnoreProperties(ignoreUnknown = true)
-  public static class Operation {
-
-    @JsonProperty("selector")
-    private @Nullable String selector;
-  }
-
+public record OperationResult(
   @JsonProperty("operation")
-  private @Nullable Operation operation;
+  @Nullable Operation operation,
 
   @JsonProperty("results")
-  private List<Result> results = Collections.emptyList();
+  List<Result> results,
 
   @JsonProperty("error")
-  private @Nullable String error;
+  @Nullable String error
+) {
+
+  public OperationResult {
+    results = Objects.requireNonNullElse(results, List.of());
+  }
+
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public record Operation(
+    @JsonProperty("selector")
+    @Nullable String selector
+  ) {
+  }
 }
