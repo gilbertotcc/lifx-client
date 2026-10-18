@@ -23,7 +23,7 @@ class ValidateColorQueryTest extends OperationsTestFixtures {
       .willReturn(aResponse().withBody(response)));
 
     var input = new ValidateColorInput("red");
-    final Color color = AUTHORIZED_CLIENT.validateColor(input).get().getColor();
+    final Color color = AUTHORIZED_CLIENT.validateColor(input).get().color();
 
     assertEquals(0.0, color.hue(), 0.0001);
     assertEquals(1.0, color.saturation(), 0.0001);

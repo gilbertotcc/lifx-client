@@ -28,7 +28,7 @@ class SetLightsStateCommandTest extends OperationsTestFixtures {
     final var state = State.builder().power(Power.ON).build();
     final var input = new SetLightsStateInput(lightsSelector, state);
 
-    final var results = AUTHORIZED_CLIENT.setLightsState(input).get().getResult();
+    final var results = AUTHORIZED_CLIENT.setLightsState(input).get().result();
 
     assertEquals(2, results.size());
   }

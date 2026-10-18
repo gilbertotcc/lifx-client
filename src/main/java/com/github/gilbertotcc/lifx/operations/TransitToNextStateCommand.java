@@ -27,7 +27,7 @@ public class TransitToNextStateCommand
     log.info("Transit to next state of {}", lightSelector.identifier());
     return new CallExecutor<>(lifxApi.cycle(lightSelector, cycle)).execute()
       .map(response -> {
-        var results = response.getResults();
+        var results = response.results();
         return new CommandOutput<>(results);
       });
   }

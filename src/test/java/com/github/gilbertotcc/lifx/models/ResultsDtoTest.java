@@ -21,12 +21,12 @@ class ResultsDtoTest {
     ResultsDto<Result> resultsDto = deserializeJson(json, new TypeReference<ResultsDto<Result>>() {
     });
 
-    assertEquals(2, resultsDto.getResults().size());
-    Result resultAtIndex0 = resultsDto.getResults().get(0);
+    assertEquals(2, resultsDto.results().size());
+    Result resultAtIndex0 = resultsDto.results().get(0);
     assertEquals("d3b2f2d97452", resultAtIndex0.id());
     assertEquals("Left Lamp", resultAtIndex0.label());
     assertEquals(Result.Status.TIMED_OUT, resultAtIndex0.status());
-    Result resultAtIndex1 = resultsDto.getResults().get(1);
+    Result resultAtIndex1 = resultsDto.results().get(1);
     assertEquals("da2c63c353b8", resultAtIndex1.id());
     assertEquals("Right Lamp", resultAtIndex1.label());
     assertEquals(Result.Status.OFFLINE, resultAtIndex1.status());
@@ -38,11 +38,11 @@ class ResultsDtoTest {
     ResultsDto<OperationResult> resultsDto = deserializeJson(json, new TypeReference<ResultsDto<OperationResult>>() {
     });
 
-    assertEquals(2, resultsDto.getResults().size());
-    OperationResult operationResult0 = resultsDto.getResults().get(0);
+    assertEquals(2, resultsDto.results().size());
+    OperationResult operationResult0 = resultsDto.results().get(0);
     assertEquals("[selector 1]", operationResult0.operation().selector());
     assertEquals(2, operationResult0.results().size());
-    OperationResult operationResult1 = resultsDto.getResults().get(1);
+    OperationResult operationResult1 = resultsDto.results().get(1);
     assertEquals("[selector 2]", operationResult1.operation().selector());
     assertTrue(operationResult1.results().isEmpty());
     assertEquals("not found", operationResult1.error());
