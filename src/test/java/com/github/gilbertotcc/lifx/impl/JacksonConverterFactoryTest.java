@@ -44,7 +44,12 @@ class JacksonConverterFactoryTest {
   void responseBodyConverterShouldDeserializeJson() throws IOException {
     final var converter = factory.responseBodyConverter(Map.class, NO_ANNOTATIONS, retrofit);
 
-    final Object value = converter.convert(ResponseBody.create("{\"power\":\"on\"}", JSON));
+    final var payload = """
+      {
+        "power": "on"
+      }
+      """;
+    final Object value = converter.convert(ResponseBody.create(payload, JSON));
 
     assertEquals(Map.of("power", "on"), value);
   }
