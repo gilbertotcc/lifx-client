@@ -21,8 +21,8 @@ public class TransitToNextStateCommand
 
   @Override
   public Either<LifxCallException, CommandOutput<List<Result>>> execute(TransitToNextStateInput input) {
-    LightSelector lightSelector = input.getLightSelector();
-    Cycle cycle = input.getCycle();
+    LightSelector lightSelector = input.lightSelector();
+    Cycle cycle = input.cycle();
 
     log.info("Transit to next state of {}", lightSelector.identifier());
     return new CallExecutor<>(lifxApi.cycle(lightSelector, cycle)).execute()

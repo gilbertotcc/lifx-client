@@ -25,8 +25,8 @@ public class SetLightsStateCommand
    */
   @Override
   public Either<LifxCallException, CommandOutput<List<Result>>> execute(SetLightsStateInput input) {
-    var lightSelector = input.getLightSelector();
-    var state = input.getState();
+    var lightSelector = input.lightSelector();
+    var state = input.state();
 
     log.info("Set lights state of {} to {}",
       lightSelector.identifier(),

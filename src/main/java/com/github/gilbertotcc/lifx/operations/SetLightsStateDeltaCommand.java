@@ -25,8 +25,8 @@ public class SetLightsStateDeltaCommand
    */
   @Override
   public Either<LifxCallException, CommandOutput<List<Result>>> execute(SetLightsStateDeltaInput input) {
-    var lightSelector = input.getLightSelector();
-    var stateDelta = input.getStateDelta();
+    var lightSelector = input.lightSelector();
+    var stateDelta = input.stateDelta();
 
     log.info("Set lights state delta of {} to {}",
       lightSelector.identifier(), stateDelta);

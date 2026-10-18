@@ -15,7 +15,7 @@ public class ValidateColorQuery implements Operation<ValidateColorInput, Validat
 
   @Override
   public Either<LifxCallException, ValidateColorOutput> execute(ValidateColorInput input) {
-    var colorString = input.getColorString();
+    var colorString = input.colorString();
     log.info("Validate color {}", colorString);
     return new CallExecutor<>(lifxApi.validateColor(colorString)).execute()
       .map(ValidateColorOutput::new);
