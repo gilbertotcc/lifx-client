@@ -30,9 +30,10 @@ configuration cache and the build cache, so build logic must stay configuration-
 ./gradlew spockTest             # Spock specs only (Groovy, src/test/groovy, run on the JUnit Platform)
 ./gradlew test --tests 'com.github.gilbertotcc.lifx.operations.ListLightsQueryTest'
 ./gradlew spockTest --tests 'com.github.gilbertotcc.lifx.models.SelectorsSpec'
-./gradlew checkstyleMain checkstyleTest
+./gradlew checkstyleMain checkstyleTest checkstyleIntegrationTest
 ./gradlew test spockTest        # also writes the JaCoCo report (HTML in build/reports/jacocoHtml)
 ./gradlew check -PtestJavaVersion=17  # run the tests on another JVM (default 25)
+./gradlew integrationTest       # live LIFX cloud test (src/integrationTest), needs LIFX_PAT; not part of check
 ```
 
 `test` runs only the `junit-jupiter` and `archunit` engines, `spockTest` only the `spock` engine (Spock 2.5 on
@@ -55,8 +56,10 @@ released (see the comment in `gradle/libs.versions.toml`).
 
 No remote publishing repository is configured; `maven-publish` provides `publishToMavenLocal`.
 
-`*IntegrationTest*` classes are excluded from `test`. `LifxClientTestIntegrationTest` hits the real LIFX cloud and
-needs `IT_ACCESS_TOKEN`; no Gradle task currently runs it.
+`LifxClientIntegrationTest` lives in its own JVM test suite (`src/integrationTest`) and runs only through
+`integrationTest`: it hits the real LIFX cloud with the token in `LIFX_PAT` and changes the power of a real light,
+restoring it at the end. `check` (and so CI) compiles and checkstyles it but never runs it. The suite gets neither
+the Mockito agent nor JaCoCo.
 
 ### Markdown checks
 
@@ -79,8 +82,8 @@ one `operations.*Command`/`*Query` per endpoint → Retrofit `api.LifxApi` → w
   method in `LifxApi`, new Input/Command(+Output) in `operations`, wiring in `LifxClientImpl.createNewClientFor`, and a
   method on `LifxClient`.
 - **Error handling**: no exceptions are thrown to callers — every client method returns vavr
-  `Either<LifxCallException, T>`. `CallExecutor` turns non-2xx responses into `LifxErrorException` (a
-  `LifxCallException`) and I/O failures into `LifxCallException`.
+  `Either<LifxCallException, T>`. `CallExecutor` turns non-2xx responses into a `LifxCallException` whose cause is a
+  `LifxErrorException` (carrying the `LifxErrorType`), and I/O failures into `LifxCallException`.
 - **HTTP setup**: `LifxClientImpl.createNewClientFor(baseUrl, token)` builds Retrofit with `LifxOkHttpClientFactory`
   (bearer auth + logging interceptor), a `StringConverterFactory` that renders `LightSelector` path params via
   `LightSelectorConverter`, and Jackson 3 using the shared `util.JacksonUtils.OBJECT_MAPPER`. Retrofit has no Jackson
@@ -118,4 +121,5 @@ Style: 2-space indent, 120-char lines, no star imports, braces always required (
 
 JSON fixtures for request/response bodies are under `src/test/resources/json/`; operation tests share helpers in
 `operations/OperationsTestFixtures` and `testutil/TestUtils`. HTTP is mocked with WireMock, JSON compared with
-JSONAssert.
+JSONAssert. The live test in `src/integrationTest` shares nothing with `src/test`: it has its own classpath (the
+library, JUnit Jupiter, Logback) and its own `logback-test.xml`.
