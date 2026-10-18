@@ -94,8 +94,10 @@ Rules:
      ```
 
      `serializeObject` and `deserializeJson` are static helpers in `testutil/TestUtils`, using the shared
-     `JacksonUtils.OBJECT_MAPPER`. The test method then declares `throws JSONException`. Strict mode (`true`) also
-     catches unwanted `null` fields.
+     `JacksonUtils.OBJECT_MAPPER`. The test method then declares `throws IOException, JSONException`
+     (`loadJsonFromFile` throws `IOException`; JSONAssert's `assertEquals` throws `JSONException`). With an inline
+     expected string instead of a fixture, `throws JSONException` suffices (`JacksonUtilsTest`). Strict mode (`true`)
+     also catches unwanted `null` fields.
 
 Operations with no body (reads, `DELETE`) skip case 3. Add one test per behavior; for example, a selector variant
 (`byId`, `byLabel`) that changes the URL is worth its own test.

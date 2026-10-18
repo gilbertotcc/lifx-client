@@ -47,7 +47,7 @@ Confirmed against `llms.txt`. The other pages use the slug you would expect from
 | Spec | Code |
 | - | - |
 | Method and path | `@GET`/`@POST`/`@PUT` on `LifxApi`, with the path prefixed by `/v1` (Retrofit base URL is `https://api.lifx.com`) |
-| `{selector}` path parameter | `@Path("selector") LightSelector` |
+| `{selector}` path parameter | `@Path("selector") LightSelector`; endpoints without `{selector}` (List Scenes) take none |
 | Other path or query parameter | `@Path("name")` or `@Query("name")` with a matching Java type |
 | Request body | `@Body` model record in `models/` with `@JsonProperty`, `@Nullable` for optional fields |
 | `2XX` with `results[]` | `Call<ResultsDto<Result>>` (or `ResultsDto<OperationResult>` when a per-light result carries an `operation`) |
