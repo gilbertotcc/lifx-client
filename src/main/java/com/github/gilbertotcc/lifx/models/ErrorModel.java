@@ -41,6 +41,11 @@ public record ErrorModel(
     @Serial
     private static final long serialVersionUID = -7071300361893825402L;
 
+    /**
+     * Formats the field and messages as {@code field: [message1, message2]}.
+     *
+     * @return the formatted detail, with empty brackets when messages are null or empty
+     */
     @Override
     public String toString() {
       return "%s: [%s]".formatted(field, messages == null ? "" : String.join(", ", messages));
