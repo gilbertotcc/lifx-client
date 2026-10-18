@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class ToggleLightsPowerCommand
-  implements Operation<ToggleLightsPowerInput, CommandOutput<List<Result>>, LifxCallException> {
+  implements Operation<ToggleLightsPowerInput, CommandOutput<List<Result>>> {
 
   private final LifxApi lifxApi;
 

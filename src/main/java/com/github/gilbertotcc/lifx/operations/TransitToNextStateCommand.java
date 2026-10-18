@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class TransitToNextStateCommand
-  implements Operation<TransitToNextStateInput, CommandOutput<List<Result>>, LifxCallException> {
+  implements Operation<TransitToNextStateInput, CommandOutput<List<Result>>> {
 
   private final LifxApi lifxApi;
 

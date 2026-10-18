@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class SetLightsStateDeltaCommand
-  implements Operation<SetLightsStateDeltaInput, CommandOutput<List<Result>>, LifxCallException> {
+  implements Operation<SetLightsStateDeltaInput, CommandOutput<List<Result>>> {
 
   private final LifxApi lifxApi;
 
