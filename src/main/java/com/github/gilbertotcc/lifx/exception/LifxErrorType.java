@@ -3,47 +3,33 @@ package com.github.gilbertotcc.lifx.exception;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 @AllArgsConstructor
 public enum LifxErrorType {
 
-  BAD_REQUEST(400, "Request was invalid."),
-  UNAUTHORIZED(401, "Bad access token."),
-  PERMISSION_DENIED(403, "Bad OAuth scope."),
-  NOT_FOUND(404, "Selector did not match any lights."),
-  NOT_PROCESSABLE_ENTITY(422, "Missing or malformed parameters."),
-  UPGRADE_REQUIRED(426, "HTTP was used to make the request instead of HTTPS."),
-  TOO_MANY_REQUESTS(429, "The request exceeded a rate limit. See the Rate Limits section."),
-  SERVER_ERROR(List.of(500, 502, 503, 523), "Something went wrong on LIFX's end."),
-  UNKNOWN(List.of(), "Unknown error.");
-
-  // Always an unmodifiable List.of(...), which Error Prone cannot tell apart from a mutable List
-  @SuppressWarnings("ImmutableEnumChecker")
-  @NonNull
-  final List<Integer> httpCodes;
+  BAD_REQUEST("Request was invalid."),
+  UNAUTHORIZED("Bad access token."),
+  PERMISSION_DENIED("Bad OAuth scope."),
+  NOT_FOUND("Selector did not match any lights."),
+  NOT_PROCESSABLE_ENTITY("Missing or malformed parameters."),
+  UPGRADE_REQUIRED("HTTP was used to make the request instead of HTTPS."),
+  TOO_MANY_REQUESTS("The request exceeded a rate limit. See the Rate Limits section."),
+  SERVER_ERROR("Something went wrong on LIFX's end."),
+  UNKNOWN("Unknown error.");
 
   @NonNull
   final String reason;
 
-  /**
-   * Associates an error type with a single HTTP status code and its reason.
-   *
-   * @throws NullPointerException if {@code httpCode} is null
-   */
-  LifxErrorType(final Integer httpCode,
-                final String reason) {
-    this.httpCodes = List.of(httpCode);
-    this.reason = reason;
-  }
-
-  public static Optional<LifxErrorType> byHttpCode(final int httpCode) {
-    return Stream.of(values())
-      .filter(errorType -> errorType.httpCodes.contains(httpCode))
-      .findFirst();
+  public static LifxErrorType byHttpCode(final int httpCode) {
+    return switch (httpCode) {
+      case 400                -> BAD_REQUEST;
+      case 401                -> UNAUTHORIZED;
+      case 403                -> PERMISSION_DENIED;
+      case 404                -> NOT_FOUND;
+      case 422                -> NOT_PROCESSABLE_ENTITY;
+      case 426                -> UPGRADE_REQUIRED;
+      case 429                -> TOO_MANY_REQUESTS;
+      case 500, 502, 503, 523 -> SERVER_ERROR;
+      default                 -> UNKNOWN;
+    };
   }
 }
-
-

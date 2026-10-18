@@ -1,10 +1,7 @@
 package com.github.gilbertotcc.lifx.models;
 
-import static java.lang.String.format;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.gilbertotcc.lifx.models.deserializer.ResultStatusDeserializer;
-import io.vavr.collection.Stream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,9 +23,12 @@ public class Result {
     public final String label;
 
     public static Status byLabel(final String label) {
-      return Stream.of(values())
-        .find(status -> status.label.equals(label))
-        .getOrElseThrow(() -> new IllegalArgumentException(format("Unknown status '%s'", label)));
+      return switch (label) {
+        case "ok"        -> OK;
+        case "timed_out" -> TIMED_OUT;
+        case "offline"   -> OFFLINE;
+        default          -> throw new IllegalArgumentException("Unknown status '%s'".formatted(label));
+      };
     }
   }
 
