@@ -13,4 +13,4 @@ gitignore: true
 globs:
   - "**/*.md"
 ignores:
-  - ".claude/**"
+  - ".claude/skills/caveman-commit/**"

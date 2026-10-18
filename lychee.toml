@@ -1,8 +1,8 @@
 # Check URLs in Markdown files only. Paths ignored by .gitignore are skipped by default.
 extensions = ["md"]
 
-# Agent skills installed with skills.sh are third-party content.
-exclude_path = ["(^|/)\\.claude/"]
+# The caveman-commit agent skill (installed with skills.sh) is third-party content.
+exclude_path = ["(^|/)\\.claude/skills/caveman-commit/"]
 
 # Keep slow hosts from making the check flaky.
 timeout = 30

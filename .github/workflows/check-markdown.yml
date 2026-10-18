@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - '**.md'
-      - '!.claude/**'
+      - '!.claude/skills/caveman-commit/**'
       - '.markdownlint-cli2.yaml'
       - 'lychee.toml'
       - '.lycheeignore'
