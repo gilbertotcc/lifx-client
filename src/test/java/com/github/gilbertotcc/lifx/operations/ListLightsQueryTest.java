@@ -28,7 +28,7 @@ class ListLightsQueryTest extends OperationsTestFixtures {
       .willReturn(aResponse().withBody(response)));
 
     ListLightsInput listLightsInput = new ListLightsInput(all());
-    final List<Light> lights = AUTHORIZED_CLIENT.listLights(listLightsInput).get().getLights();
+    final List<Light> lights = AUTHORIZED_CLIENT.listLights(listLightsInput).get().lights();
 
     assertEquals(1, lights.size());
   }

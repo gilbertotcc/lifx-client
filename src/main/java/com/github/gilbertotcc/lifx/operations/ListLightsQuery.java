@@ -16,7 +16,7 @@ public class ListLightsQuery implements Operation<ListLightsInput, ListLightsOut
 
   @Override
   public Either<LifxCallException, ListLightsOutput> execute(ListLightsInput input) {
-    LightSelector lightSelector = input.getSelector();
+    LightSelector lightSelector = input.selector();
 
     log.info("List lights (selector: {})", lightSelector.identifier());
     return new CallExecutor<>(lifxApi.listLights(lightSelector)).execute()

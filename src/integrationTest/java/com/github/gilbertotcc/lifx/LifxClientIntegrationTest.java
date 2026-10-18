@@ -63,7 +63,7 @@ class LifxClientIntegrationTest {
 
     // A failed listing is reported by listLightsShouldSucceed; the tests that need a light are skipped
     lifxClient.listLights(ListLightsInput.ALL_LIGHTS)
-      .fold(error -> List.<Light>of(), ListLightsOutput::getLights)
+      .fold(error -> List.<Light>of(), ListLightsOutput::lights)
       .stream()
       .filter(Light::isConnected)
       .filter(light -> light.getId() != null && light.getPower() != null)
@@ -98,7 +98,7 @@ class LifxClientIntegrationTest {
   @Test
   @Order(1)
   void listLightsShouldSucceed() {
-    List<Light> lights = assertRight(lifxClient.listLights(ListLightsInput.ALL_LIGHTS)).getLights();
+    List<Light> lights = assertRight(lifxClient.listLights(ListLightsInput.ALL_LIGHTS)).lights();
 
     assertEquals(lights.size(), lights.stream().map(Light::getId).distinct().count(), "Light ids are not unique");
     lights.forEach(LifxClientIntegrationTest::assertWellFormed);
@@ -134,10 +134,10 @@ class LifxClientIntegrationTest {
     var input = new ValidateColorInput("green");
     Color color = assertRight(lifxClient.validateColor(input)).getColor();
 
-    assertEquals(120, color.getHue(), 0.001);
-    assertEquals(1, color.getSaturation(), 0.001);
-    assertNull(color.getBrightness());
-    assertNull(color.getKelvin());
+    assertEquals(120, color.hue(), 0.001);
+    assertEquals(1, color.saturation(), 0.001);
+    assertNull(color.brightness());
+    assertNull(color.kelvin());
   }
 
   @Test
@@ -156,7 +156,7 @@ class LifxClientIntegrationTest {
 
   private Power currentPower() {
     var input = new ListLightsInput(Selectors.byId(lightId));
-    return assertRight(lifxClient.listLights(input)).getLights().stream()
+    return assertRight(lifxClient.listLights(input)).lights().stream()
       .findFirst()
       .map(Light::getPower)
       .orElse(null);
@@ -175,8 +175,8 @@ class LifxClientIntegrationTest {
 
   private static void assertSingleOkResult(final String id, final List<Result> results) {
     assertEquals(1, results.size(), "Number of results");
-    assertEquals(id, results.get(0).getId());
-    assertEquals(Result.Status.OK, results.get(0).getStatus());
+    assertEquals(id, results.get(0).id());
+    assertEquals(Result.Status.OK, results.get(0).status());
   }
 
   private static void assertWellFormed(final Light light) {

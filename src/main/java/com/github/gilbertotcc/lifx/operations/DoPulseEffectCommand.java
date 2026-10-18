@@ -27,8 +27,8 @@ public class DoPulseEffectCommand
    */
   @Override
   public Either<LifxCallException, CommandOutput<List<Result>>> execute(DoPulseEffectInput input) {
-    LightSelector lightSelector = input.getLightSelector();
-    PulseEffect pulseEffect = input.getPulseEffect();
+    LightSelector lightSelector = input.lightSelector();
+    PulseEffect pulseEffect = input.pulseEffect();
 
     log.info("Do pulse effect with {}. Settings: {}",
       lightSelector.identifier(),

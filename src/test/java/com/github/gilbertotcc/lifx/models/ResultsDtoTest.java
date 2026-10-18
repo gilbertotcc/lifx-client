@@ -23,13 +23,13 @@ class ResultsDtoTest {
 
     assertEquals(2, resultsDto.getResults().size());
     Result resultAtIndex0 = resultsDto.getResults().get(0);
-    assertEquals("d3b2f2d97452", resultAtIndex0.getId());
-    assertEquals("Left Lamp", resultAtIndex0.getLabel());
-    assertEquals(Result.Status.TIMED_OUT, resultAtIndex0.getStatus());
+    assertEquals("d3b2f2d97452", resultAtIndex0.id());
+    assertEquals("Left Lamp", resultAtIndex0.label());
+    assertEquals(Result.Status.TIMED_OUT, resultAtIndex0.status());
     Result resultAtIndex1 = resultsDto.getResults().get(1);
-    assertEquals("da2c63c353b8", resultAtIndex1.getId());
-    assertEquals("Right Lamp", resultAtIndex1.getLabel());
-    assertEquals(Result.Status.OFFLINE, resultAtIndex1.getStatus());
+    assertEquals("da2c63c353b8", resultAtIndex1.id());
+    assertEquals("Right Lamp", resultAtIndex1.label());
+    assertEquals(Result.Status.OFFLINE, resultAtIndex1.status());
   }
 
   @Test
