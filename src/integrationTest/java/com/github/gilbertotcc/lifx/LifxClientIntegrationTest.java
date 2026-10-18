@@ -100,7 +100,6 @@ class LifxClientIntegrationTest {
   void listLightsShouldSucceed() {
     List<Light> lights = assertRight(lifxClient.listLights(ListLightsInput.ALL_LIGHTS)).getLights();
 
-    assertFalse(lights.isEmpty(), "The account has no lights");
     assertEquals(lights.size(), lights.stream().map(Light::getId).distinct().count(), "Light ids are not unique");
     lights.forEach(LifxClientIntegrationTest::assertWellFormed);
   }

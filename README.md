@@ -76,7 +76,7 @@ in the `LIFX_PAT` environment variable; without it the test fails with `LIFX_PAT
 `.env` files (`.env` is git-ignored, so it is a safe place to keep the token), so export the variable in your shell:
 
 ```bash
-export LIFX_PAT=<YOUR_ACCESS_TOKEN>
+export LIFX_PAT='YOUR_ACCESS_TOKEN'
 ./gradlew integrationTest
 ```
 
