@@ -1,6 +1,10 @@
 package com.github.gilbertotcc.lifx.models;
 
-public interface LightSelector {
+public sealed interface LightSelector
+  permits CombinableLightSelector,
+          MultiZoneEnabledLightSelector,
+          RandomizableLightSelector,
+          RandomLightSelector {
 
   String identifier();
 }

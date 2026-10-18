@@ -8,7 +8,7 @@ import lombok.Singular;
 
 @Builder
 public record CombinedLightSelector(@Singular Set<CombinableLightSelector> selectors)
-  implements LightSelector, CombinableLightSelector {
+  implements CombinableLightSelector {
 
   @Override
   public String identifier() {

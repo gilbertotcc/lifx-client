@@ -3,7 +3,7 @@ package com.github.gilbertotcc.lifx.models;
 import java.util.Set;
 
 public record MultiZoneLightSelector(MultiZoneEnabledLightSelector selector, Set<Integer> zones)
-  implements LightSelector, CombinableLightSelector {
+  implements CombinableLightSelector {
 
   @Override
   public String identifier() {
