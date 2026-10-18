@@ -8,43 +8,9 @@ Every operation gets a `<Name>Test` in `src/test/java/com/github/gilbertotcc/lif
 
 Extend `OperationsTestFixtures`. It starts a `WireMockServer` on port 9999 before each test, stops it after, and
 provides `wireMockServer`, `VALID_ACCESS_TOKEN` and `AUTHORIZED_CLIENT` (a `LifxClient` pointed at the mock). Do not
-create your own server or client. Match the style of `ListLightsQueryTest`: 2-space indent, `final var`, no star
-imports, one static import per line, braces always.
-
-```java
-package com.github.gilbertotcc.lifx.operations;
-
-import com.github.gilbertotcc.lifx.exception.LifxCallException;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-
-import static com.github.gilbertotcc.lifx.models.Selectors.all;
-import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-class ListLightsQueryTest extends OperationsTestFixtures {
-
-  @Test
-  void listLightsShouldSuccess() throws IOException {
-    final String response = loadJsonFromFile("/json/response_body/list_lights_OK.json");
-
-    wireMockServer.stubFor(get(urlEqualTo("/v1/lights/all"))
-      .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
-      .willReturn(aResponse().withBody(response)));
-
-    final var lights = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all())).get().lights();
-
-    assertEquals(1, lights.size());
-  }
-}
-```
+create your own server or client. Copy the structure and imports of
+`src/test/java/com/github/gilbertotcc/lifx/operations/ListLightsQueryTest.java` (read it). Match its style: 2-space
+indent, `final var`, no star imports, one static import per line, braces always.
 
 Rules:
 
@@ -121,8 +87,8 @@ the wire shape changed, and never loosen an assertion to make a test pass.
 ## Run
 
 ```bash
-./gradlew test --tests 'com.github.gilbertotcc.lifx.operations.<Name>Test'
-./gradlew check
+./gradlew test --tests 'com.github.gilbertotcc.lifx.operations.<Name>Test' --console=plain
+./gradlew check --console=plain
 ```
 
 Do not touch `src/integrationTest` unless asked: `LifxClientIntegrationTest` drives real lights through the LIFX cloud
