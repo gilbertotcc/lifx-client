@@ -93,6 +93,9 @@ public class Selectors {
   public record LabelSelector(String label)
     implements CombinableLightSelector, MultiZoneEnabledLightSelector {
 
+    /**
+     * Renders {@code label:} followed by the supplied value without escaping or validation.
+     */
     @Override
     public String identifier() {
       return "label:%s".formatted(label);
@@ -102,6 +105,9 @@ public class Selectors {
   public record IdSelector(String id)
     implements CombinableLightSelector, MultiZoneEnabledLightSelector {
 
+    /**
+     * Renders {@code id:} followed by the supplied value without escaping or validation.
+     */
     @Override
     public String identifier() {
       return "id:%s".formatted(id);
@@ -111,6 +117,9 @@ public class Selectors {
   public record GroupIdSelector(String groupId)
     implements RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
 
+    /**
+     * Renders {@code group_id:} followed by the supplied value without escaping or validation.
+     */
     @Override
     public String identifier() {
       return "group_id:%s".formatted(groupId);
@@ -120,6 +129,9 @@ public class Selectors {
   public record GroupSelector(String group)
     implements RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
 
+    /**
+     * Renders {@code group:} followed by the supplied value without escaping or validation.
+     */
     @Override
     public String identifier() {
       return "group:%s".formatted(group);
@@ -129,6 +141,9 @@ public class Selectors {
   public record LocationIdSelector(String locationId)
     implements RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
 
+    /**
+     * Renders {@code location_id:} followed by the supplied value without escaping or validation.
+     */
     @Override
     public String identifier() {
       return "location_id:%s".formatted(locationId);
@@ -138,6 +153,9 @@ public class Selectors {
   public record LocationSelector(String location)
     implements RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
 
+    /**
+     * Renders {@code location:} followed by the supplied value without escaping or validation.
+     */
     @Override
     public String identifier() {
       return "location:%s".formatted(location);
@@ -147,6 +165,9 @@ public class Selectors {
   public record SceneIdSelector(String sceneId)
     implements RandomizableLightSelector, CombinableLightSelector, MultiZoneEnabledLightSelector {
 
+    /**
+     * Renders {@code scene_id:} followed by the supplied value without escaping or validation.
+     */
     @Override
     public String identifier() {
       return "scene_id:%s".formatted(sceneId);

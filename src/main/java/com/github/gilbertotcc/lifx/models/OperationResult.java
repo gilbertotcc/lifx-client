@@ -19,6 +19,10 @@ public record OperationResult(
   @Nullable String error
 ) {
 
+  /**
+   * Creates a response value, replacing a null results list with an empty list.
+   * A non-null list is retained without copying.
+   */
   public OperationResult {
     results = Objects.requireNonNullElse(results, List.of());
   }

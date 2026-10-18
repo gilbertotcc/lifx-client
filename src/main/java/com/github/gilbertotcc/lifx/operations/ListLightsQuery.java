@@ -14,6 +14,12 @@ public class ListLightsQuery implements Operation<ListLightsInput, ListLightsOut
 
   private final LifxApi lifxApi;
 
+  /**
+   * Synchronously retrieves the selected lights.
+   *
+   * @return the light list on the right, or a call exception on the left for HTTP or I/O failures
+   * @throws NullPointerException if a successful response has no body or its list contains a null element
+   */
   @Override
   public Either<LifxCallException, ListLightsOutput> execute(ListLightsInput input) {
     LightSelector lightSelector = input.selector();

@@ -10,6 +10,10 @@ public record ResultsDto<T>(
   List<T> results
 ) {
 
+  /**
+   * Creates a response value, replacing a null results list with an empty list.
+   * A non-null list is retained without copying.
+   */
   public ResultsDto {
     results = Objects.requireNonNullElse(results, List.of());
   }

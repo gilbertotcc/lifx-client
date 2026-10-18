@@ -25,6 +25,10 @@ public record Error(
   @Serial
   private static final long serialVersionUID = -790843377907574526L;
 
+  /**
+   * Creates a response value, replacing a null details list with an empty list.
+   * A non-null list is retained without copying.
+   */
   public Error {
     details = Objects.requireNonNullElse(details, List.of());
   }
