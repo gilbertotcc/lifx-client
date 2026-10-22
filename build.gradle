@@ -72,6 +72,9 @@ dependencies {
   api libs.vavr
   api libs.jspecify
   implementation libs.slf4j.api
+
+  // OKHTTP (declared directly so Maven consumers get OkHttp 5 instead of Retrofit's transitive 4.12.0)
+  implementation libs.okhttp
   implementation libs.logging.interceptor
 
   // STATIC ANALYSIS

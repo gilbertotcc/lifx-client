@@ -5,7 +5,7 @@ jackson-bom = "3.2.3"
 lombok = "1.18.48"
 vavr = "1.0.1"
 slf4j = "2.0.20"
-okhttp-logging = "5.5.0"
+okhttp = "5.5.0"
 jspecify = "1.0.1"
 errorprone = "2.50.0"
 nullaway = "0.14.2"
@@ -32,7 +32,8 @@ jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 vavr = { module = "io.vavr:vavr", version.ref = "vavr" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp-logging" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
 nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "nullaway" }
