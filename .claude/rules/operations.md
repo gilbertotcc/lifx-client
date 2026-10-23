@@ -13,30 +13,35 @@ paths:
 - Class shape: `@Slf4j @RequiredArgsConstructor`, `private final LifxApi lifxApi`, `implements Operation<I, O>`.
   `execute` calls `log.info` once with the key inputs: the selector's `identifier()` when the endpoint has one
   (`ListLightsQuery`), otherwise the identifying input (`ValidateColorQuery` logs the color string). Then it runs
-  `new CallExecutor<>(lifxApi.x(...)).execute().map(...)`. See `ListLightsQuery` and `SetLightsStateCommand`.
+  `new CallExecutor<>(lifxApi.x(...)).execute().map(...)` for writes, or `.executeExpectingBody().map(...)` for reads.
+  See `ListLightsQuery` and `SetLightsStateCommand`.
 - Input: a record. A `{selector}` path param is a `LightSelector` (`TransitToNextStateInput`); other params use plain
   types (`ValidateColorInput` holds a `String`; a `{scene_uuid}` would be a `UUID`). Endpoints such as List Scenes
   have no selector at all. Exception: an input that is the wire body extends its model DTO
   (`SetLightsStatesInput extends LightsStatesDto`).
-- Output: writes reuse `CommandOutput<List<Result>>`, or `CommandOutput<List<OperationResult>>` for
-  `SetLightsStatesCommand`; unwrap `ResultsDto` with `response.results()`. Reads get their own record, with
-  `List.copyOf` in the compact constructor for lists (`ListLightsOutput`).
+- Output: writes reuse the sealed `CommandOutput<List<Result>>`, or `CommandOutput<List<OperationResult>>` for
+  `SetLightsStatesCommand`. `execute()` yields an `Option` (empty for a body-less 2xx, e.g. a `fast` request answered
+  with 202), mapped with
+  `.map(optionalResponse -> optionalResponse.fold(CommandOutput.EmptyOutput::new, response -> new
+  CommandOutput.SomeOutput<>(response.results())))`. Reads get their own record, with `List.copyOf` in the compact
+  constructor for lists (`ListLightsOutput`); `executeExpectingBody()` turns a body-less 2xx into a
+  `LifxCallException`.
 - Body models (`models/`): records with `@JsonProperty` and `@Nullable` for optional fields (`Cycle`, `Result`).
   Custom (de)serializers go in `models/serializer` and `models/deserializer` (`DirectionSerializer`,
   `ResultStatusDeserializer`), wired with `@JsonSerialize` / `@JsonDeserialize`. `ModelsDependencyTest` forbids
   Jackson classes in `models` itself, apart from annotations.
-- `execute` Javadoc: one summary sentence starting "Synchronously ...", then `@return`. Writes (and
-  `ListLightsQuery`) document the Either and the NPE on a body-less response:
+- `execute` Javadoc: one summary sentence starting "Synchronously ...", then `@return`. Writes document the Either
+  and the `EmptyOutput` on a body-less response:
 
   ```java
-  * @return per-light results on the right, or a call exception on the left for HTTP or I/O failures
-  * @throws NullPointerException if a successful response has no body
+  * @return per-light results on the right (an {@code EmptyOutput} if a successful response has no body),
+  *     or a call exception on the left for HTTP or I/O failures
   ```
 
-  `ListLightsQuery` words `@return` as "the light list on the right, ..." and adds "or its list contains a null
-  element" to the `@throws`. `ValidateColorQuery` has no `@throws`: its `.map(ValidateColorOutput::new)` accepts a null
-  body, so `@return` says "the parsed color on the right, possibly null if a successful response has no body, or a
-  call exception on the left ...". Match the wording to what the `.map` does with a null body.
+  Reads word `@return` as "the light list on the right, or a call exception on the left for HTTP or I/O failures or
+  a successful response without a body" (`ValidateColorQuery`: "the parsed color ..."). `ListLightsQuery` also has
+  `@throws NullPointerException if the response list contains a null element`, from `List.copyOf`. Match the
+  wording to what the output constructor does with the body.
 - `LifxClient` and `LifxClientImpl` change together: the interface method returns `Either<LifxCallException, O>`;
   the impl gets a field under `// Operations`, a delegating `@Override`, and a `new XxxCommand(lifxApi)` /
   `new XxxQuery(lifxApi)` argument in `createNewClientFor`. Field order must equal constructor argument order
