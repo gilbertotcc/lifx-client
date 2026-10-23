@@ -37,8 +37,12 @@ final class JacksonConverterFactory extends Converter.Factory {
                                                           final Annotation[] annotations,
                                                           final Retrofit retrofit) {
     final ObjectReader reader = objectMapper.readerFor(objectMapper.constructType(type));
+    // An empty body (e.g. a 202 answering a fast request) converts to null, which CallExecutor reports as no body
     return body -> {
       try (body) {
+        if (body.source().exhausted()) {
+          return null;
+        }
         return reader.readValue(body.charStream());
       } catch (JacksonException e) {
         throw new IOException("Unable to deserialize response body", e);

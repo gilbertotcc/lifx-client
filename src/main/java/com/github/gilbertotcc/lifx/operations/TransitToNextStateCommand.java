@@ -22,8 +22,8 @@ public class TransitToNextStateCommand
   /**
    * Synchronously requests a transition to the next state in the supplied cycle for the selected lights.
    *
-   * @return per-light results on the right, or a call exception on the left for HTTP or I/O failures
-   * @throws NullPointerException if a successful response has no body
+   * @return per-light results on the right (an {@code EmptyOutput} if a successful response has no body),
+   *     or a call exception on the left for HTTP or I/O failures
    */
   @Override
   public Either<LifxCallException, CommandOutput<List<Result>>> execute(TransitToNextStateInput input) {
@@ -32,9 +32,9 @@ public class TransitToNextStateCommand
 
     log.info("Transit to next state of {}", lightSelector.identifier());
     return new CallExecutor<>(lifxApi.cycle(lightSelector, cycle)).execute()
-      .map(response -> {
-        var results = response.results();
-        return new CommandOutput<>(results);
-      });
+      .map(optionalResponse -> optionalResponse.fold(
+        CommandOutput.EmptyOutput::new,
+        response -> new CommandOutput.SomeOutput<>(response.results())
+      ));
   }
 }

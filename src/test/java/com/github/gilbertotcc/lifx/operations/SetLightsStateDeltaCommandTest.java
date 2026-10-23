@@ -31,7 +31,7 @@ class SetLightsStateDeltaCommandTest extends OperationsTestFixtures {
       .build();
     var input = new SetLightsStateDeltaInput(all(), stateDelta);
 
-    final List<Result> results = AUTHORIZED_CLIENT.setLightsStateDelta(input).get().result();
+    final List<Result> results = someResultOf(AUTHORIZED_CLIENT.setLightsStateDelta(input));
 
     assertEquals(1, results.size());
   }

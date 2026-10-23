@@ -4,6 +4,7 @@ import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.exception.LifxErrorException;
 import com.github.gilbertotcc.lifx.exception.LifxErrorType;
 import com.github.gilbertotcc.lifx.testutil.TestUtils;
+import io.vavr.control.Option;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
@@ -14,6 +15,7 @@ import retrofit2.Response;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -32,7 +34,46 @@ class CallExecutorTest {
 
     var okResponse = new CallExecutor<String>(callMock).execute().get();
 
+    assertEquals(Option.of("ok"), okResponse);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  void executeShouldReturnNoneForSuccessfulResponseWithoutBody() throws IOException {
+    final var callMock = mock(Call.class, RETURNS_DEEP_STUBS);
+    Response<String> response = Response.success(null);
+    when(callMock.execute()).thenReturn(response);
+
+    var okResponse = new CallExecutor<String>(callMock).execute().get();
+
+    assertEquals(Option.none(), okResponse);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  void executeExpectingBodyShouldReturnBody() throws IOException {
+    final var callMock = mock(Call.class, RETURNS_DEEP_STUBS);
+    Response<String> response = Response.success("ok");
+    when(callMock.execute()).thenReturn(response);
+
+    var okResponse = new CallExecutor<String>(callMock).executeExpectingBody().get();
+
     assertEquals("ok", okResponse);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  void executeExpectingBodyShouldFailForSuccessfulResponseWithoutBody() throws IOException {
+    final var callMock = mock(Call.class, RETURNS_DEEP_STUBS);
+    Request request = new Request.Builder().get().url("http://localhost:8080/test").build();
+    Response<String> response = Response.success(null);
+    when(callMock.request()).thenReturn(request);
+    when(callMock.execute()).thenReturn(response);
+
+    var exception = new CallExecutor<String>(callMock).executeExpectingBody().getLeft();
+
+    assertInstanceOf(IOException.class, exception.getCause());
+    assertEquals("Successful response has no body", exception.getCause().getMessage());
   }
 
   @Test

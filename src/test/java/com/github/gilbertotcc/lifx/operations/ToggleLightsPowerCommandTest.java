@@ -27,7 +27,7 @@ class ToggleLightsPowerCommandTest extends OperationsTestFixtures {
 
     var input = new ToggleLightsPowerInput(all(), Duration.ofSeconds(1L));
 
-    final List<Result> results = AUTHORIZED_CLIENT.toggleLightsPower(input).get().result();
+    final List<Result> results = someResultOf(AUTHORIZED_CLIENT.toggleLightsPower(input));
 
     assertEquals(1, results.size());
   }

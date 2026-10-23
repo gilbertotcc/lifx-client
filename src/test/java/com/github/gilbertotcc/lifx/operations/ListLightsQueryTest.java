@@ -3,6 +3,8 @@ package com.github.gilbertotcc.lifx.operations;
 import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.models.Light;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,5 +45,18 @@ class ListLightsQueryTest extends OperationsTestFixtures {
 
     assertTrue(result.isLeft());
     assertInstanceOf(LifxCallException.class, result.getLeft());
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {200, 204})
+  void listLightsShouldFailForEmptyBody(final int status) {
+    wireMockServer.stubFor(get(urlEqualTo("/v1/lights/all"))
+      .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
+      .willReturn(aResponse().withStatus(status)));
+
+    final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
+
+    assertTrue(result.isLeft());
+    assertInstanceOf(IOException.class, result.getLeft().getCause());
   }
 }

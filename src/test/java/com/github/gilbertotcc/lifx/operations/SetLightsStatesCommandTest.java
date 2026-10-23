@@ -32,7 +32,7 @@ class SetLightsStatesCommandTest extends OperationsTestFixtures {
     final LightsState lightsState1 = LightsState.of(Selectors.byId("bbbbb"), state);
     var input = new SetLightsStatesInput(List.of(lightsState0, lightsState1), null, false);
 
-    final List<OperationResult> results = AUTHORIZED_CLIENT.setLightsStates(input).get().result();
+    final List<OperationResult> results = someResultOf(AUTHORIZED_CLIENT.setLightsStates(input));
 
     assertEquals(2, results.size());
   }

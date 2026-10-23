@@ -22,8 +22,8 @@ public class DoBreatheEffectCommand
   /**
    * Synchronously requests a breathe effect for the selected lights.
    *
-   * @return per-light results on the right, or a call exception on the left for HTTP or I/O failures
-   * @throws NullPointerException if a successful response has no body
+   * @return per-light results on the right (an {@code EmptyOutput} if a successful response has no body),
+   *     or a call exception on the left for HTTP or I/O failures
    */
   @Override
   public Either<LifxCallException, CommandOutput<List<Result>>> execute(DoBreatheEffectInput input) {
@@ -33,9 +33,9 @@ public class DoBreatheEffectCommand
     log.info("Do breathe effect with {}. Settings: {}",
       lightSelector.identifier(), breatheEffect);
     return new CallExecutor<>(lifxApi.breatheEffect(lightSelector, breatheEffect)).execute()
-      .map(response -> {
-        var results = response.results();
-        return new CommandOutput<>(results);
-      });
+      .map(optionalResponse -> optionalResponse.fold(
+        CommandOutput.EmptyOutput::new,
+        response -> new CommandOutput.SomeOutput<>(response.results())
+      ));
   }
 }

@@ -30,7 +30,7 @@ class DoPulseEffectCommandTest extends OperationsTestFixtures {
       .build();
 
     var input = new DoPulseEffectInput(all(), pulseEffect);
-    final List<Result> results = AUTHORIZED_CLIENT.doPulseEffect(input).get().result();
+    final List<Result> results = someResultOf(AUTHORIZED_CLIENT.doPulseEffect(input));
 
     assertEquals(1, results.size());
   }
