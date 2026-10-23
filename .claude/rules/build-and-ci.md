@@ -19,7 +19,8 @@ published library runs on Java 17+. Gradle auto-detects installed JDKs, SDKMAN o
 foojay resolver plugin (`settings.gradle`) auto-provisions it into `~/.gradle/jdks`.
 
 Dependency and plugin versions live in the version catalog `gradle/libs.versions.toml` (except the foojay plugin in
-`settings.gradle` and the Checkstyle/JaCoCo `toolVersion`s in `build.gradle`). `gradle.properties` enables the
+`settings.gradle`). The Checkstyle/JaCoCo `toolVersion`s read `libs.versions.*`; their otherwise unused library
+entries let Dependabot track them. `gradle.properties` enables the
 configuration cache and the build cache, so build logic must stay configuration-cache compatible (lazy
 `tasks.register`/`tasks.named`, no `Project` access at execution time).
 

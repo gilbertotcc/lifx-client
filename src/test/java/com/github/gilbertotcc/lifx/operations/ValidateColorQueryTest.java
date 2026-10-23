@@ -11,6 +11,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ValidateColorQueryTest extends OperationsTestFixtures {
 
@@ -27,5 +29,17 @@ class ValidateColorQueryTest extends OperationsTestFixtures {
 
     assertEquals(0.0, color.hue(), 0.0001);
     assertEquals(1.0, color.saturation(), 0.0001);
+  }
+
+  @Test
+  void validateColorShouldFailForNullBody() {
+    wireMockServer.stubFor(get(urlEqualTo("/v1/color?string=red"))
+      .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
+      .willReturn(aResponse().withBody("null")));
+
+    final var result = AUTHORIZED_CLIENT.validateColor(new ValidateColorInput("red"));
+
+    assertTrue(result.isLeft());
+    assertInstanceOf(IOException.class, result.getLeft().getCause());
   }
 }

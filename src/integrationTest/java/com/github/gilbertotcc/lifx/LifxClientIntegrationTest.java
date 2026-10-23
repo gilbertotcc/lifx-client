@@ -9,6 +9,7 @@ import com.github.gilbertotcc.lifx.models.Power;
 import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.Selectors;
 import com.github.gilbertotcc.lifx.models.State;
+import com.github.gilbertotcc.lifx.operations.CommandOutput;
 import com.github.gilbertotcc.lifx.operations.ListLightsInput;
 import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
@@ -84,7 +85,7 @@ class LifxClientIntegrationTest {
 
     State state = State.builder().power(originalPower).duration(Duration.ZERO).build();
     var input = new SetLightsStateInput(Selectors.byId(lightId), state);
-    assertSingleOkResult(lightId, assertRight(lifxClient.setLightsState(input)).result());
+    assertSingleOkResult(lightId, assertSomeResult(lifxClient.setLightsState(input)));
 
     // The listing can lag behind commands
     Power power = null;
@@ -112,7 +113,7 @@ class LifxClientIntegrationTest {
     var input = new SetLightsStateInput(Selectors.byId(lightId), state);
 
     lightChanged = true;
-    List<Result> results = assertRight(lifxClient.setLightsState(input)).result();
+    List<Result> results = assertSomeResult(lifxClient.setLightsState(input));
 
     assertSingleOkResult(lightId, results);
   }
@@ -124,7 +125,7 @@ class LifxClientIntegrationTest {
     var input = new ToggleLightsPowerInput(Selectors.byId(lightId), TOGGLE_DURATION);
 
     lightChanged = true;
-    List<Result> results = assertRight(lifxClient.toggleLightsPower(input)).result();
+    List<Result> results = assertSomeResult(lifxClient.toggleLightsPower(input));
 
     assertSingleOkResult(lightId, results);
   }
@@ -171,6 +172,13 @@ class LifxClientIntegrationTest {
       fail("LIFX call failed", result.getLeft());
     }
     return result.get();
+  }
+
+  private static <T> T assertSomeResult(final Either<LifxCallException, CommandOutput<T>> result) {
+    if (assertRight(result) instanceof CommandOutput.SomeOutput<T> someOutput) {
+      return someOutput.result();
+    }
+    return fail("LIFX command returned no result");
   }
 
   private static void assertSingleOkResult(final String id, final List<Result> results) {

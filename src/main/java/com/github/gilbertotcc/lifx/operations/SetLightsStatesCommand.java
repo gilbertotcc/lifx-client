@@ -25,17 +25,17 @@ public class SetLightsStatesCommand
   /**
    * Synchronously requests the state updates supplied for each selector.
    *
-   * @return per-operation results on the right, or a call exception on the left for HTTP or I/O failures
-   * @throws NullPointerException if a successful response has no body
+   * @return per-operation results on the right (an {@code EmptyOutput} if a successful response has no body),
+   *     or a call exception on the left for HTTP or I/O failures
    */
   @Override
   public Either<LifxCallException, CommandOutput<List<OperationResult>>> execute(SetLightsStatesInput input) {
     log.info("Set lights states of {}", lightSelectorListOf(input));
     return new CallExecutor<>(lifxApi.setLightsStates(input)).execute()
-      .map(response -> {
-        var results = response.results();
-        return new CommandOutput<>(results);
-      });
+      .map(optionalResponse -> optionalResponse.fold(
+        CommandOutput.EmptyOutput::new,
+        response -> new CommandOutput.SomeOutput<>(response.results())
+      ));
   }
 
   private static String lightSelectorListOf(final LightsStatesDto lightsStatesDto) {

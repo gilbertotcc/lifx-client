@@ -30,7 +30,7 @@ class DoBreatheEffectCommandTest extends OperationsTestFixtures {
       .build();
 
     var input = new DoBreatheEffectInput(all(), breatheEffect);
-    final List<Result> results = AUTHORIZED_CLIENT.doBreatheEffect(input).get().result();
+    final List<Result> results = someResultOf(AUTHORIZED_CLIENT.doBreatheEffect(input));
 
     assertEquals(1, results.size());
   }

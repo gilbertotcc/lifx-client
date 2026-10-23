@@ -72,6 +72,9 @@ dependencies {
   api libs.vavr
   api libs.jspecify
   implementation libs.slf4j.api
+
+  // OKHTTP (declared directly so Maven consumers get OkHttp 5 instead of Retrofit's transitive 4.12.0)
+  implementation libs.okhttp
   implementation libs.logging.interceptor
 
   // STATIC ANALYSIS
@@ -104,7 +107,7 @@ base {
 }
 
 jacoco {
-  toolVersion = '0.8.15'
+  toolVersion = libs.versions.jacoco.get()
 }
 
 tasks.named('jacocoTestReport', JacocoReport) {
@@ -200,7 +203,7 @@ tasks.withType(Test).matching { it.name in ['test', 'spockTest'] }.configureEach
 // CHECKSTYLE
 
 checkstyle {
-  toolVersion = '14.3.0'
+  toolVersion = libs.versions.checkstyle.get()
 }
 
 checkstyleMain.source = "src/main/java"

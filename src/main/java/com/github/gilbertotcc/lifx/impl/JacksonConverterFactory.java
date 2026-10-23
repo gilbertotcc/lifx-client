@@ -32,13 +32,24 @@ final class JacksonConverterFactory extends Converter.Factory {
     return new JacksonConverterFactory(objectMapper);
   }
 
+  /**
+   * Creates a converter that deserializes JSON into the requested type.
+   * The returned converter closes the response body even if conversion fails, and returns null for an empty body.
+   * Jackson parsing and mapping failures are wrapped in {@link IOException}; other I/O failures propagate.
+   *
+   * @return a converter for the requested response type
+   */
   @Override
   public Converter<ResponseBody, ?> responseBodyConverter(final Type type,
                                                           final Annotation[] annotations,
                                                           final Retrofit retrofit) {
     final ObjectReader reader = objectMapper.readerFor(objectMapper.constructType(type));
+    // An empty body (e.g. a 202 answering a fast request) converts to null, which CallExecutor reports as no body
     return body -> {
       try (body) {
+        if (body.source().exhausted()) {
+          return null;
+        }
         return reader.readValue(body.charStream());
       } catch (JacksonException e) {
         throw new IOException("Unable to deserialize response body", e);

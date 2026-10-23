@@ -55,6 +55,11 @@ public class RedLightOnSwitcher {
 
 Client methods never throw: each returns a vavr `Either` holding either the result or a `LifxCallException`.
 
+Commands such as `setLightsState` return a sealed `CommandOutput`. It is a `SomeOutput`, whose `result()` holds the
+per-light results, or an `EmptyOutput` when LIFX accepts the request without a response body (for example, a `fast`
+request answered with `202 Accepted`). Queries such as `listLights` report a successful response without a body as
+a `LifxCallException`.
+
 `src/integrationTest` shows the client calling the real LIFX cloud, and the tests in `src/test` cover every operation
 the LIFX HTTP API provides.
 

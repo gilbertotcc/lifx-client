@@ -37,18 +37,22 @@ Request flow: `LifxClient` (public interface, factory `LifxClient.newLifxClientF
 one `operations.*Command`/`*Query` per endpoint → Retrofit `api.LifxApi` → wrapped by `impl.CallExecutor`.
 
 - **Operations** (`operations/`): each endpoint is an `Operation<I, O>` with its own `*Input` / `*Output` (or
-  generic `CommandOutput<T>`) class. Naming: `*Query` for reads, `*Command` for writes. Adding an endpoint means:
-  method in `LifxApi`, new Input/Command(+Output) in `operations`, wiring in `LifxClientImpl.createNewClientFor`, and a
-  method on `LifxClient`. Full procedure: `.claude/skills/lifx-operation/SKILL.md` (plain Markdown, usable by
-  any agent); file conventions: `.claude/rules/operations.md`.
+  the sealed `CommandOutput<T>`: `SomeOutput` / `EmptyOutput`) class. Naming: `*Query` for reads, `*Command` for
+  writes. Adding an endpoint means: method in `LifxApi`, new Input/Command(+Output) in `operations`, wiring in
+  `LifxClientImpl.createNewClientFor`, and a method on `LifxClient`. Full procedure:
+  `.claude/skills/lifx-operation/SKILL.md` (plain Markdown, usable by any agent); file conventions:
+  `.claude/rules/operations.md`.
 - **Error handling**: no exceptions are thrown to callers — every client method returns vavr
   `Either<LifxCallException, T>`. `CallExecutor` turns non-2xx responses into a `LifxCallException` whose cause is a
-  `LifxErrorException` (carrying the `LifxErrorType`), and I/O failures into `LifxCallException`.
+  `LifxErrorException` (carrying the `LifxErrorType`), and I/O failures into `LifxCallException`. A successful
+  `execute()` yields an `Option` that is empty for a body-less 2xx (commands map it to `EmptyOutput`);
+  `executeExpectingBody()`, used by queries, turns that case into a `LifxCallException`.
 - **HTTP setup**: `LifxClientImpl.createNewClientFor(baseUrl, token)` builds Retrofit with `LifxOkHttpClientFactory`
   (bearer auth + logging interceptor), a `StringConverterFactory` that renders `LightSelector` path params via
   `LightSelectorConverter`, and Jackson 3 using the shared `util.JacksonUtils.OBJECT_MAPPER`. Retrofit has no Jackson
   3 converter, so `impl.JacksonConverterFactory` is in-house; it wraps Jackson's unchecked `JacksonException` in
-  `IOException` so `CallExecutor` still reports (de)serialization failures as `LifxCallException`. The `baseUrl`
+  `IOException` so `CallExecutor` still reports (de)serialization failures as `LifxCallException`, and converts an
+  empty body to `null`, since Retrofit only skips the converter for 204/205. The `baseUrl`
   overload exists for tests (WireMock).
 - **Models** (`models/`): DTOs, mostly records (the `State` and effect hierarchies stay Lombok classes, since records
   can't extend), plus the selector hierarchy (`LightSelector`, `CombinableLightSelector`, `RandomizableLightSelector`,

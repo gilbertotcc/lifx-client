@@ -1,12 +1,16 @@
 package com.github.gilbertotcc.lifx.operations;
 
 import com.github.gilbertotcc.lifx.LifxClient;
+import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.impl.LifxClientImpl;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import io.vavr.control.Either;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import static java.lang.String.format;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class OperationsTestFixtures {
 
@@ -20,6 +24,14 @@ public class OperationsTestFixtures {
 
   private static LifxClient authorizedClient() {
     return LifxClientImpl.createNewClientFor(BASE_URL, VALID_ACCESS_TOKEN);
+  }
+
+  protected static <T> T someResultOf(final Either<LifxCallException, CommandOutput<T>> output) {
+    assertTrue(output.isRight(), () -> "Expected a command output, got " + output);
+    if (output.get() instanceof CommandOutput.SomeOutput<T> someOutput) {
+      return someOutput.result();
+    }
+    return fail("Expected a command output with a result, got " + output.get());
   }
 
   @BeforeEach

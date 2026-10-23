@@ -2,6 +2,7 @@ package com.github.gilbertotcc.lifx.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
@@ -52,6 +53,13 @@ class JacksonConverterFactoryTest {
     final Object value = converter.convert(ResponseBody.create(payload, JSON));
 
     assertEquals(Map.of("power", "on"), value);
+  }
+
+  @Test
+  void responseBodyConverterShouldReturnNullForEmptyBody() throws IOException {
+    final var converter = factory.responseBodyConverter(Map.class, NO_ANNOTATIONS, retrofit);
+
+    assertNull(converter.convert(ResponseBody.create("", JSON)));
   }
 
   @Test
