@@ -32,6 +32,13 @@ final class JacksonConverterFactory extends Converter.Factory {
     return new JacksonConverterFactory(objectMapper);
   }
 
+  /**
+   * Creates a converter that deserializes JSON into the requested type.
+   * The returned converter closes the response body even if conversion fails, and returns null for an empty body.
+   * Jackson parsing and mapping failures are wrapped in {@link IOException}; other I/O failures propagate.
+   *
+   * @return a converter for the requested response type
+   */
   @Override
   public Converter<ResponseBody, ?> responseBodyConverter(final Type type,
                                                           final Annotation[] annotations,
