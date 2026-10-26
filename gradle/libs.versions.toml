@@ -1,7 +1,7 @@
 [versions]
 retrofit = "3.0.0"
 # Jackson 3.x keeps jackson-annotations on the 2.x line; the BOM pins the matching version
-jackson-bom = "3.2.3"
+jackson-bom = "3.2.4"
 lombok = "1.18.48"
 vavr = "1.0.1"
 slf4j = "2.0.20"
