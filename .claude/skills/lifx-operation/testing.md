@@ -23,7 +23,7 @@ Rules:
   declares `IOException`, so the test needs `throws IOException`).
 - Every client method returns `Either<LifxCallException, T>`. On success, unwrap with `.get()` and assert on the
   mapped values (`.lights()`, `.color()`); for commands, `someResultOf(...)` from `OperationsTestFixtures` unwraps the
-  `CommandOutput.SomeOutput` result. On failure, check `result.isLeft()` and `result.getLeft()`.
+  `OperationOutput.Some` result. On failure, check `result.isLeft()` and `result.getLeft()`.
 
 ## Required cases
 
@@ -67,7 +67,7 @@ Rules:
      also catches unwanted `null` fields.
 
 4. **Empty body**, if the operation adds handling of its own. `SetLightsStateCommandTest` covers commands
-   (`aResponse().withStatus(202)` gives `CommandOutput.EmptyOutput`) and `ListLightsQueryTest` covers queries
+   (`aResponse().withStatus(202)` gives `OperationOutput.Empty`) and `ListLightsQueryTest` covers queries
    (`isLeft()` with an `IOException` cause); a new endpoint reuses that behavior and needs no extra test.
 
 Operations with no body (reads, `DELETE`) skip case 3. Add one test per behavior; for example, a selector variant

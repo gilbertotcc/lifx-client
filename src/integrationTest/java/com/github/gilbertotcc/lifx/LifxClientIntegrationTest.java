@@ -9,7 +9,7 @@ import com.github.gilbertotcc.lifx.models.Power;
 import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.Selectors;
 import com.github.gilbertotcc.lifx.models.State;
-import com.github.gilbertotcc.lifx.operations.CommandOutput;
+import com.github.gilbertotcc.lifx.operations.OperationOutput;
 import com.github.gilbertotcc.lifx.operations.ListLightsInput;
 import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
@@ -174,9 +174,9 @@ class LifxClientIntegrationTest {
     return result.get();
   }
 
-  private static <T> T assertSomeResult(final Either<LifxCallException, CommandOutput<T>> result) {
-    if (assertRight(result) instanceof CommandOutput.SomeOutput<T> someOutput) {
-      return someOutput.result();
+  private static <T> T assertSomeResult(final Either<LifxCallException, OperationOutput<T>> result) {
+    if (assertRight(result) instanceof OperationOutput.Some<T> some) {
+      return some.result();
     }
     return fail("LIFX command returned no result");
   }

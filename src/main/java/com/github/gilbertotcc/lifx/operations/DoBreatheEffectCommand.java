@@ -6,6 +6,7 @@ import com.github.gilbertotcc.lifx.impl.CallExecutor;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
 import com.github.gilbertotcc.lifx.models.LightSelector;
 import com.github.gilbertotcc.lifx.models.Result;
+import com.github.gilbertotcc.lifx.models.ResultsDto;
 import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,27 +16,24 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class DoBreatheEffectCommand
-  implements Operation<DoBreatheEffectInput, CommandOutput<List<Result>>> {
+  implements Operation<DoBreatheEffectInput, OperationOutput<List<Result>>> {
 
   private final LifxApi lifxApi;
 
   /**
    * Synchronously requests a breathe effect for the selected lights.
    *
-   * @return per-light results on the right (an {@code EmptyOutput} if a successful response has no body),
+   * @return per-light results on the right (an {@code Empty} if a successful response has no body),
    *     or a call exception on the left for HTTP or I/O failures
    */
   @Override
-  public Either<LifxCallException, CommandOutput<List<Result>>> execute(DoBreatheEffectInput input) {
+  public Either<LifxCallException, OperationOutput<List<Result>>> execute(DoBreatheEffectInput input) {
     LightSelector lightSelector = input.lightSelector();
     BreatheEffect breatheEffect = input.breatheEffect();
 
     log.info("Do breathe effect with {}. Settings: {}",
       lightSelector.identifier(), breatheEffect);
     return new CallExecutor<>(lifxApi.breatheEffect(lightSelector, breatheEffect)).execute()
-      .map(optionalResponse -> optionalResponse.fold(
-        CommandOutput.EmptyOutput::new,
-        response -> new CommandOutput.SomeOutput<>(response.results())
-      ));
+      .map(OperationOutput.from(ResultsDto::results));
   }
 }

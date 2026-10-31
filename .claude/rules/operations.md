@@ -19,22 +19,20 @@ paths:
   types (`ValidateColorInput` holds a `String`; a `{scene_uuid}` would be a `UUID`). Endpoints such as List Scenes
   have no selector at all. Exception: an input that is the wire body extends its model DTO
   (`SetLightsStatesInput extends LightsStatesDto`).
-- Output: writes reuse the sealed `CommandOutput<List<Result>>`, or `CommandOutput<List<OperationResult>>` for
-  `SetLightsStatesCommand`. `execute()` yields an `Option` (empty for a body-less 2xx, e.g. a `fast` request answered
-  with 202), mapped with
-  `.map(optionalResponse -> optionalResponse.fold(CommandOutput.EmptyOutput::new, response -> new
-  CommandOutput.SomeOutput<>(response.results())))`. Reads get their own record, with `List.copyOf` in the compact
-  constructor for lists (`ListLightsOutput`); `executeExpectingBody()` turns a body-less 2xx into a
-  `LifxCallException`.
+- Output: writes reuse the sealed `OperationOutput<List<Result>>`, or `OperationOutput<List<OperationResult>>` for
+  `SetLightsStatesCommand`. `execute()` yields an `Optional` (empty for a body-less 2xx, e.g. a `fast` request
+  answered with 202), mapped with `.map(OperationOutput.from(ResultsDto::results))`. Reads get their own record,
+  with `List.copyOf` in the compact constructor for lists (`ListLightsOutput`); `executeExpectingBody()` turns a
+  body-less 2xx into a `LifxCallException`.
 - Body models (`models/`): records with `@JsonProperty` and `@Nullable` for optional fields (`Cycle`, `Result`).
   Custom (de)serializers go in `models/serializer` and `models/deserializer` (`DirectionSerializer`,
   `ResultStatusDeserializer`), wired with `@JsonSerialize` / `@JsonDeserialize`. `ModelsDependencyTest` forbids
   Jackson classes in `models` itself, apart from annotations.
 - `execute` Javadoc: one summary sentence starting "Synchronously ...", then `@return`. Writes document the Either
-  and the `EmptyOutput` on a body-less response:
+  and the `Empty` on a body-less response:
 
   ```java
-  * @return per-light results on the right (an {@code EmptyOutput} if a successful response has no body),
+  * @return per-light results on the right (an {@code Empty} if a successful response has no body),
   *     or a call exception on the left for HTTP or I/O failures
   ```
 

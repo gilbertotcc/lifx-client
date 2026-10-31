@@ -8,7 +8,7 @@ import com.github.gilbertotcc.lifx.models.OperationResult;
 import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.converter.LightSelectorConverter;
 import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
-import com.github.gilbertotcc.lifx.operations.CommandOutput;
+import com.github.gilbertotcc.lifx.operations.OperationOutput;
 import com.github.gilbertotcc.lifx.operations.DoBreatheEffectCommand;
 import com.github.gilbertotcc.lifx.operations.DoBreatheEffectInput;
 import com.github.gilbertotcc.lifx.operations.DoPulseEffectCommand;
@@ -122,37 +122,37 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public Either<LifxCallException, CommandOutput<List<Result>>> setLightsState(SetLightsStateInput input) {
+  public Either<LifxCallException, OperationOutput<List<Result>>> setLightsState(SetLightsStateInput input) {
     return setLightsStateCommand.execute(input);
   }
 
   @Override
-  public Either<LifxCallException, CommandOutput<List<OperationResult>>> setLightsStates(SetLightsStatesInput input) {
+  public Either<LifxCallException, OperationOutput<List<OperationResult>>> setLightsStates(SetLightsStatesInput input) {
     return setLightsStatesCommand.execute(input);
   }
 
   @Override
-  public Either<LifxCallException, CommandOutput<List<Result>>> setLightsStateDelta(SetLightsStateDeltaInput input) {
+  public Either<LifxCallException, OperationOutput<List<Result>>> setLightsStateDelta(SetLightsStateDeltaInput input) {
     return setLightsStateDeltaCommand.execute(input);
   }
 
   @Override
-  public Either<LifxCallException, CommandOutput<List<Result>>> toggleLightsPower(ToggleLightsPowerInput input) {
+  public Either<LifxCallException, OperationOutput<List<Result>>> toggleLightsPower(ToggleLightsPowerInput input) {
     return toggleLightsPowerCommand.execute(input);
   }
 
   @Override
-  public Either<LifxCallException, CommandOutput<List<Result>>> doBreatheEffect(DoBreatheEffectInput input) {
+  public Either<LifxCallException, OperationOutput<List<Result>>> doBreatheEffect(DoBreatheEffectInput input) {
     return doBreatheEffectCommand.execute(input);
   }
 
   @Override
-  public Either<LifxCallException, CommandOutput<List<Result>>> doPulseEffect(DoPulseEffectInput input) {
+  public Either<LifxCallException, OperationOutput<List<Result>>> doPulseEffect(DoPulseEffectInput input) {
     return doPulseEffectCommand.execute(input);
   }
 
   @Override
-  public Either<LifxCallException, CommandOutput<List<Result>>> transitToNextState(TransitToNextStateInput input) {
+  public Either<LifxCallException, OperationOutput<List<Result>>> transitToNextState(TransitToNextStateInput input) {
     return transitToNextStateCommand.execute(input);
   }
 

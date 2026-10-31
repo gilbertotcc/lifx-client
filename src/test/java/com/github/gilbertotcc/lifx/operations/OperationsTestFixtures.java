@@ -26,10 +26,10 @@ public class OperationsTestFixtures {
     return LifxClientImpl.createNewClientFor(BASE_URL, VALID_ACCESS_TOKEN);
   }
 
-  protected static <T> T someResultOf(final Either<LifxCallException, CommandOutput<T>> output) {
+  protected static <T> T someResultOf(final Either<LifxCallException, OperationOutput<T>> output) {
     assertTrue(output.isRight(), () -> "Expected a command output, got " + output);
-    if (output.get() instanceof CommandOutput.SomeOutput<T> someOutput) {
-      return someOutput.result();
+    if (output.get() instanceof OperationOutput.Some<T> some) {
+      return some.result();
     }
     return fail("Expected a command output with a result, got " + output.get());
   }

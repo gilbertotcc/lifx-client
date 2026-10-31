@@ -37,15 +37,15 @@ Request flow: `LifxClient` (public interface, factory `LifxClient.newLifxClientF
 one `operations.*Command`/`*Query` per endpoint → Retrofit `api.LifxApi` → wrapped by `impl.CallExecutor`.
 
 - **Operations** (`operations/`): each endpoint is an `Operation<I, O>` with its own `*Input` / `*Output` (or
-  the sealed `CommandOutput<T>`: `SomeOutput` / `EmptyOutput`) class. Naming: `*Query` for reads, `*Command` for
-  writes. Adding an endpoint means: method in `LifxApi`, new Input/Command(+Output) in `operations`, wiring in
+  the sealed `OperationOutput<T>`: `Some` / `Empty`) class. Naming: `*Query` for reads, `*Command` for
+  writes. Adding an endpoint means: method in `LifxApi`, new Input/Command (+Output) in `operations`, wiring in
   `LifxClientImpl.createNewClientFor`, and a method on `LifxClient`. Full procedure:
   `.claude/skills/lifx-operation/SKILL.md` (plain Markdown, usable by any agent); file conventions:
   `.claude/rules/operations.md`.
 - **Error handling**: no exceptions are thrown to callers — every client method returns vavr
   `Either<LifxCallException, T>`. `CallExecutor` turns non-2xx responses into a `LifxCallException` whose cause is a
   `LifxErrorException` (carrying the `LifxErrorType`), and I/O failures into `LifxCallException`. A successful
-  `execute()` yields an `Option` that is empty for a body-less 2xx (commands map it to `EmptyOutput`);
+  `execute()` yields an `Optional` that is empty for a body-less 2xx (commands map it with `OperationOutput.from`);
   `executeExpectingBody()`, used by queries, turns that case into a `LifxCallException`.
 - **HTTP setup**: `LifxClientImpl.createNewClientFor(baseUrl, token)` builds Retrofit with `LifxOkHttpClientFactory`
   (bearer auth + logging interceptor), a `StringConverterFactory` that renders `LightSelector` path params via
@@ -67,6 +67,8 @@ ArchUnit tests in `src/test/java/.../arch` fail the build if violated:
   and `io.vavr..` (not Jackson, Retrofit, Lombok runtime types, etc.); dependencies that come from annotations are
   ignored, since ArchUnit 1.x counts them but the rule targets code. Note: `models.serializer`/`deserializer`/
   `converter` are subpackages, so they are not covered by this rule.
+- Main code may use only these vavr types (and their nested classes): `Either`, `Seq`, `Try`, `Validation`
+  (`VavrDependencyTest`). Use `java.util.Optional`, not vavr `Option`.
 - No `System.out`/`System.err`, no generic exceptions thrown, no `java.util.logging` (use SLF4J via Lombok `@Slf4j`).
 
 The compiler also fails the build on:

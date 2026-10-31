@@ -4,7 +4,6 @@ import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.exception.LifxErrorException;
 import com.github.gilbertotcc.lifx.exception.LifxErrorType;
 import com.github.gilbertotcc.lifx.testutil.TestUtils;
-import io.vavr.control.Option;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
@@ -13,6 +12,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -34,19 +34,19 @@ class CallExecutorTest {
 
     var okResponse = new CallExecutor<String>(callMock).execute().get();
 
-    assertEquals(Option.of("ok"), okResponse);
+    assertEquals(Optional.of("ok"), okResponse);
   }
 
   @Test
   @SuppressWarnings("unchecked")
-  void executeShouldReturnNoneForSuccessfulResponseWithoutBody() throws IOException {
+  void executeShouldReturnEmptyForSuccessfulResponseWithoutBody() throws IOException {
     final var callMock = mock(Call.class, RETURNS_DEEP_STUBS);
     Response<String> response = Response.success(null);
     when(callMock.execute()).thenReturn(response);
 
     var okResponse = new CallExecutor<String>(callMock).execute().get();
 
-    assertEquals(Option.none(), okResponse);
+    assertEquals(Optional.empty(), okResponse);
   }
 
   @Test

@@ -46,8 +46,8 @@ it is not already in context.
    when the path has `{selector}` (other path params, such as Activate Scene's `{scene_uuid}`, get their own `@Path`
    with a plain type like `UUID`), `@Query` or `@Body` parameters, and a `Call<...>` type matching the `2XX` schema.
 3. **Operation** in `operations/`: the `*Input` record, the `*Command` (write) or `*Query` (read) implementing
-   `Operation<I, O>`, and an `*Output` record only when the sealed `CommandOutput<T>` (`SomeOutput` /
-   `EmptyOutput`) doesn't fit.
+   `Operation<I, O>`, and an `*Output` record only when the sealed `OperationOutput<T>` (`Some` /
+   `Empty`) doesn't fit.
 4. **`LifxClient`**: a method `Either<LifxCallException, O> name(NameInput input)`.
 5. **`impl/LifxClientImpl`**: it uses a private Lombok `@RequiredArgsConstructor`, so constructor arguments follow
    field order.
