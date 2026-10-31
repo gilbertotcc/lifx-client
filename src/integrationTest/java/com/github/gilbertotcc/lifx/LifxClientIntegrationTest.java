@@ -11,7 +11,6 @@ import com.github.gilbertotcc.lifx.models.Selectors;
 import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.operations.CommandOutput;
 import com.github.gilbertotcc.lifx.operations.ListLightsInput;
-import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
 import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
 import com.github.gilbertotcc.lifx.operations.ValidateColorInput;
@@ -64,7 +63,7 @@ class LifxClientIntegrationTest {
 
     // A failed listing is reported by listLightsShouldSucceed; the tests that need a light are skipped
     lifxClient.listLights(ListLightsInput.ALL_LIGHTS)
-      .fold(error -> List.<Light>of(), ListLightsOutput::lights)
+      .fold(error -> List.<Light>of(), CommandOutput.SomeOutput::result)
       .stream()
       .filter(Light::connected)
       .filter(light -> light.id() != null && light.power() != null)
@@ -99,7 +98,7 @@ class LifxClientIntegrationTest {
   @Test
   @Order(1)
   void listLightsShouldSucceed() {
-    List<Light> lights = assertRight(lifxClient.listLights(ListLightsInput.ALL_LIGHTS)).lights();
+    List<Light> lights = assertRight(lifxClient.listLights(ListLightsInput.ALL_LIGHTS)).result();
 
     assertEquals(lights.size(), lights.stream().map(Light::id).distinct().count(), "Light ids are not unique");
     lights.forEach(LifxClientIntegrationTest::assertWellFormed);
@@ -133,7 +132,7 @@ class LifxClientIntegrationTest {
   @Test
   void validateGreenColorShouldSucceed() {
     var input = new ValidateColorInput("green");
-    Color color = assertRight(lifxClient.validateColor(input)).color();
+    Color color = assertRight(lifxClient.validateColor(input)).result();
 
     assertEquals(120, color.hue(), 0.001);
     assertEquals(1, color.saturation(), 0.001);
@@ -157,7 +156,7 @@ class LifxClientIntegrationTest {
 
   private Power currentPower() {
     var input = new ListLightsInput(Selectors.byId(lightId));
-    return assertRight(lifxClient.listLights(input)).lights().stream()
+    return assertRight(lifxClient.listLights(input)).result().stream()
       .findFirst()
       .map(Light::power)
       .orElse(null);
