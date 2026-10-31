@@ -3,14 +3,17 @@ package com.github.gilbertotcc.lifx.operations;
 import com.github.gilbertotcc.lifx.api.LifxApi;
 import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.impl.CallExecutor;
+import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightSelector;
 import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
-public class ListLightsQuery implements Operation<ListLightsInput, ListLightsOutput> {
+public class ListLightsQuery implements Operation<ListLightsInput, CommandOutput.SomeOutput<List<Light>>> {
 
   private final LifxApi lifxApi;
 
@@ -19,14 +22,13 @@ public class ListLightsQuery implements Operation<ListLightsInput, ListLightsOut
    *
    * @return the light list on the right, or a call exception on the left for HTTP or I/O failures or a successful
    *     response without a body
-   * @throws NullPointerException if the response list contains a null element
    */
   @Override
-  public Either<LifxCallException, ListLightsOutput> execute(ListLightsInput input) {
+  public Either<LifxCallException, CommandOutput.SomeOutput<List<Light>>> execute(ListLightsInput input) {
     LightSelector lightSelector = input.selector();
 
     log.info("List lights (selector: {})", lightSelector.identifier());
     return new CallExecutor<>(lifxApi.listLights(lightSelector)).executeExpectingBody()
-      .map(ListLightsOutput::new);
+      .map(CommandOutput.SomeOutput::new);
   }
 }
