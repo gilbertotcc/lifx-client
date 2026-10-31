@@ -26,7 +26,8 @@ paths:
   CommandOutput.SomeOutput<>(response.results())))`. Reads return `CommandOutput.SomeOutput<T>` directly, with `T`
   the `LifxApi` body type (`SomeOutput<List<Light>>`, `SomeOutput<Color>`), mapped with
   `.map(CommandOutput.SomeOutput::new)`; no `*Output` record. `executeExpectingBody()` turns a body-less 2xx into a
-  `LifxCallException`, so a read never yields `EmptyOutput`.
+  `LifxCallException`, so a read never yields `EmptyOutput`. A list body is checked for null elements (a `Left` with
+  an `IOException` cause) and wrapped with `List.copyOf` (`ListLightsQuery` uses `flatMap` for this).
 - Body models (`models/`): records with `@JsonProperty` and `@Nullable` for optional fields (`Cycle`, `Result`).
   Custom (de)serializers go in `models/serializer` and `models/deserializer` (`DirectionSerializer`,
   `ResultStatusDeserializer`), wired with `@JsonSerialize` / `@JsonDeserialize`. `ModelsDependencyTest` forbids
@@ -39,9 +40,9 @@ paths:
   *     or a call exception on the left for HTTP or I/O failures
   ```
 
-  Reads word `@return` as "the light list on the right, or a call exception on the left for HTTP or I/O failures or
-  a successful response without a body" (`ValidateColorQuery`: "the parsed color ..."). Add `@throws` only when the
-  mapping of the body can actually throw.
+  Reads word `@return` as "the parsed color on the right, or a call exception on the left for HTTP or I/O failures or
+  a successful response without a body" (`ValidateColorQuery`); `ListLightsQuery` adds "an unmodifiable copy of" and
+  "a response list with a null element". Add `@throws` only when the mapping of the body can actually throw.
 - `LifxClient` and `LifxClientImpl` change together: the interface method returns `Either<LifxCallException, O>`;
   the impl gets a field under `// Operations`, a delegating `@Override`, and a `new XxxCommand(lifxApi)` /
   `new XxxQuery(lifxApi)` argument in `createNewClientFor`. Field order must equal constructor argument order
