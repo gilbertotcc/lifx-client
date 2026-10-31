@@ -30,9 +30,21 @@ class ListLightsQueryTest extends OperationsTestFixtures {
       .willReturn(aResponse().withBody(response)));
 
     ListLightsInput listLightsInput = new ListLightsInput(all());
-    final List<Light> lights = AUTHORIZED_CLIENT.listLights(listLightsInput).get().lights();
+    final List<Light> lights = AUTHORIZED_CLIENT.listLights(listLightsInput).get().result();
 
     assertEquals(1, lights.size());
+  }
+
+  @Test
+  void listLightsShouldFailForNullLight() {
+    wireMockServer.stubFor(get(urlEqualTo("/v1/lights/all"))
+      .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
+      .willReturn(aResponse().withBody("[null]")));
+
+    final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
+
+    assertTrue(result.isLeft());
+    assertInstanceOf(IOException.class, result.getLeft().getCause());
   }
 
   @Test

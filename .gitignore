@@ -199,5 +199,12 @@ gradle-app.setting
 
 .env
 
+# Eclipse JDT Language Server / Buildship metadata and build output
+/.project
+/.classpath
+/.factorypath
+/.settings/
+/bin/
+
 # Git worktrees created by Claude Code
 .claude/worktrees/

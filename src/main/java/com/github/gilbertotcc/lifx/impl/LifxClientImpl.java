@@ -3,6 +3,8 @@ package com.github.gilbertotcc.lifx.impl;
 import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.api.LifxApi;
 import com.github.gilbertotcc.lifx.exception.LifxCallException;
+import com.github.gilbertotcc.lifx.models.Color;
+import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightSelector;
 import com.github.gilbertotcc.lifx.models.OperationResult;
 import com.github.gilbertotcc.lifx.models.Result;
@@ -14,7 +16,6 @@ import com.github.gilbertotcc.lifx.operations.DoBreatheEffectInput;
 import com.github.gilbertotcc.lifx.operations.DoPulseEffectCommand;
 import com.github.gilbertotcc.lifx.operations.DoPulseEffectInput;
 import com.github.gilbertotcc.lifx.operations.ListLightsInput;
-import com.github.gilbertotcc.lifx.operations.ListLightsOutput;
 import com.github.gilbertotcc.lifx.operations.ListLightsQuery;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateCommand;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateDeltaCommand;
@@ -27,7 +28,6 @@ import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
 import com.github.gilbertotcc.lifx.operations.TransitToNextStateCommand;
 import com.github.gilbertotcc.lifx.operations.TransitToNextStateInput;
 import com.github.gilbertotcc.lifx.operations.ValidateColorInput;
-import com.github.gilbertotcc.lifx.operations.ValidateColorOutput;
 import com.github.gilbertotcc.lifx.operations.ValidateColorQuery;
 import com.github.gilbertotcc.lifx.util.JacksonUtils;
 import io.vavr.control.Either;
@@ -117,7 +117,7 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public Either<LifxCallException, ListLightsOutput> listLights(ListLightsInput input) {
+  public Either<LifxCallException, CommandOutput.SomeOutput<List<Light>>> listLights(ListLightsInput input) {
     return listLightsQuery.execute(input);
   }
 
@@ -157,7 +157,7 @@ public class LifxClientImpl implements LifxClient {
   }
 
   @Override
-  public Either<LifxCallException, ValidateColorOutput> validateColor(ValidateColorInput input) {
+  public Either<LifxCallException, CommandOutput.SomeOutput<Color>> validateColor(ValidateColorInput input) {
     return validateColorQuery.execute(input);
   }
 }
