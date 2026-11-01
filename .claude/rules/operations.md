@@ -12,38 +12,38 @@ paths:
 - Naming: `*Query` for reads, `*Command` for writes, with `*Input` / `*Output` beside them.
 - Class shape: `@Slf4j @RequiredArgsConstructor`, `private final LifxApi lifxApi`, `implements Operation<I, O>`.
   `execute` calls `log.info` once with the key inputs: the selector's `identifier()` when the endpoint has one
-  (`ListLightsQuery`), otherwise the identifying input (`ValidateColorQuery` logs the color string). Then it runs
-  `new CallExecutor<>(lifxApi.x(...)).execute().map(...)` for writes, or `.executeExpectingBody().map(...)` for reads.
-  See `ListLightsQuery`, `ValidateColorQuery` and `SetLightsStateCommand`.
+  (`ListLightsQuery`), otherwise the identifying input (`ValidateColorQuery` logs the color string). Then it calls one
+  of the `OperationCalls` helpers with the `LifxApi` call: `executeCommand` for writes, `executeQuery` for reads,
+  `executeListQuery` for reads that return a list. See `ListLightsQuery`, `ValidateColorQuery` and `SetLightsStateCommand`.
 - Input: a record. A `{selector}` path param is a `LightSelector` (`TransitToNextStateInput`); other params use plain
   types (`ValidateColorInput` holds a `String`; a `{scene_uuid}` would be a `UUID`). Endpoints such as List Scenes
   have no selector at all. Exception: an input that is the wire body extends its model DTO
   (`SetLightsStatesInput extends LightsStatesDto`).
-- Output: writes reuse the sealed `CommandOutput<List<Result>>`, or `CommandOutput<List<OperationResult>>` for
-  `SetLightsStatesCommand`. `execute()` yields an `Option` (empty for a body-less 2xx, e.g. a `fast` request answered
-  with 202), mapped with
-  `.map(optionalResponse -> optionalResponse.fold(CommandOutput.EmptyOutput::new, response -> new
-  CommandOutput.SomeOutput<>(response.results())))`. Reads return `CommandOutput.SomeOutput<T>` directly, with `T`
-  the `LifxApi` body type (`SomeOutput<List<Light>>`, `SomeOutput<Color>`), mapped with
-  `.map(CommandOutput.SomeOutput::new)`; no `*Output` record. `executeExpectingBody()` turns a body-less 2xx into a
-  `LifxCallException`, so a read never yields `EmptyOutput`. A list body is checked for null elements (a `Left` with
-  an `IOException` cause) and wrapped with `List.copyOf` (`ListLightsQuery` uses `flatMap` for this).
+- Output: operations return `LifxResult<O>` and need no `*Output` record. Writes use `LifxResult<List<Result>>`, or
+  `LifxResult<List<OperationResult>>` for `SetLightsStatesCommand`, through `OperationCalls.executeCommand`; a
+  body-less 2xx (e.g. a `fast` request answered with 202) becomes `LifxResult.Success.None`. Reads return
+  `LifxResult<T>` with `T` the `LifxApi` body type (`LifxResult<List<Light>>`, `LifxResult<Color>`), through
+  `executeQuery`; they never yield `Success.None`, since a body-less 2xx becomes a `Failure`. `executeListQuery`
+  also checks a list body for null elements (a `Failure` with an `IOException` cause) and wraps it with
+  `List.copyOf`.
 - Body models (`models/`): records with `@JsonProperty` and `@Nullable` for optional fields (`Cycle`, `Result`).
   Custom (de)serializers go in `models/serializer` and `models/deserializer` (`DirectionSerializer`,
-  `ResultStatusDeserializer`), wired with `@JsonSerialize` / `@JsonDeserialize`. `ModelsDependencyTest` forbids
-  Jackson classes in `models` itself, apart from annotations.
-- `execute` Javadoc: one summary sentence starting "Synchronously ...", then `@return`. Writes document the Either
-  and the `EmptyOutput` on a body-less response:
+  `ResultStatusDeserializer`), registered in `JacksonUtils.OBJECT_MAPPER` (a `SimpleModule`), where one applies to
+  every field of its type. `ModelsDependencyTest` allows only `com.fasterxml.jackson.annotation` in `models` itself.
+- `execute` Javadoc: one summary sentence starting "Synchronously ...", then `@return`. Writes document all three
+  outcomes:
 
   ```java
-  * @return per-light results on the right (an {@code EmptyOutput} if a successful response has no body),
-  *     or a call exception on the left for HTTP or I/O failures
+  * @return {@link LifxResult.Success.Some} with the per-light results, {@link LifxResult.Success.None} if a
+  *     successful response has no body, or {@link LifxResult.Failure} with a call exception for HTTP or I/O
+  *     failures
   ```
 
-  Reads word `@return` as "the parsed color on the right, or a call exception on the left for HTTP or I/O failures or
-  a successful response without a body" (`ValidateColorQuery`); `ListLightsQuery` adds "an unmodifiable copy of" and
+  Reads word `@return` as "{@link LifxResult.Success.Some} with the parsed color, or {@link LifxResult.Failure} with
+  a call exception for HTTP or I/O failures or a successful response without a body. Never
+  {@link LifxResult.Success.None}" (`ValidateColorQuery`); `ListLightsQuery` adds "an unmodifiable copy of" and
   "a response list with a null element". Add `@throws` only when the mapping of the body can actually throw.
-- `LifxClient` and `LifxClientImpl` change together: the interface method returns `Either<LifxCallException, O>`;
+- `LifxClient` and `LifxClientImpl` change together: the interface method returns `LifxResult<O>`;
   the impl gets a field under `// Operations`, a delegating `@Override`, and a `new XxxCommand(lifxApi)` /
   `new XxxQuery(lifxApi)` argument in `createNewClientFor`. Field order must equal constructor argument order
   (private Lombok `@RequiredArgsConstructor`).

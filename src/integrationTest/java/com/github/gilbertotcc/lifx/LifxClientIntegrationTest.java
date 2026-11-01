@@ -1,6 +1,5 @@
 package com.github.gilbertotcc.lifx;
 
-import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.exception.LifxErrorException;
 import com.github.gilbertotcc.lifx.exception.LifxErrorType;
 import com.github.gilbertotcc.lifx.models.Color;
@@ -9,12 +8,10 @@ import com.github.gilbertotcc.lifx.models.Power;
 import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.Selectors;
 import com.github.gilbertotcc.lifx.models.State;
-import com.github.gilbertotcc.lifx.operations.CommandOutput;
 import com.github.gilbertotcc.lifx.operations.ListLightsInput;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
 import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
 import com.github.gilbertotcc.lifx.operations.ValidateColorInput;
-import io.vavr.control.Either;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -62,9 +59,9 @@ class LifxClientIntegrationTest {
     lifxClient = LifxClient.newLifxClientFor(accessToken);
 
     // A failed listing is reported by listLightsShouldSucceed; the tests that need a light are skipped
-    lifxClient.listLights(ListLightsInput.ALL_LIGHTS)
-      .fold(error -> List.<Light>of(), CommandOutput.SomeOutput::result)
-      .stream()
+    var listing = lifxClient.listLights(ListLightsInput.ALL_LIGHTS);
+    List<Light> lights = listing instanceof LifxResult.Success.Some<List<Light>> some ? some.result() : List.of();
+    lights.stream()
       .filter(Light::connected)
       .filter(light -> light.id() != null && light.power() != null)
       .findFirst()
@@ -98,7 +95,7 @@ class LifxClientIntegrationTest {
   @Test
   @Order(1)
   void listLightsShouldSucceed() {
-    List<Light> lights = assertRight(lifxClient.listLights(ListLightsInput.ALL_LIGHTS)).result();
+    List<Light> lights = assertSomeResult(lifxClient.listLights(ListLightsInput.ALL_LIGHTS));
 
     assertEquals(lights.size(), lights.stream().map(Light::id).distinct().count(), "Light ids are not unique");
     lights.forEach(LifxClientIntegrationTest::assertWellFormed);
@@ -132,7 +129,7 @@ class LifxClientIntegrationTest {
   @Test
   void validateGreenColorShouldSucceed() {
     var input = new ValidateColorInput("green");
-    Color color = assertRight(lifxClient.validateColor(input)).result();
+    Color color = assertSomeResult(lifxClient.validateColor(input));
 
     assertEquals(120, color.hue(), 0.001);
     assertEquals(1, color.saturation(), 0.001);
@@ -144,9 +141,12 @@ class LifxClientIntegrationTest {
   void listLightsShouldFailForInvalidToken() {
     var result = LifxClient.newLifxClientFor("unknownAccessToken").listLights(ListLightsInput.ALL_LIGHTS);
 
-    assertTrue(result.isLeft(), "Expected the call to fail");
+    if (!(result instanceof LifxResult.Failure<List<Light>> failure)) {
+      fail("Expected the call to fail");
+      return;
+    }
     // CallExecutor wraps HTTP errors in a LifxCallException
-    var error = assertInstanceOf(LifxErrorException.class, result.getLeft().getCause());
+    var error = assertInstanceOf(LifxErrorException.class, failure.lifxCallException().getCause());
     assertEquals(LifxErrorType.UNAUTHORIZED, error.getType());
   }
 
@@ -156,7 +156,7 @@ class LifxClientIntegrationTest {
 
   private Power currentPower() {
     var input = new ListLightsInput(Selectors.byId(lightId));
-    return assertRight(lifxClient.listLights(input)).result().stream()
+    return assertSomeResult(lifxClient.listLights(input)).stream()
       .findFirst()
       .map(Light::power)
       .orElse(null);
@@ -166,18 +166,14 @@ class LifxClientIntegrationTest {
     return power == Power.ON ? Power.OFF : Power.ON;
   }
 
-  private static <T> T assertRight(final Either<LifxCallException, T> result) {
-    if (result.isLeft()) {
-      fail("LIFX call failed", result.getLeft());
+  private static <T> T assertSomeResult(final LifxResult<T> result) {
+    if (result instanceof LifxResult.Failure<T> failure) {
+      return fail("LIFX call failed", failure.lifxCallException());
     }
-    return result.get();
-  }
-
-  private static <T> T assertSomeResult(final Either<LifxCallException, CommandOutput<T>> result) {
-    if (assertRight(result) instanceof CommandOutput.SomeOutput<T> someOutput) {
-      return someOutput.result();
+    if (result instanceof LifxResult.Success.Some<T> some) {
+      return some.result();
     }
-    return fail("LIFX command returned no result");
+    return fail("LIFX call returned no result");
   }
 
   private static void assertSingleOkResult(final String id, final List<Result> results) {

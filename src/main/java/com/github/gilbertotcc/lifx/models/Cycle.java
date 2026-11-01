@@ -3,9 +3,7 @@ package com.github.gilbertotcc.lifx.models;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.gilbertotcc.lifx.models.serializer.DirectionSerializer;
 import org.jspecify.annotations.Nullable;
-import tools.jackson.databind.annotation.JsonSerialize;
 
 public record Cycle(
   @JsonProperty("states")
@@ -15,7 +13,6 @@ public record Cycle(
   @Nullable State defaultState,
 
   @JsonProperty("direction")
-  @JsonSerialize(using = DirectionSerializer.class)
   @Nullable Direction direction
 ) {
 

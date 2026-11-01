@@ -1,14 +1,13 @@
 package com.github.gilbertotcc.lifx.operations;
 
-import com.github.gilbertotcc.lifx.exception.LifxCallException;
-import io.vavr.control.Either;
+import com.github.gilbertotcc.lifx.LifxResult;
 
 public interface Operation<I, O> {
 
   /**
    * Synchronously executes the operation with the supplied input.
    *
-   * @return the output on the right, or a call exception on the left for HTTP or I/O failures
+   * @return {@link LifxResult.Success} with the result or {@link LifxResult.Failure} in case of failure.
    */
-  Either<LifxCallException, O> execute(I input);
+  LifxResult<O> execute(I input);
 }

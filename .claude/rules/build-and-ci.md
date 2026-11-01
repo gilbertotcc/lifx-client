@@ -38,8 +38,18 @@ requests to and pushes to `main`. It reports test results on pull requests, and 
 Workflows reference actions by version tag (`@vX.Y.Z`), not commit SHA; Dependabot (`.github/dependabot.yml`) updates
 them weekly in one grouped pull request.
 
+Only jackson-annotations and jspecify are `api` dependencies; Retrofit, jackson-core, jackson-databind and the Jackson
+BOM are `implementation`, so consumers don't see them at compile time. jackson-annotations has its own version in the
+catalog (`jackson-annotations`, the value the BOM sets) because the BOM is `implementation`-only: with the BOM
+there, a consumer's compile classpath resolved the dependency without a version and failed. It is `api` because
+the models use its annotations. `@JsonSerialize`/`@JsonDeserialize` can't go on models, since they live in databind:
+a consumer compiling with `-Xlint:all -Werror` fails with `[classfile] Cannot find annotation method 'using()'`. Keep
+the catalog version in step with the BOM: Gradle takes the highest version at runtime if they drift.
+
 Dependabot also updates Gradle dependencies, plugins and the wrapper weekly, after a 7-day cooldown: minor and patch
-updates in one grouped pull request, majors separately (grouped per family, such as Jackson or JUnit). Upgrades that
+updates in one grouped pull request, majors separately (grouped per family, such as Jackson or JUnit). The `jackson` group
+covers majors only, so jackson-annotations minor and patch bumps arrive in the catch-all minor/patch pull request, next
+to the BOM's. Upgrades that
 need a migration (Spock/Groovy line changes) are ignored; each ignore rule in
 `.github/dependabot.yml` states its reason and when to remove it.
 

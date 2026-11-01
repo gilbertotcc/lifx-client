@@ -2,6 +2,9 @@
 retrofit = "3.0.0"
 # Jackson 3.x keeps jackson-annotations on the 2.x line; the BOM pins the matching version
 jackson-bom = "3.2.4"
+# Pinned on its own because jackson-annotations is api (the BOM is not): the value BOM 3.2.4 sets. Keep it in step
+# with the BOM; if they drift, Gradle picks the highest version at runtime.
+jackson-annotations = "2.22"
 lombok = "1.18.48"
 vavr = "1.0.1"
 slf4j = "2.0.20"
@@ -30,7 +33,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 jackson-bom = { module = "tools.jackson:jackson-bom", version.ref = "jackson-bom" }
 jackson-core = { module = "tools.jackson.core:jackson-core" }
 jackson-databind = { module = "tools.jackson.core:jackson-databind" }
-jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations" }
+jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson-annotations" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 vavr = { module = "io.vavr:vavr", version.ref = "vavr" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }

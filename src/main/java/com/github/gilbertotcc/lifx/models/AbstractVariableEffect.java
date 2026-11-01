@@ -3,12 +3,10 @@ package com.github.gilbertotcc.lifx.models;
 import java.time.Duration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.gilbertotcc.lifx.models.serializer.DurationSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.jspecify.annotations.Nullable;
-import tools.jackson.databind.annotation.JsonSerialize;
 
 @Getter
 @ToString
@@ -22,7 +20,6 @@ abstract class AbstractVariableEffect {
   private @Nullable String fromColor;
 
   @JsonProperty("period")
-  @JsonSerialize(using = DurationSerializer.class)
   private @Nullable Duration period;
 
   @JsonProperty("cycles")

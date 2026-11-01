@@ -1,10 +1,8 @@
 package com.github.gilbertotcc.lifx.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.gilbertotcc.lifx.models.deserializer.ResultStatusDeserializer;
 import lombok.AllArgsConstructor;
 import org.jspecify.annotations.Nullable;
-import tools.jackson.databind.annotation.JsonDeserialize;
 
 public record Result(
   @JsonProperty("id")
@@ -14,7 +12,6 @@ public record Result(
   @Nullable String label,
 
   @JsonProperty("status")
-  @JsonDeserialize(using = ResultStatusDeserializer.class)
   @Nullable Status status
 ) {
 

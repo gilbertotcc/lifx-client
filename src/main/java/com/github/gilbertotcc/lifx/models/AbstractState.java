@@ -4,13 +4,10 @@ import java.time.Duration;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.gilbertotcc.lifx.models.serializer.DurationSerializer;
-import com.github.gilbertotcc.lifx.models.serializer.PowerSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.jspecify.annotations.Nullable;
-import tools.jackson.databind.annotation.JsonSerialize;
 
 @Getter
 @ToString
@@ -19,7 +16,6 @@ import tools.jackson.databind.annotation.JsonSerialize;
 abstract class AbstractState {
 
   @JsonProperty("power")
-  @JsonSerialize(using = PowerSerializer.class)
   private @Nullable Power power;
 
   @JsonProperty("color")
@@ -29,7 +25,6 @@ abstract class AbstractState {
   private @Nullable Double brightness;
 
   @JsonProperty("duration")
-  @JsonSerialize(using = DurationSerializer.class)
   private @Nullable Duration duration;
 
   @JsonProperty("infrared")

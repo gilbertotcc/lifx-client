@@ -1,12 +1,10 @@
 package com.github.gilbertotcc.lifx;
 
-import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.impl.LifxClientImpl;
 import com.github.gilbertotcc.lifx.models.Color;
 import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.OperationResult;
 import com.github.gilbertotcc.lifx.models.Result;
-import com.github.gilbertotcc.lifx.operations.CommandOutput;
 import com.github.gilbertotcc.lifx.operations.DoBreatheEffectInput;
 import com.github.gilbertotcc.lifx.operations.DoPulseEffectInput;
 import com.github.gilbertotcc.lifx.operations.ListLightsInput;
@@ -17,8 +15,6 @@ import com.github.gilbertotcc.lifx.operations.ToggleLightsPowerInput;
 import com.github.gilbertotcc.lifx.operations.TransitToNextStateInput;
 import com.github.gilbertotcc.lifx.operations.ValidateColorInput;
 
-import io.vavr.control.Either;
-
 import java.util.List;
 
 public interface LifxClient {
@@ -27,21 +23,21 @@ public interface LifxClient {
     return LifxClientImpl.createNewClientFor(accessToken);
   }
 
-  Either<LifxCallException, CommandOutput.SomeOutput<List<Light>>> listLights(ListLightsInput input);
+  LifxResult<List<Light>> listLights(ListLightsInput input);
 
-  Either<LifxCallException, CommandOutput<List<Result>>> setLightsState(SetLightsStateInput input);
+  LifxResult<List<Result>> setLightsState(SetLightsStateInput input);
 
-  Either<LifxCallException, CommandOutput<List<OperationResult>>> setLightsStates(SetLightsStatesInput input);
+  LifxResult<List<OperationResult>> setLightsStates(SetLightsStatesInput input);
 
-  Either<LifxCallException, CommandOutput<List<Result>>> setLightsStateDelta(SetLightsStateDeltaInput input);
+  LifxResult<List<Result>> setLightsStateDelta(SetLightsStateDeltaInput input);
 
-  Either<LifxCallException, CommandOutput<List<Result>>> toggleLightsPower(ToggleLightsPowerInput input);
+  LifxResult<List<Result>> toggleLightsPower(ToggleLightsPowerInput input);
 
-  Either<LifxCallException, CommandOutput<List<Result>>> doBreatheEffect(DoBreatheEffectInput input);
+  LifxResult<List<Result>> doBreatheEffect(DoBreatheEffectInput input);
 
-  Either<LifxCallException, CommandOutput<List<Result>>> doPulseEffect(DoPulseEffectInput input);
+  LifxResult<List<Result>> doPulseEffect(DoPulseEffectInput input);
 
-  Either<LifxCallException, CommandOutput<List<Result>>> transitToNextState(TransitToNextStateInput input);
+  LifxResult<List<Result>> transitToNextState(TransitToNextStateInput input);
 
-  Either<LifxCallException, CommandOutput.SomeOutput<Color>> validateColor(ValidateColorInput input);
+  LifxResult<Color> validateColor(ValidateColorInput input);
 }

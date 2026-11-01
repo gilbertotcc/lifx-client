@@ -41,14 +41,16 @@ it is not already in context.
 
 1. **Models** in `models/`: the request body and any new response type. Reuse `ResultsDto<Result>` for writes that
    return `results[]`. Add custom (de)serializers in `models/serializer` or `models/deserializer` only when Jackson
-   annotations can't express the wire format. A new package needs a `@NullMarked` `package-info.java`.
+   annotations can't express the wire format, and register them in `JacksonUtils`, where one applies to every field of
+   its type (two fields of the same type can't use different ones). A new package needs a `@NullMarked`
+   `package-info.java`.
 2. **`api/LifxApi`**: one method with the HTTP verb annotation, a `/v1/...` path, `@Path("selector") LightSelector` only
    when the path has `{selector}` (other path params, such as Activate Scene's `{scene_uuid}`, get their own `@Path`
    with a plain type like `UUID`), `@Query` or `@Body` parameters, and a `Call<...>` type matching the `2XX` schema.
 3. **Operation** in `operations/`: the `*Input` record, the `*Command` (write) or `*Query` (read) implementing
-   `Operation<I, O>`, and an `*Output` record only when the sealed `CommandOutput<T>` (`SomeOutput` /
-   `EmptyOutput`) doesn't fit.
-4. **`LifxClient`**: a method `Either<LifxCallException, O> name(NameInput input)`.
+   `Operation<I, O>`, and no `*Output` record: the operation returns `LifxResult<O>` through an
+   `OperationCalls` helper (`executeCommand`, `executeQuery` or `executeListQuery`).
+4. **`LifxClient`**: a method `LifxResult<O> name(NameInput input)`.
 5. **`impl/LifxClientImpl`**: it uses a private Lombok `@RequiredArgsConstructor`, so constructor arguments follow
    field order.
    1. Add a `private final` field at the end of the `// Operations` block.
