@@ -60,7 +60,7 @@ public class LifxClientImpl implements LifxClient {
 
   // Mainly for testing purposes
   public static LifxClientImpl createNewClientFor(final String baseUrl, final String accessToken) {
-    validate(baseUrl, accessToken).get();
+    validate(baseUrl, accessToken).toEither().getOrElseThrow(e -> e);
 
     final OkHttpClient okHttpClient = LifxOkHttpClientFactory.INSTANCE.getOkHttpClient(accessToken, log::debug);
     final LifxApi lifxApi = new Retrofit.Builder()
