@@ -8,11 +8,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
+import java.time.Duration;
 
 import static com.github.gilbertotcc.lifx.models.Selectors.all;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,13 +28,21 @@ class SetLightsStateCommandTest extends OperationsTestFixtures {
 
     wireMockServer.stubFor(put(urlEqualTo("/v1/lights/all/state"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
+      .withRequestBody(equalToJson(loadJsonFromFile("/json/request_body/state.json")))
       .willReturn(aResponse().withBody(response)));
 
     final var lightsSelector = all();
-    final var state = State.builder().power(Power.ON).build();
+    final var state = State.builder()
+      .power(Power.ON)
+      .color("blue saturation:0.5")
+      .brightness(0.5)
+      .duration(Duration.ofMillis(2500))
+      .infrared(0.25)
+      .fast(false)
+      .build();
     final var input = new SetLightsStateInput(lightsSelector, state);
 
-    final var results = someResultOf(AUTHORIZED_CLIENT.setLightsState(input));
+    final var results = someResultOf(authorizedClient.setLightsState(input));
 
     assertEquals(2, results.size());
   }
@@ -48,7 +58,7 @@ class SetLightsStateCommandTest extends OperationsTestFixtures {
     final var state = State.builder().power(Power.ON).fast(true).build();
     final var input = new SetLightsStateInput(all(), state);
 
-    assertInstanceOf(LifxResult.Success.None.class, AUTHORIZED_CLIENT.setLightsState(input));
+    assertInstanceOf(LifxResult.Success.None.class, authorizedClient.setLightsState(input));
   }
 
   @Test
@@ -59,6 +69,6 @@ class SetLightsStateCommandTest extends OperationsTestFixtures {
 
     final var input = new SetLightsStateInput(all(), State.builder().power(Power.ON).build());
 
-    assertInstanceOf(LifxResult.Success.None.class, AUTHORIZED_CLIENT.setLightsState(input));
+    assertInstanceOf(LifxResult.Success.None.class, authorizedClient.setLightsState(input));
   }
 }

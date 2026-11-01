@@ -1,0 +1,9 @@
+{
+  "power": "on",
+  "duration": 2.5,
+  "infrared": 0.25,
+  "hue": 120.0,
+  "saturation": 0.5,
+  "brightness": 0.1,
+  "kelvin": 500.0
+}

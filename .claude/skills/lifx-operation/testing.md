@@ -6,9 +6,10 @@ Every operation gets a `<Name>Test` in `src/test/java/com/github/gilbertotcc/lif
 
 ## Test class skeleton
 
-Extend `OperationsTestFixtures`. It starts a `WireMockServer` on port 9999 before each test, stops it after, and
-provides `wireMockServer`, `VALID_ACCESS_TOKEN` and `AUTHORIZED_CLIENT` (a `LifxClient` pointed at the mock). Do not
-create your own server or client. Copy the structure and imports of
+Extend `OperationsTestFixtures`. It starts a `WireMockServer` on a dynamic port before each test, stops it after, and
+provides `wireMockServer`, `VALID_ACCESS_TOKEN` and `authorizedClient` (a `LifxClient` pointed at the mock, created per
+test because the port is only known once the server has started). Do not create your own server or client. Copy the
+structure and imports of
 `src/test/java/com/github/gilbertotcc/lifx/operations/ListLightsQueryTest.java` (read it). Match its style: 2-space
 indent, `final var`, no star imports, one static import per line, braces always.
 
@@ -31,30 +32,29 @@ Rules:
 1. **Success with mapped values.** Stub a fixture, call the client, unwrap it with `someResultOf` and assert real values
    (sizes, ids, statuses, numeric fields with a delta, as `ValidateColorQueryTest` does with `0.0001`). Do not stop at
    "not null".
-2. **One failure path** that returns a `LifxResult.Failure`. Pick one:
-   - Malformed body, as in `ListLightsQueryTest.listLightsShouldFailForMalformedResponseBody`:
+2. **Failure paths.** Add the operation to the `operations()` table in `OperationFailuresTest`: its name, the client
+   call and the URL path. That covers a 4xx (422 with the shared error fixture), a 5xx and an I/O failure, each asserted
+   on the `LifxCallException` cause. Don't use 404 in failure stubs, because WireMock also answers 404 to an unmatched
+   request. If the operation has failure behavior of its own, also add it to its `<Name>Test`, as
+   `ListLightsQueryTest.listLightsShouldFailForMalformedResponseBody` does:
 
-     ```java
-     wireMockServer.stubFor(get(urlEqualTo("/v1/lights/all"))
-       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
-       .willReturn(aResponse().withBody("not json")));
+   ```java
+   wireMockServer.stubFor(get(urlEqualTo("/v1/lights/all"))
+     .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
+     .willReturn(aResponse().withBody("not json")));
 
-     final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
+   final var result = authorizedClient.listLights(new ListLightsInput(all()));
 
-     assertInstanceOf(IOException.class, failureOf(result).getCause());
-     ```
+   assertInstanceOf(IOException.class, failureOf(result).getCause());
+   ```
 
-   - Non-2xx with the shared error fixture: `aResponse().withStatus(422).withBody(loadJsonFromFile(
-     "/json/response_body/error_response.json"))` (import `WireMock.aResponse`; `withStatus` is on the response
-     builder). The failure still carries a `LifxCallException`; its cause is a `LifxErrorException` carrying the
-     `LifxErrorType` (see `impl/CallExecutorTest`). Assert the type only if the operation adds behavior of its own.
-3. **Request body check** for any operation that sends a body (`@Body`). Pick one:
-   - On the wire: add `.withRequestBody(equalToJson(loadJsonFromFile("/json/request_body/<name>.json")))` to the stub
-     (static imports `WireMock.equalToJson`; `withRequestBody` is on `MappingBuilder`). If the body is not matched,
-     WireMock answers 404, the call fails and the test fails, so it needs no extra assertion. No existing operation
-     test uses this yet; keep it to one stub per test.
-   - On the model: serialize the body model and compare strictly, as in `models/LightsStateTest` and
-     `util/json/JacksonUtilsTest`:
+3. **Request body check** for any operation that sends a body (`@Body`):
+   - By default, check it on the wire: add `.withRequestBody(equalToJson(loadJsonFromFile("/json/request_body/<name>.json")))`
+     to the success stub (static imports `WireMock.equalToJson`; `withRequestBody` is on `MappingBuilder`), and set every
+     field of the input so the wire names are really checked. If the body is not matched, WireMock answers 404, the call
+     fails and the test fails, so it needs no extra assertion. Keep it to one stub per test.
+   - For a serialization detail of the model itself, also serialize it and compare strictly, as in
+     `models/LightsStateTest` and `util/json/JacksonUtilsTest`:
 
      ```java
      JSONAssert.assertEquals(loadJsonFromFile("/json/request_body/lights_state.json"), serializeObject(body), true);
@@ -83,7 +83,7 @@ All fixtures live in `src/test/resources/json/` and are plain JSON, copied from 
 | Success response | `response_body/<snake_case_operation>_OK.json` | `list_lights_OK.json`, `set_state_OK.json`, `set_states_OK.json`, `validate_color_OK.json` |
 | Shared results response | `response_body/results_OK.json` | reuse for operations that return `results[]` |
 | Error response | `response_body/error_response.json` | shared by all failure tests; do not copy it |
-| Request body | `request_body/<snake_case_body>.json` | `lights_state.json` |
+| Request body | `request_body/<snake_case_body>.json` | `lights_state.json`, `state.json`, `lights_states.json`, `state_delta.json`, `toggle_power.json`, `breathe_effect.json`, `pulse_effect.json`, `cycle.json` |
 
 Name a new success fixture after the operation, in snake_case, with the `_OK` suffix. Reuse `results_OK.json` or an
 existing `set_*_OK.json` when the response has the same shape instead of adding a duplicate. Change a fixture only if

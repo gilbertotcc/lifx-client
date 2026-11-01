@@ -11,6 +11,7 @@ import static com.github.gilbertotcc.lifx.models.Selectors.all;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,11 +24,12 @@ class ToggleLightsPowerCommandTest extends OperationsTestFixtures {
 
     wireMockServer.stubFor(post(urlEqualTo("/v1/lights/all/toggle"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
+      .withRequestBody(equalToJson(loadJsonFromFile("/json/request_body/toggle_power.json")))
       .willReturn(aResponse().withBody(response)));
 
-    var input = new ToggleLightsPowerInput(all(), Duration.ofSeconds(1L));
+    var input = new ToggleLightsPowerInput(all(), Duration.ofMillis(2500));
 
-    final List<Result> results = someResultOf(AUTHORIZED_CLIENT.toggleLightsPower(input));
+    final List<Result> results = someResultOf(authorizedClient.toggleLightsPower(input));
 
     assertEquals(1, results.size());
   }

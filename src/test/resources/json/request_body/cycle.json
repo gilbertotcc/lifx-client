@@ -1,0 +1,8 @@
+{
+  "states": [
+    {"power": "on", "color": "red", "brightness": 0.75, "duration": 1.5, "infrared": 0.5, "fast": false},
+    {"power": "off", "color": "green", "brightness": 0.25, "duration": 3.0, "infrared": 1.0, "fast": false}
+  ],
+  "defaults": {"power": "on", "color": "white", "brightness": 0.5, "duration": 2.0, "infrared": 0.0, "fast": false},
+  "direction": "backward"
+}

@@ -1,0 +1,9 @@
+{
+  "color": "red",
+  "from_color": "blue",
+  "period": 2.5,
+  "cycles": 3.0,
+  "persist": true,
+  "power_on": false,
+  "peak": 0.75
+}
