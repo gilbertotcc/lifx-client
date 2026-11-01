@@ -1,4 +1,4 @@
-package com.github.gilbertotcc.lifx.models.converter;
+package com.github.gilbertotcc.lifx.impl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -9,7 +9,7 @@ import retrofit2.Converter;
 import retrofit2.Retrofit;
 
 @AllArgsConstructor(staticName = "of")
-public class StringConverterFactory<T> extends Converter.Factory {
+final class StringConverterFactory<T> extends Converter.Factory {
 
   private final Class<T> sourceType;
   private final Converter<T, String> converter;

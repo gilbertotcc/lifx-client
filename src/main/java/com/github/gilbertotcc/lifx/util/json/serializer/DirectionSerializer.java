@@ -1,4 +1,4 @@
-package com.github.gilbertotcc.lifx.models.serializer;
+package com.github.gilbertotcc.lifx.util.json.serializer;
 
 import com.github.gilbertotcc.lifx.models.Cycle;
 import tools.jackson.core.JsonGenerator;

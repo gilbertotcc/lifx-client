@@ -1,6 +1,6 @@
 package com.github.gilbertotcc.lifx.exception;
 
-import static com.github.gilbertotcc.lifx.util.JacksonUtils.OBJECT_MAPPER;
+import static com.github.gilbertotcc.lifx.util.json.JacksonUtils.OBJECT_MAPPER;
 
 import com.github.gilbertotcc.lifx.models.ErrorModel;
 import io.vavr.control.Try;

@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
-import com.github.gilbertotcc.lifx.util.JacksonUtils;
+import com.github.gilbertotcc.lifx.util.json.JacksonUtils;
 import lombok.experimental.UtilityClass;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;

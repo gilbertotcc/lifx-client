@@ -50,16 +50,16 @@ one `operations.*Command`/`*Query` per endpoint → Retrofit `api.LifxApi` → w
   empty for a body-less 2xx (`OperationCalls.executeCommand` maps it to `Success.None`); `executeExpectingBody()`,
   used by queries, turns that case into a `LifxCallException`.
 - **HTTP setup**: `LifxClientImpl.createNewClientFor(baseUrl, token)` builds Retrofit with `LifxOkHttpClientFactory`
-  (bearer auth + logging interceptor), a `StringConverterFactory` that renders `LightSelector` path params via
-  `LightSelectorConverter`, and Jackson 3 using the shared `util.JacksonUtils.OBJECT_MAPPER`. Retrofit has no Jackson
-  3 converter, so `impl.JacksonConverterFactory` is in-house; it wraps Jackson's unchecked `JacksonException` in
+  (bearer auth + logging interceptor), an `impl.StringConverterFactory` that renders `LightSelector` path params via
+  `impl.LightSelectorConverter`, and Jackson 3 using the shared `util.json.JacksonUtils.OBJECT_MAPPER`. Retrofit has no
+  Jackson 3 converter, so `impl.JacksonConverterFactory` is in-house; it wraps Jackson's unchecked `JacksonException` in
   `IOException` so `CallExecutor` still reports (de)serialization failures as `LifxCallException`, and converts an
   empty body to `null`, since Retrofit only skips the converter for 204/205. The `baseUrl`
   overload exists for tests (WireMock).
 - **Models** (`models/`): DTOs, mostly records (the `State` and effect hierarchies stay Lombok classes, since records
   can't extend), plus the selector hierarchy (`LightSelector`, `CombinableLightSelector`, `RandomizableLightSelector`,
   multi-zone selectors), created via the `Selectors` factory. Custom Jackson (de)serializers live in
-  `models/serializer` and `models/deserializer`, and are registered in `JacksonUtils`.
+  `util/json/serializer` and `util/json/deserializer`, and are registered in `JacksonUtils`.
 
 ## Enforced rules
 
@@ -67,11 +67,11 @@ ArchUnit tests in `src/test/java/.../arch` fail the build if violated:
 
 - Classes in `..lifx.models` may only depend on `models` itself, `java.lang`, `java.time`, `java.util..`, `java.io`,
   and `io.vavr..` (not Jackson, Retrofit, Lombok runtime types, etc.); dependencies that come from annotations are
-  ignored, since ArchUnit 1.x counts them but the rule targets code. Note: `models.serializer`/`deserializer`/
-  `converter` are subpackages, so they are not covered by this rule.
+  ignored, since ArchUnit 1.x counts them but the rule targets code. Note: `util.json` and its subpackages are outside
+  `models`, so they are not covered by this rule.
 - Classes in `..lifx.models` may use `com.fasterxml.jackson.annotation` annotations, but nothing from `tools.jackson..`,
-  annotations included (a second rule, which does count annotations). `models.serializer`/`deserializer` are not
-  covered and may use Jackson.
+  annotations included (a second rule, which does count annotations). `util.json` and its subpackages are not covered
+  and may use Jackson.
 - No `System.out`/`System.err`, no generic exceptions thrown, no `java.util.logging` (use SLF4J via Lombok `@Slf4j`).
 
 The compiler also fails the build on:

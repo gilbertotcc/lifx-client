@@ -1,4 +1,4 @@
-package com.github.gilbertotcc.lifx.models.deserializer;
+package com.github.gilbertotcc.lifx.util.json.deserializer;
 
 import java.util.Optional;
 

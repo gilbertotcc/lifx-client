@@ -1,4 +1,4 @@
-package com.github.gilbertotcc.lifx.models.serializer;
+package com.github.gilbertotcc.lifx.util.json.serializer;
 
 import java.time.Duration;
 
