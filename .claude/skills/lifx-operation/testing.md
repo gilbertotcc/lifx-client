@@ -41,7 +41,7 @@ Rules:
 
      final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
 
-     assertInstanceOf(LifxCallException.class, failureOf(result));
+     assertInstanceOf(IOException.class, failureOf(result).getCause());
      ```
 
    - Non-2xx with the shared error fixture: `aResponse().withStatus(422).withBody(loadJsonFromFile(

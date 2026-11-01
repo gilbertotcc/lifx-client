@@ -1,6 +1,5 @@
 package com.github.gilbertotcc.lifx.operations;
 
-import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.models.Light;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -53,7 +52,7 @@ class ListLightsQueryTest extends OperationsTestFixtures {
 
     final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
 
-    assertInstanceOf(LifxCallException.class, failureOf(result));
+    assertInstanceOf(IOException.class, failureOf(result).getCause());
   }
 
   @ParameterizedTest
