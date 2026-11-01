@@ -28,7 +28,7 @@ class ListLightsQueryTest extends OperationsTestFixtures {
       .willReturn(aResponse().withBody(response)));
 
     ListLightsInput listLightsInput = new ListLightsInput(all());
-    final List<Light> lights = someResultOf(AUTHORIZED_CLIENT.listLights(listLightsInput));
+    final List<Light> lights = someResultOf(authorizedClient.listLights(listLightsInput));
 
     assertEquals(1, lights.size());
   }
@@ -39,7 +39,7 @@ class ListLightsQueryTest extends OperationsTestFixtures {
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody("[null]")));
 
-    final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
+    final var result = authorizedClient.listLights(new ListLightsInput(all()));
 
     assertInstanceOf(IOException.class, failureOf(result).getCause());
   }
@@ -50,7 +50,7 @@ class ListLightsQueryTest extends OperationsTestFixtures {
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody("not json")));
 
-    final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
+    final var result = authorizedClient.listLights(new ListLightsInput(all()));
 
     assertInstanceOf(IOException.class, failureOf(result).getCause());
   }
@@ -62,7 +62,7 @@ class ListLightsQueryTest extends OperationsTestFixtures {
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withStatus(status)));
 
-    final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
+    final var result = authorizedClient.listLights(new ListLightsInput(all()));
 
     assertInstanceOf(IOException.class, failureOf(result).getCause());
   }

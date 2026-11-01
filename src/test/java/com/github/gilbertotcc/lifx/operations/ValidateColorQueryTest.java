@@ -24,7 +24,7 @@ class ValidateColorQueryTest extends OperationsTestFixtures {
       .willReturn(aResponse().withBody(response)));
 
     var input = new ValidateColorInput("red");
-    final Color color = someResultOf(AUTHORIZED_CLIENT.validateColor(input));
+    final Color color = someResultOf(authorizedClient.validateColor(input));
 
     assertEquals(0.0, color.hue(), 0.0001);
     assertEquals(1.0, color.saturation(), 0.0001);
@@ -36,7 +36,7 @@ class ValidateColorQueryTest extends OperationsTestFixtures {
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody("null")));
 
-    final var result = AUTHORIZED_CLIENT.validateColor(new ValidateColorInput("red"));
+    final var result = authorizedClient.validateColor(new ValidateColorInput("red"));
 
     assertInstanceOf(IOException.class, failureOf(result).getCause());
   }

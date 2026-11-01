@@ -1,0 +1,8 @@
+{
+  "power": "on",
+  "color": "blue saturation:0.5",
+  "brightness": 0.5,
+  "duration": 2.5,
+  "infrared": 0.25,
+  "fast": false
+}
