@@ -1,4 +1,4 @@
-package com.github.gilbertotcc.lifx.util.json.serializer;
+package com.github.gilbertotcc.lifx.util.json;
 
 import java.time.Duration;
 
@@ -6,7 +6,7 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
-public class DurationSerializer extends ValueSerializer<Duration> {
+class DurationSerializer extends ValueSerializer<Duration> {
 
   /**
    * Writes the duration's whole-second component as a JSON number, ignoring nanoseconds.

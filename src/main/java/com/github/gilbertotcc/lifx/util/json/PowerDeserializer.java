@@ -1,4 +1,4 @@
-package com.github.gilbertotcc.lifx.util.json.deserializer;
+package com.github.gilbertotcc.lifx.util.json;
 
 import java.util.Optional;
 
@@ -8,7 +8,7 @@ import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.ValueDeserializer;
 
-public class PowerDeserializer extends ValueDeserializer<Power> {
+class PowerDeserializer extends ValueDeserializer<Power> {
 
   /**
    * Reads a case-sensitive power label without trimming whitespace.

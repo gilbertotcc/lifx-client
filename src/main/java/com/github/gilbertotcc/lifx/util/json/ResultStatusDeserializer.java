@@ -1,4 +1,4 @@
-package com.github.gilbertotcc.lifx.util.json.deserializer;
+package com.github.gilbertotcc.lifx.util.json;
 
 import java.util.Optional;
 
@@ -8,7 +8,7 @@ import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.ValueDeserializer;
 
-public class ResultStatusDeserializer extends ValueDeserializer<Result.Status> {
+class ResultStatusDeserializer extends ValueDeserializer<Result.Status> {
 
   /**
    * Reads a case-sensitive result status label without trimming whitespace.

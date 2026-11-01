@@ -58,8 +58,8 @@ one `operations.*Command`/`*Query` per endpoint → Retrofit `api.LifxApi` → w
   overload exists for tests (WireMock).
 - **Models** (`models/`): DTOs, mostly records (the `State` and effect hierarchies stay Lombok classes, since records
   can't extend), plus the selector hierarchy (`LightSelector`, `CombinableLightSelector`, `RandomizableLightSelector`,
-  multi-zone selectors), created via the `Selectors` factory. Custom Jackson (de)serializers live in
-  `util/json/serializer` and `util/json/deserializer`, and are registered in `JacksonUtils`.
+  multi-zone selectors), created via the `Selectors` factory. Custom Jackson (de)serializers live in `util/json` and
+  are registered in `JacksonUtils`.
 
 ## Enforced rules
 
@@ -67,11 +67,10 @@ ArchUnit tests in `src/test/java/.../arch` fail the build if violated:
 
 - Classes in `..lifx.models` may only depend on `models` itself, `java.lang`, `java.time`, `java.util..`, `java.io`,
   and `io.vavr..` (not Jackson, Retrofit, Lombok runtime types, etc.); dependencies that come from annotations are
-  ignored, since ArchUnit 1.x counts them but the rule targets code. Note: `util.json` and its subpackages are outside
-  `models`, so they are not covered by this rule.
+  ignored, since ArchUnit 1.x counts them but the rule targets code. Note: `util.json` is outside `models`, so it is
+  not covered by this rule.
 - Classes in `..lifx.models` may use `com.fasterxml.jackson.annotation` annotations, but nothing from `tools.jackson..`,
-  annotations included (a second rule, which does count annotations). `util.json` and its subpackages are not covered
-  and may use Jackson.
+  annotations included (a second rule, which does count annotations). `util.json` is not covered and may use Jackson.
 - No `System.out`/`System.err`, no generic exceptions thrown, no `java.util.logging` (use SLF4J via Lombok `@Slf4j`).
 
 The compiler also fails the build on:
