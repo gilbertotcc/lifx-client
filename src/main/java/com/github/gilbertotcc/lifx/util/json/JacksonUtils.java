@@ -1,4 +1,4 @@
-package com.github.gilbertotcc.lifx.util;
+package com.github.gilbertotcc.lifx.util.json;
 
 import java.time.Duration;
 
@@ -7,12 +7,12 @@ import com.github.gilbertotcc.lifx.models.Cycle;
 import com.github.gilbertotcc.lifx.models.LightSelector;
 import com.github.gilbertotcc.lifx.models.Power;
 import com.github.gilbertotcc.lifx.models.Result;
-import com.github.gilbertotcc.lifx.models.deserializer.PowerDeserializer;
-import com.github.gilbertotcc.lifx.models.deserializer.ResultStatusDeserializer;
-import com.github.gilbertotcc.lifx.models.serializer.DirectionSerializer;
-import com.github.gilbertotcc.lifx.models.serializer.DurationSerializer;
-import com.github.gilbertotcc.lifx.models.serializer.LightSelectorSerializer;
-import com.github.gilbertotcc.lifx.models.serializer.PowerSerializer;
+import com.github.gilbertotcc.lifx.util.json.deserializer.PowerDeserializer;
+import com.github.gilbertotcc.lifx.util.json.deserializer.ResultStatusDeserializer;
+import com.github.gilbertotcc.lifx.util.json.serializer.DirectionSerializer;
+import com.github.gilbertotcc.lifx.util.json.serializer.DurationSerializer;
+import com.github.gilbertotcc.lifx.util.json.serializer.LightSelectorSerializer;
+import com.github.gilbertotcc.lifx.util.json.serializer.PowerSerializer;
 import lombok.experimental.UtilityClass;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;

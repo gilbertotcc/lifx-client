@@ -1,9 +1,9 @@
-package com.github.gilbertotcc.lifx.models.converter;
+package com.github.gilbertotcc.lifx.impl;
 
 import com.github.gilbertotcc.lifx.models.LightSelector;
 import retrofit2.Converter;
 
-public class LightSelectorConverter implements Converter<LightSelector, String> {
+final class LightSelectorConverter implements Converter<LightSelector, String> {
 
   @Override
   public String convert(final LightSelector lightSelector) {

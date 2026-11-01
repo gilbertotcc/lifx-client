@@ -54,7 +54,7 @@ Rules:
      WireMock answers 404, the call fails and the test fails, so it needs no extra assertion. No existing operation
      test uses this yet; keep it to one stub per test.
    - On the model: serialize the body model and compare strictly, as in `models/LightsStateTest` and
-     `util/JacksonUtilsTest`:
+     `util/json/JacksonUtilsTest`:
 
      ```java
      JSONAssert.assertEquals(loadJsonFromFile("/json/request_body/lights_state.json"), serializeObject(body), true);

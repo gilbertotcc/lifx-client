@@ -8,8 +8,6 @@ import com.github.gilbertotcc.lifx.models.Light;
 import com.github.gilbertotcc.lifx.models.LightSelector;
 import com.github.gilbertotcc.lifx.models.OperationResult;
 import com.github.gilbertotcc.lifx.models.Result;
-import com.github.gilbertotcc.lifx.models.converter.LightSelectorConverter;
-import com.github.gilbertotcc.lifx.models.converter.StringConverterFactory;
 import com.github.gilbertotcc.lifx.operations.DoBreatheEffectCommand;
 import com.github.gilbertotcc.lifx.operations.DoBreatheEffectInput;
 import com.github.gilbertotcc.lifx.operations.DoPulseEffectCommand;
@@ -28,7 +26,7 @@ import com.github.gilbertotcc.lifx.operations.TransitToNextStateCommand;
 import com.github.gilbertotcc.lifx.operations.TransitToNextStateInput;
 import com.github.gilbertotcc.lifx.operations.ValidateColorInput;
 import com.github.gilbertotcc.lifx.operations.ValidateColorQuery;
-import com.github.gilbertotcc.lifx.util.JacksonUtils;
+import com.github.gilbertotcc.lifx.util.json.JacksonUtils;
 import io.vavr.control.Validation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -72,6 +70,7 @@ public class LifxClientImpl implements LifxClient {
       .client(okHttpClient)
       .build()
       .create(LifxApi.class);
+
     return new LifxClientImpl(
       new ListLightsQuery(lifxApi),
       new SetLightsStateCommand(lifxApi),

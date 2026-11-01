@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 
-import com.github.gilbertotcc.lifx.util.JacksonUtils;
+import com.github.gilbertotcc.lifx.util.json.JacksonUtils;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;

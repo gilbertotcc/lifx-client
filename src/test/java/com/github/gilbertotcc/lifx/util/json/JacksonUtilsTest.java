@@ -1,4 +1,4 @@
-package com.github.gilbertotcc.lifx.util;
+package com.github.gilbertotcc.lifx.util.json;
 
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.deserializeJson;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.serializeObject;
