@@ -12,7 +12,7 @@ public record TogglePower(
   /**
    * Creates power-toggle settings with the requested transition duration.
    *
-   * @param duration transition duration, serialized in whole seconds with the nanosecond component ignored
+   * @param duration transition duration, serialized in seconds, cut to one decimal place
    */
   public static TogglePower in(final Duration duration) {
     return new TogglePower(duration);

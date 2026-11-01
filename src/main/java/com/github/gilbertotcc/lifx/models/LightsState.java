@@ -15,7 +15,8 @@ public class LightsState extends AbstractState {
 
   /**
    * Creates a state update for the selected lights without local validation or defaults.
-   * Null state properties are omitted from JSON; the transition duration is serialized in whole seconds.
+   * Null state properties are omitted from JSON; the transition duration is serialized in seconds, cut to one decimal
+   * place.
    */
   @Builder
   public LightsState(final LightSelector lightSelector,

@@ -18,7 +18,7 @@ public class ToggleLightsPowerCommand
 
   /**
    * Synchronously requests a power toggle for the selected lights.
-   * The requested transition duration is serialized in whole seconds.
+   * The requested transition duration is serialized in seconds, cut to one decimal place.
    *
    * @return {@link LifxResult.Success.Some} with the per-light results, {@link LifxResult.Success.None} if a
    *     successful response has no body, or {@link LifxResult.Failure} with a call exception for HTTP or I/O
@@ -29,7 +29,7 @@ public class ToggleLightsPowerCommand
     var lightSelector = input.lightSelector();
     var duration = input.duration();
 
-    log.info("Toggle lights power of {} in {} seconds", lightSelector.identifier(), duration.toSeconds());
+    log.info("Toggle lights power of {} in {}", lightSelector.identifier(), duration);
     return OperationCalls.executeCommand(lifxApi.togglePower(lightSelector, TogglePower.in(duration)));
   }
 }
