@@ -27,9 +27,9 @@ paths:
   also checks a list body for null elements (a `Failure` with an `IOException` cause) and wraps it with
   `List.copyOf`.
 - Body models (`models/`): records with `@JsonProperty` and `@Nullable` for optional fields (`Cycle`, `Result`).
-  Custom (de)serializers go in `util/json/serializer` and `util/json/deserializer` (`DirectionSerializer`,
-  `ResultStatusDeserializer`), registered in `JacksonUtils.OBJECT_MAPPER` (a `SimpleModule`), where one applies to
-  every field of its type. `ModelsDependencyTest` allows only `com.fasterxml.jackson.annotation` in `models` itself.
+  Custom (de)serializers go in `util/json` (`DirectionSerializer`, `ResultStatusDeserializer`), registered in
+  `JacksonUtils.OBJECT_MAPPER` (a `SimpleModule`), where one applies to every field of its type.
+  `ModelsDependencyTest` allows only `com.fasterxml.jackson.annotation` in `models` itself.
 - `execute` Javadoc: one summary sentence starting "Synchronously ...", then `@return`. Writes document all three
   outcomes:
 

@@ -1,16 +1,16 @@
-package com.github.gilbertotcc.lifx.util.json.serializer;
+package com.github.gilbertotcc.lifx.util.json;
 
-import com.github.gilbertotcc.lifx.models.Cycle;
+import com.github.gilbertotcc.lifx.models.LightSelector;
 import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
-public class DirectionSerializer extends ValueSerializer<Cycle.Direction> {
+class LightSelectorSerializer extends ValueSerializer<LightSelector> {
 
   @Override
-  public void serialize(final Cycle.Direction direction,
+  public void serialize(final LightSelector lightSelector,
                         final JsonGenerator jsonGenerator,
                         final SerializationContext serializationContext) {
-    jsonGenerator.writeString(direction.label);
+    jsonGenerator.writeString(lightSelector.identifier());
   }
 }
