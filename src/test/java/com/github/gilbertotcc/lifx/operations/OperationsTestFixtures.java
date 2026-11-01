@@ -1,15 +1,14 @@
 package com.github.gilbertotcc.lifx.operations;
 
 import com.github.gilbertotcc.lifx.LifxClient;
+import com.github.gilbertotcc.lifx.LifxResult;
 import com.github.gilbertotcc.lifx.exception.LifxCallException;
 import com.github.gilbertotcc.lifx.impl.LifxClientImpl;
 import com.github.tomakehurst.wiremock.WireMockServer;
-import io.vavr.control.Either;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import static java.lang.String.format;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class OperationsTestFixtures {
@@ -26,12 +25,18 @@ public class OperationsTestFixtures {
     return LifxClientImpl.createNewClientFor(BASE_URL, VALID_ACCESS_TOKEN);
   }
 
-  protected static <T> T someResultOf(final Either<LifxCallException, CommandOutput<T>> output) {
-    assertTrue(output.isRight(), () -> "Expected a command output, got " + output);
-    if (output.get() instanceof CommandOutput.SomeOutput<T> someOutput) {
-      return someOutput.result();
+  protected static <T> T someResultOf(final LifxResult<T> result) {
+    if (result instanceof LifxResult.Success.Some<T> some) {
+      return some.result();
     }
-    return fail("Expected a command output with a result, got " + output.get());
+    return fail("Expected a successful result with a value, got " + result);
+  }
+
+  protected static <T> LifxCallException failureOf(final LifxResult<T> result) {
+    if (result instanceof LifxResult.Failure<T> failure) {
+      return failure.lifxCallException();
+    }
+    return fail("Expected a failure, got " + result);
   }
 
   @BeforeEach

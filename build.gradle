@@ -69,7 +69,7 @@ dependencies {
   // COMMON
   annotationProcessor libs.lombok
   compileOnly libs.lombok
-  api libs.vavr
+  implementation libs.vavr
   api libs.jspecify
   implementation libs.slf4j.api
 

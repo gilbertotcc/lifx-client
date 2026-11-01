@@ -1,5 +1,6 @@
 package com.github.gilbertotcc.lifx.operations;
 
+import com.github.gilbertotcc.lifx.LifxResult;
 import com.github.gilbertotcc.lifx.models.Power;
 import com.github.gilbertotcc.lifx.models.State;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class SetLightsStateCommandTest extends OperationsTestFixtures {
   // 202 answers a fast request; Retrofit skips the converter for 204
   @ParameterizedTest
   @ValueSource(ints = {200, 202, 204})
-  void setLightsStateShouldReturnEmptyOutputForEmptyBody(final int status) {
+  void setLightsStateShouldReturnNoneForEmptyBody(final int status) {
     wireMockServer.stubFor(put(urlEqualTo("/v1/lights/all/state"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withStatus(status)));
@@ -47,17 +48,17 @@ class SetLightsStateCommandTest extends OperationsTestFixtures {
     final var state = State.builder().power(Power.ON).fast(true).build();
     final var input = new SetLightsStateInput(all(), state);
 
-    assertInstanceOf(CommandOutput.EmptyOutput.class, AUTHORIZED_CLIENT.setLightsState(input).get());
+    assertInstanceOf(LifxResult.Success.None.class, AUTHORIZED_CLIENT.setLightsState(input));
   }
 
   @Test
-  void setLightsStateShouldReturnEmptyOutputForNullBody() {
+  void setLightsStateShouldReturnNoneForNullBody() {
     wireMockServer.stubFor(put(urlEqualTo("/v1/lights/all/state"))
       .withHeader("Authorization", equalTo("Bearer " + VALID_ACCESS_TOKEN))
       .willReturn(aResponse().withBody("null")));
 
     final var input = new SetLightsStateInput(all(), State.builder().power(Power.ON).build());
 
-    assertInstanceOf(CommandOutput.EmptyOutput.class, AUTHORIZED_CLIENT.setLightsState(input).get());
+    assertInstanceOf(LifxResult.Success.None.class, AUTHORIZED_CLIENT.setLightsState(input));
   }
 }

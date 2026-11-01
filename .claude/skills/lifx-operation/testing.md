@@ -21,16 +21,17 @@ Rules:
   auth.
 - Load response bodies with `TestUtils.loadJsonFromFile("/json/...")` (classpath path, leading slash; the method
   declares `IOException`, so the test needs `throws IOException`).
-- Every client method returns `Either<LifxCallException, T>`. On success, unwrap with `.get()` and assert on the
-  mapped values (`.lights()`, `.color()`); for commands, `someResultOf(...)` from `OperationsTestFixtures` unwraps the
-  `CommandOutput.SomeOutput` result. On failure, check `result.isLeft()` and `result.getLeft()`.
+- Every client method returns `LifxResult<T>`. On success, unwrap with `someResultOf(...)` from
+  `OperationsTestFixtures`, which asserts a `LifxResult.Success.Some` and returns its `result()`, and assert on the
+  mapped values. On failure, `failureOf(...)` from the same class asserts a `LifxResult.Failure` and returns its
+  `LifxCallException`.
 
 ## Required cases
 
-1. **Success with mapped values.** Stub a fixture, call the client, `.get()` the output and assert real values
+1. **Success with mapped values.** Stub a fixture, call the client, unwrap it with `someResultOf` and assert real values
    (sizes, ids, statuses, numeric fields with a delta, as `ValidateColorQueryTest` does with `0.0001`). Do not stop at
    "not null".
-2. **One failure path** that returns a `LifxCallException` on the left. Pick one:
+2. **One failure path** that returns a `LifxResult.Failure`. Pick one:
    - Malformed body, as in `ListLightsQueryTest.listLightsShouldFailForMalformedResponseBody`:
 
      ```java
@@ -40,13 +41,12 @@ Rules:
 
      final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
 
-     assertTrue(result.isLeft());
-     assertInstanceOf(LifxCallException.class, result.getLeft());
+     assertInstanceOf(LifxCallException.class, failureOf(result));
      ```
 
    - Non-2xx with the shared error fixture: `aResponse().withStatus(422).withBody(loadJsonFromFile(
      "/json/response_body/error_response.json"))` (import `WireMock.aResponse`; `withStatus` is on the response
-     builder). The left is still a `LifxCallException`; its cause is a `LifxErrorException` carrying the
+     builder). The failure still carries a `LifxCallException`; its cause is a `LifxErrorException` carrying the
      `LifxErrorType` (see `impl/CallExecutorTest`). Assert the type only if the operation adds behavior of its own.
 3. **Request body check** for any operation that sends a body (`@Body`). Pick one:
    - On the wire: add `.withRequestBody(equalToJson(loadJsonFromFile("/json/request_body/<name>.json")))` to the stub
@@ -67,8 +67,8 @@ Rules:
      also catches unwanted `null` fields.
 
 4. **Empty body**, if the operation adds handling of its own. `SetLightsStateCommandTest` covers commands
-   (`aResponse().withStatus(202)` gives `CommandOutput.EmptyOutput`) and `ListLightsQueryTest` covers queries
-   (`isLeft()` with an `IOException` cause); a new endpoint reuses that behavior and needs no extra test.
+   (`aResponse().withStatus(202)` gives `LifxResult.Success.None`) and `ListLightsQueryTest` covers queries
+   (a `Failure` with an `IOException` cause); a new endpoint reuses that behavior and needs no extra test.
 
 Operations with no body (reads, `DELETE`) skip case 3. Add one test per behavior; for example, a selector variant
 (`byId`, `byLabel`) that changes the URL is worth its own test.

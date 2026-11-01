@@ -36,17 +36,19 @@ Markdown lint and link checks: `.claude/rules/markdown.md`.
 Request flow: `LifxClient` (public interface, factory `LifxClient.newLifxClientFor(token)`) → `impl.LifxClientImpl` →
 one `operations.*Command`/`*Query` per endpoint → Retrofit `api.LifxApi` → wrapped by `impl.CallExecutor`.
 
-- **Operations** (`operations/`): each endpoint is an `Operation<I, O>` with its own `*Input` / `*Output` (or
-  the sealed `CommandOutput<T>`: `SomeOutput` / `EmptyOutput`) class. Naming: `*Query` for reads, `*Command` for
+- **Operations** (`operations/`): each endpoint is an `Operation<I, O>` with its own `*Input` class and a
+  `LifxResult<T>` result (an `*Output` record only if `T` needs one). Naming: `*Query` for reads, `*Command` for
   writes. Adding an endpoint means: method in `LifxApi`, new Input/Command(+Output) in `operations`, wiring in
   `LifxClientImpl.createNewClientFor`, and a method on `LifxClient`. Full procedure:
   `.claude/skills/lifx-operation/SKILL.md` (plain Markdown, usable by any agent); file conventions:
   `.claude/rules/operations.md`.
-- **Error handling**: no exceptions are thrown to callers — every client method returns vavr
-  `Either<LifxCallException, T>`. `CallExecutor` turns non-2xx responses into a `LifxCallException` whose cause is a
-  `LifxErrorException` (carrying the `LifxErrorType`), and I/O failures into `LifxCallException`. A successful
-  `execute()` yields an `Option` that is empty for a body-less 2xx (commands map it to `EmptyOutput`);
-  `executeExpectingBody()`, used by queries, turns that case into a `LifxCallException`.
+- **Error handling**: no exceptions are thrown to callers — every client method returns the sealed
+  `LifxResult<T>`: `Success.Some` (with `result()`), `Success.None` (body-less 2xx) or `Failure` (with
+  `lifxCallException()`). `OperationCalls` converts `CallExecutor`'s internal `Either` / `Option` into it.
+  `CallExecutor` turns non-2xx responses into a `LifxCallException` whose cause is a `LifxErrorException` (carrying
+  the `LifxErrorType`), and I/O failures into `LifxCallException`. A successful `execute()` yields an `Option` that is
+  empty for a body-less 2xx (`OperationCalls.executeCommand` maps it to `Success.None`); `executeExpectingBody()`,
+  used by queries, turns that case into a `LifxCallException`.
 - **HTTP setup**: `LifxClientImpl.createNewClientFor(baseUrl, token)` builds Retrofit with `LifxOkHttpClientFactory`
   (bearer auth + logging interceptor), a `StringConverterFactory` that renders `LightSelector` path params via
   `LightSelectorConverter`, and Jackson 3 using the shared `util.JacksonUtils.OBJECT_MAPPER`. Retrofit has no Jackson

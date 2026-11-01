@@ -30,9 +30,13 @@ To generate the access token, visit [LIFX Cloud Settings page](https://cloud.lif
 import static com.github.gilbertotcc.lifx.models.Selectors.all;
 
 import com.github.gilbertotcc.lifx.LifxClient;
+import com.github.gilbertotcc.lifx.LifxResult;
 import com.github.gilbertotcc.lifx.models.Power;
+import com.github.gilbertotcc.lifx.models.Result;
 import com.github.gilbertotcc.lifx.models.State;
 import com.github.gilbertotcc.lifx.operations.SetLightsStateInput;
+
+import java.util.List;
 
 public class RedLightOnSwitcher {
 
@@ -47,18 +51,18 @@ public class RedLightOnSwitcher {
       .build();
     var input = new SetLightsStateInput(all(), state);
 
-    client.setLightsState(input)
-      .peekLeft(error -> System.err.println("LIFX call failed: " + error.getMessage()));
+    LifxResult<List<Result>> result = client.setLightsState(input);
+    if (result instanceof LifxResult.Failure<List<Result>> failure) {
+      System.err.println("LIFX call failed: " + failure.lifxCallException().getMessage());
+    }
   }
 }
 ```
 
-Client methods never throw: each returns a vavr `Either` holding either the result or a `LifxCallException`.
-
-Commands such as `setLightsState` return a sealed `CommandOutput`. It is a `SomeOutput`, whose `result()` holds the
-per-light results, or an `EmptyOutput` when LIFX accepts the request without a response body (for example, a `fast`
-request answered with `202 Accepted`). Queries such as `listLights` report a successful response without a body as
-a `LifxCallException`.
+Client methods never throw: each returns a sealed `LifxResult`. It is a `Success.Some`, whose `result()` holds the
+result (for `setLightsState`, the per-light results), a `Success.None` when LIFX accepts the request without a response
+body (for example, a `fast` request answered with `202 Accepted`), or a `Failure`, whose `lifxCallException()` explains
+what went wrong. Queries such as `listLights` report a successful response without a body as a `Failure`.
 
 `src/integrationTest` shows the client calling the real LIFX cloud, and the tests in `src/test` cover every operation
 the LIFX HTTP API provides.

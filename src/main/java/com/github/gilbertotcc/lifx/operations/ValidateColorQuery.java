@@ -1,30 +1,28 @@
 package com.github.gilbertotcc.lifx.operations;
 
+import com.github.gilbertotcc.lifx.LifxResult;
 import com.github.gilbertotcc.lifx.api.LifxApi;
-import com.github.gilbertotcc.lifx.exception.LifxCallException;
-import com.github.gilbertotcc.lifx.impl.CallExecutor;
 import com.github.gilbertotcc.lifx.models.Color;
-import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ValidateColorQuery implements Operation<ValidateColorInput, CommandOutput.SomeOutput<Color>> {
+public class ValidateColorQuery implements Operation<ValidateColorInput, Color> {
 
   private final LifxApi lifxApi;
 
   /**
    * Synchronously asks the API to parse the supplied color string.
    *
-   * @return the parsed color on the right, or a call exception on the left for HTTP or I/O failures or a
-   *     successful response without a body
+   * @return {@link LifxResult.Success.Some} with the parsed color, or {@link LifxResult.Failure} with a call
+   *     exception for HTTP or I/O failures or a successful response without a body. Never
+   *     {@link LifxResult.Success.None}
    */
   @Override
-  public Either<LifxCallException, CommandOutput.SomeOutput<Color>> execute(ValidateColorInput input) {
+  public LifxResult<Color> execute(ValidateColorInput input) {
     var colorString = input.colorString();
     log.info("Validate color {}", colorString);
-    return new CallExecutor<>(lifxApi.validateColor(colorString)).executeExpectingBody()
-      .map(CommandOutput.SomeOutput::new);
+    return OperationCalls.executeQuery(lifxApi.validateColor(colorString));
   }
 }

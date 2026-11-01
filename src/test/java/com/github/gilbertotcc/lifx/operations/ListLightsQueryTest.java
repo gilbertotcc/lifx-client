@@ -17,7 +17,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ListLightsQueryTest extends OperationsTestFixtures {
 
@@ -30,7 +29,7 @@ class ListLightsQueryTest extends OperationsTestFixtures {
       .willReturn(aResponse().withBody(response)));
 
     ListLightsInput listLightsInput = new ListLightsInput(all());
-    final List<Light> lights = AUTHORIZED_CLIENT.listLights(listLightsInput).get().result();
+    final List<Light> lights = someResultOf(AUTHORIZED_CLIENT.listLights(listLightsInput));
 
     assertEquals(1, lights.size());
   }
@@ -43,8 +42,7 @@ class ListLightsQueryTest extends OperationsTestFixtures {
 
     final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
 
-    assertTrue(result.isLeft());
-    assertInstanceOf(IOException.class, result.getLeft().getCause());
+    assertInstanceOf(IOException.class, failureOf(result).getCause());
   }
 
   @Test
@@ -55,8 +53,7 @@ class ListLightsQueryTest extends OperationsTestFixtures {
 
     final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
 
-    assertTrue(result.isLeft());
-    assertInstanceOf(LifxCallException.class, result.getLeft());
+    assertInstanceOf(LifxCallException.class, failureOf(result));
   }
 
   @ParameterizedTest
@@ -68,7 +65,6 @@ class ListLightsQueryTest extends OperationsTestFixtures {
 
     final var result = AUTHORIZED_CLIENT.listLights(new ListLightsInput(all()));
 
-    assertTrue(result.isLeft());
-    assertInstanceOf(IOException.class, result.getLeft().getCause());
+    assertInstanceOf(IOException.class, failureOf(result).getCause());
   }
 }
