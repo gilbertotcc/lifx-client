@@ -15,7 +15,7 @@ public class State extends AbstractState {
 
   /**
    * Creates a state update without local validation or defaults.
-   * Null properties are omitted from JSON; the transition duration is serialized in whole seconds.
+   * Null properties are omitted from JSON; the transition duration is serialized in seconds, cut to one decimal place.
    */
   @Builder
   public State(final @Nullable Power power,

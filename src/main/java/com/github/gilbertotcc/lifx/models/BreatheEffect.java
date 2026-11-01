@@ -17,7 +17,8 @@ public class BreatheEffect extends AbstractVariableEffect {
 
   /**
    * Creates breathe-effect settings without local validation or defaults.
-   * Null settings are omitted by the client's JSON mapper; the period is serialized in whole seconds.
+   * Null settings are omitted by the client's JSON mapper; the period is serialized in seconds, cut to one decimal
+   * place.
    */
   @Builder
   BreatheEffect(final @Nullable String color,
