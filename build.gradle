@@ -58,12 +58,14 @@ configurations {
 
 dependencies {
   // RETROFIT
-  api libs.retrofit
+  implementation libs.retrofit
 
   // JACKSON (3.x keeps jackson-annotations on the 2.x line; the BOM pins the matching version)
-  api platform(libs.jackson.bom)
-  api libs.jackson.core
-  api libs.jackson.databind
+  implementation platform(libs.jackson.bom)
+  implementation libs.jackson.core
+  implementation libs.jackson.databind
+  // api: the models' Jackson annotations must resolve on consumers' compile classpaths; it has its own catalog
+  // version because the BOM is implementation-only and would leave this dependency versionless for consumers
   api libs.jackson.annotations
 
   // COMMON

@@ -4,6 +4,7 @@ import static com.tngtech.archunit.core.domain.Dependency.Predicates.dependencyT
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage;
 import static com.tngtech.archunit.lang.conditions.ArchConditions.onlyHaveDependenciesWhere;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.Dependency;
@@ -41,4 +42,13 @@ class ModelsDependencyTest {
         "java.lang", "java.time", "java.util..", "io.vavr..", "java.io",
         "" /* Avoid issue with enums. See: https://github.com/TNG/ArchUnit/issues/81#issuecomment-399688049 */
       )))));
+
+  // Unlike the rule above, this one also counts annotations: (de)serializers are registered in JacksonUtils, so a
+  // Jackson databind annotation on a model would reach consumers' classpaths without databind on them.
+  @ArchTest
+  static final ArchRule MODELS_SHOULD_NOT_DEPEND_ON_TOOLS_JACKSON =
+    noClasses().that()
+      .haveNameNotMatching(".*(Test|Spec).*")
+      .and().resideInAPackage(MODELS_PACKAGE)
+      .should().dependOnClassesThat().resideInAnyPackage("tools.jackson..");
 }

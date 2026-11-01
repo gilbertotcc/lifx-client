@@ -41,7 +41,9 @@ it is not already in context.
 
 1. **Models** in `models/`: the request body and any new response type. Reuse `ResultsDto<Result>` for writes that
    return `results[]`. Add custom (de)serializers in `models/serializer` or `models/deserializer` only when Jackson
-   annotations can't express the wire format. A new package needs a `@NullMarked` `package-info.java`.
+   annotations can't express the wire format, and register them in `JacksonUtils`, where one applies to every field of
+   its type (two fields of the same type can't use different ones). A new package needs a `@NullMarked`
+   `package-info.java`.
 2. **`api/LifxApi`**: one method with the HTTP verb annotation, a `/v1/...` path, `@Path("selector") LightSelector` only
    when the path has `{selector}` (other path params, such as Activate Scene's `{scene_uuid}`, get their own `@Path`
    with a plain type like `UUID`), `@Query` or `@Body` parameters, and a `Call<...>` type matching the `2XX` schema.

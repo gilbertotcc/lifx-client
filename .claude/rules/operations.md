@@ -28,8 +28,8 @@ paths:
   `List.copyOf`.
 - Body models (`models/`): records with `@JsonProperty` and `@Nullable` for optional fields (`Cycle`, `Result`).
   Custom (de)serializers go in `models/serializer` and `models/deserializer` (`DirectionSerializer`,
-  `ResultStatusDeserializer`), wired with `@JsonSerialize` / `@JsonDeserialize`. `ModelsDependencyTest` forbids
-  Jackson classes in `models` itself, apart from annotations.
+  `ResultStatusDeserializer`), registered in `JacksonUtils.OBJECT_MAPPER` (a `SimpleModule`), where one applies to
+  every field of its type. `ModelsDependencyTest` allows only `com.fasterxml.jackson.annotation` in `models` itself.
 - `execute` Javadoc: one summary sentence starting "Synchronously ...", then `@return`. Writes document all three
   outcomes:
 
