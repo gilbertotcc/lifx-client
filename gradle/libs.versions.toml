@@ -21,7 +21,7 @@ jsonassert = "1.5.3"
 mockito = "5.24.0"
 # 4.0.0-beta is used on purpose: WireMock 3.13.2 pulls handlebars 4.3.1 (GHSA-r4gv-qr8j-p3pg) and Jetty 11
 # (GHSA-qh8g-58pp-2wxh, fixed only in Jetty 12). Move to 4.x GA once released.
-wiremock = "4.0.0-beta.40"
+wiremock = "4.0.0-beta.41"
 groovy = "5.0.8"
 spock = "2.5-groovy-5.0"
 test-logger = "4.0.0"
