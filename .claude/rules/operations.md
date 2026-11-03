@@ -17,9 +17,9 @@ paths:
   `executeListQuery` for reads that return a list. See `ListLightsQuery`, `ValidateColorQuery` and `SetLightsStateCommand`.
 - Input: a record whose compact constructor rejects null components with `Objects.requireNonNull(x, "x")`, so a null
   fails when the input is built, not in `execute`'s log line. A `{selector}` path param is a `LightSelector`
-  (`TransitToNextStateInput`); other params use plain types (`ValidateColorInput` holds a `String`; a `{scene_uuid}` would be a `UUID`). Endpoints such as List Scenes
-  have no selector at all. Exception: an input that is the wire body extends its model DTO
-  (`SetLightsStatesInput extends LightsStatesDto`).
+  (`TransitToNextStateInput`); other params use plain types (`ValidateColorInput` holds a `String`; a `{scene_uuid}`
+  would be a `UUID`). Endpoints such as List Scenes have no selector at all. Exception: an input that is the wire body
+  extends its model DTO (`SetLightsStatesInput extends LightsStatesDto`).
 - Output: operations return `LifxResult<O>` and need no `*Output` record. Writes use `LifxResult<List<Result>>`, or
   `LifxResult<List<OperationResult>>` for `SetLightsStatesCommand`, through `OperationCalls.executeCommand`; a
   body-less 2xx (e.g. a `fast` request answered with 202) becomes `LifxResult.Success.None`. Reads return
