@@ -27,7 +27,14 @@ class LightTest {
 
   @Test
   void deserializeNullBrightnessShouldGiveNull() {
-    Light light = deserializeJson("{\"id\":\"1\",\"brightness\":null}", Light.class);
+    Light light = deserializeJson(
+      """
+        {
+          "id": "1",
+          "brightness": null
+        }""",
+      Light.class
+    );
 
     assertNull(light.brightness());
   }
