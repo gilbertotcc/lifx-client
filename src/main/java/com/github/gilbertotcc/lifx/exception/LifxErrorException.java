@@ -10,6 +10,7 @@ import retrofit2.Response;
 
 import java.io.Serial;
 import java.util.Objects;
+import java.util.Optional;
 
 @Getter
 public class LifxErrorException extends RuntimeException {
@@ -34,9 +35,10 @@ public class LifxErrorException extends RuntimeException {
    */
   public static LifxErrorException from(Response<?> response) {
     var rawBody = Try.of(() -> Objects.requireNonNull(response.errorBody()).string()).getOrNull();
-    var errorModel = rawBody == null
-      ? null
-      : Try.of(() -> OBJECT_MAPPER.readerFor(ErrorModel.class).<ErrorModel>readValue(rawBody)).getOrNull();
+    var errorModel = Optional.ofNullable(rawBody)
+      .map(nonEmptyBody -> Try.of(() -> OBJECT_MAPPER.readerFor(ErrorModel.class).<ErrorModel>readValue(nonEmptyBody)))
+      .flatMap(Try::toJavaOptional)
+      .orElse(null);
 
     return new LifxErrorException(response.code(), errorModel, rawBody, LifxRateLimit.from(response.headers()));
   }
