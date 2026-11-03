@@ -46,7 +46,8 @@ it is not already in context.
 2. **`api/LifxApi`**: one method with the HTTP verb annotation, a `/v1/...` path, `@Path("selector") LightSelector` only
    when the path has `{selector}` (other path params, such as Activate Scene's `{scene_uuid}`, get their own `@Path`
    with a plain type like `UUID`), `@Query` or `@Body` parameters, and a `Call<...>` type matching the `2XX` schema.
-3. **Operation** in `operations/`: the `*Input` record, the `*Command` (write) or `*Query` (read) implementing
+3. **Operation** in `operations/`: the `*Input` record (a compact constructor rejects null components with
+   `Objects.requireNonNull`), the `*Command` (write) or `*Query` (read) implementing
    `Operation<I, O>`, and no `*Output` record: the operation returns `LifxResult<O>` through an
    `OperationCalls` helper (`executeCommand`, `executeQuery` or `executeListQuery`).
 4. **`LifxClient`**: a method `LifxResult<O> name(NameInput input)`.
@@ -56,7 +57,7 @@ it is not already in context.
    2. Add `new NameCommand(lifxApi)` (or `new NameQuery(lifxApi)` for a read) at the same position in the
       `new LifxClientImpl(...)` call in `createNewClientFor(baseUrl, accessToken)`, so the field list and the argument
       list stay in the same order.
-   3. Add an `@Override` method that delegates to `field.execute(input)`.
+   3. Add an `@Override` method that delegates to `field.execute(Objects.requireNonNull(input, "input"))`.
 6. **Tests and fixtures** per [testing.md](testing.md).
 
 ## 4. Changing an existing operation

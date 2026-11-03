@@ -34,7 +34,7 @@ public class CallExecutor<T> {
         errorResponse -> LifxCallException.with(call, LifxErrorException.from(errorResponse))
       )
       .map(response -> Option.of(response.body()))
-      .peekLeft(error -> log.error("Call {} failed with error: {}", call.request(), error.getMessage()));
+      .peekLeft(error -> log.error("{}", error.getMessage()));
   }
 
   /**

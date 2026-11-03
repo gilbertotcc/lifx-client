@@ -42,11 +42,14 @@ one `operations.*Command`/`*Query` per endpoint → Retrofit `api.LifxApi` → w
   `LifxClientImpl.createNewClientFor`, and a method on `LifxClient`. Full procedure:
   `.claude/skills/lifx-operation/SKILL.md` (plain Markdown, usable by any agent); file conventions:
   `.claude/rules/operations.md`.
-- **Error handling**: no exceptions are thrown to callers — every client method returns the sealed
+- **Error handling**: call failures are not thrown to callers — every client method returns the sealed
   `LifxResult<T>`: `Success.Some` (with `result()`), `Success.None` (body-less 2xx) or `Failure` (with
-  `lifxCallException()`). `OperationCalls` converts `CallExecutor`'s internal `Either` / `Option` into it.
-  `CallExecutor` turns non-2xx responses into a `LifxCallException` whose cause is a `LifxErrorException` (carrying
-  the `LifxErrorType`), and I/O failures into `LifxCallException`. A successful `execute()` yields an `Option` that is
+  `lifxCallException()`). Only null arguments throw `NullPointerException`: `*Input` constructors reject null
+  components and `LifxClientImpl` rejects a null input. `OperationCalls` converts `CallExecutor`'s internal `Either` /
+  `Option` into `LifxResult`. `CallExecutor` turns non-2xx responses into a `LifxCallException` whose cause is a
+  `LifxErrorException` (carrying the `LifxErrorType`, status code, parsed `ErrorModel`, raw body and `LifxRateLimit`),
+  and I/O failures into `LifxCallException`; its message omits the URL if `call.request()` itself fails. There is no
+  retry on 429. A successful `execute()` yields an `Option` that is
   empty for a body-less 2xx (`OperationCalls.executeCommand` maps it to `Success.None`); `executeExpectingBody()`,
   used by queries, turns that case into a `LifxCallException`.
 - **HTTP setup**: `LifxClientImpl.createNewClientFor(baseUrl, token)` builds Retrofit with `LifxOkHttpClientFactory`

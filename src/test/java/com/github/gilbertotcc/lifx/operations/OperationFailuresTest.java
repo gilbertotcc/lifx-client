@@ -4,6 +4,7 @@ import com.github.gilbertotcc.lifx.LifxClient;
 import com.github.gilbertotcc.lifx.LifxResult;
 import com.github.gilbertotcc.lifx.exception.LifxErrorException;
 import com.github.gilbertotcc.lifx.exception.LifxErrorType;
+import com.github.gilbertotcc.lifx.exception.LifxRateLimit;
 import com.github.gilbertotcc.lifx.models.BreatheEffect;
 import com.github.gilbertotcc.lifx.models.Cycle;
 import com.github.gilbertotcc.lifx.models.LightsState;
@@ -21,6 +22,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -101,6 +103,26 @@ class OperationFailuresTest extends OperationsTestFixtures {
 
     assertEquals(LifxErrorType.SERVER_ERROR, cause.getType());
     assertNull(cause.getErrorModel());
+  }
+
+  @ParameterizedTest
+  @MethodSource("operations")
+  void shouldKeepStatusCodeRawBodyAndRateLimitFor429(final Function<LifxClient, LifxResult<?>> call,
+                                                     final String path) {
+    final var body = "{\"error\":\"rate limit exceeded\"}";
+    stubResponse(path, aResponse()
+      .withStatus(429)
+      .withBody(body)
+      .withHeader("X-RateLimit-Limit", "120")
+      .withHeader("X-RateLimit-Remaining", "0")
+      .withHeader("X-RateLimit-Reset", "1700000000"));
+
+    final var cause = assertInstanceOf(LifxErrorException.class, failureOf(call.apply(authorizedClient)).getCause());
+
+    assertEquals(LifxErrorType.TOO_MANY_REQUESTS, cause.getType());
+    assertEquals(429, cause.getStatusCode());
+    assertEquals(body, cause.getRawBody());
+    assertEquals(new LifxRateLimit(120, 0, Instant.ofEpochSecond(1700000000L)), cause.getRateLimit());
   }
 
   @ParameterizedTest

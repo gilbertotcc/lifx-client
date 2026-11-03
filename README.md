@@ -59,10 +59,21 @@ public class RedLightOnSwitcher {
 }
 ```
 
-Client methods never throw: each returns a sealed `LifxResult`. It is a `Success.Some`, whose `result()` holds the
-result (for `setLightsState`, the per-light results), a `Success.None` when LIFX accepts the request without a response
-body (for example, a `fast` request answered with `202 Accepted`), or a `Failure`, whose `lifxCallException()` explains
-what went wrong. Queries such as `listLights` report a successful response without a body as a `Failure`.
+Client methods report the outcome of a call through a sealed `LifxResult`. It is a `Success.Some`, whose `result()` holds
+the result (for `setLightsState`, the per-light results), a `Success.None` when LIFX accepts the request without a
+response body (for example, a `fast` request answered with `202 Accepted`), or a `Failure`, whose `lifxCallException()`
+explains what went wrong. Queries such as `listLights` report a successful response without a body as a `Failure`.
+
+A null argument is a programmer error, not a call outcome, so it throws `NullPointerException`: a client method given a
+null input, and an `*Input` constructor given a null value (only the `defaultState` of `SetLightsStatesInput` may be
+null).
+
+When LIFX answers with an error status, the cause of the `lifxCallException()` is a `LifxErrorException` with the details:
+`getType()`, `getStatusCode()`, `getErrorModel()` (the parsed error, or null), `getRawBody()` and `getRateLimit()` (the
+`X-RateLimit-*` headers, or null). The client doesn't retry, but after a 429 `getRateLimit().reset()` says when the next
+rate-limit window begins.
+
+Fields of a `Light` are nullable: LIFX may omit them or send null.
 
 `src/integrationTest` shows the client calling the real LIFX cloud, and the tests in `src/test` cover every operation
 the LIFX HTTP API provides.

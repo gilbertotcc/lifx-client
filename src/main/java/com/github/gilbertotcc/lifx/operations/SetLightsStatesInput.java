@@ -13,11 +13,12 @@ import java.util.List;
 public class SetLightsStatesInput extends LightsStatesDto {
 
   /**
-   * Creates a batch state request, retaining the supplied list without copying or validating it.
+   * Creates a batch state request, retaining an unmodifiable copy of the supplied list.
    *
    * @param defaultState defaults to send with the per-selector states, or null to omit
+   * @throws NullPointerException if the list or one of its elements is null
    */
   public SetLightsStatesInput(List<LightsState> lightsStates, @Nullable State defaultState, boolean fast) {
-    super(lightsStates, defaultState, fast);
+    super(List.copyOf(lightsStates), defaultState, fast);
   }
 }

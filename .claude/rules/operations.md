@@ -15,8 +15,9 @@ paths:
   (`ListLightsQuery`), otherwise the identifying input (`ValidateColorQuery` logs the color string). Then it calls one
   of the `OperationCalls` helpers with the `LifxApi` call: `executeCommand` for writes, `executeQuery` for reads,
   `executeListQuery` for reads that return a list. See `ListLightsQuery`, `ValidateColorQuery` and `SetLightsStateCommand`.
-- Input: a record. A `{selector}` path param is a `LightSelector` (`TransitToNextStateInput`); other params use plain
-  types (`ValidateColorInput` holds a `String`; a `{scene_uuid}` would be a `UUID`). Endpoints such as List Scenes
+- Input: a record whose compact constructor rejects null components with `Objects.requireNonNull(x, "x")`, so a null
+  fails when the input is built, not in `execute`'s log line. A `{selector}` path param is a `LightSelector`
+  (`TransitToNextStateInput`); other params use plain types (`ValidateColorInput` holds a `String`; a `{scene_uuid}` would be a `UUID`). Endpoints such as List Scenes
   have no selector at all. Exception: an input that is the wire body extends its model DTO
   (`SetLightsStatesInput extends LightsStatesDto`).
 - Output: operations return `LifxResult<O>` and need no `*Output` record. Writes use `LifxResult<List<Result>>`, or
@@ -44,7 +45,8 @@ paths:
   {@link LifxResult.Success.None}" (`ValidateColorQuery`); `ListLightsQuery` adds "an unmodifiable copy of" and
   "a response list with a null element". Add `@throws` only when the mapping of the body can actually throw.
 - `LifxClient` and `LifxClientImpl` change together: the interface method returns `LifxResult<O>`;
-  the impl gets a field under `// Operations`, a delegating `@Override`, and a `new XxxCommand(lifxApi)` /
+  the impl gets a field under `// Operations`, a delegating `@Override`
+  (`field.execute(Objects.requireNonNull(input, "input"))`), and a `new XxxCommand(lifxApi)` /
   `new XxxQuery(lifxApi)` argument in `createNewClientFor`. Field order must equal constructor argument order
   (private Lombok `@RequiredArgsConstructor`).
 - For a whole new endpoint or a signature change, follow the `lifx-operation` skill

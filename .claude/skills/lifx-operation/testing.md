@@ -70,6 +70,9 @@ Rules:
    (`aResponse().withStatus(202)` gives `LifxResult.Success.None`) and `ListLightsQueryTest` covers queries
    (a `Failure` with an `IOException` cause); a new endpoint reuses that behavior and needs no extra test.
 
+5. **Null inputs.** Add the new `*Input`'s null components to `OperationInputsTest`, and the new client method to the
+   null-input test in `LifxClientImplTest`.
+
 Operations with no body (reads, `DELETE`) skip case 3. Add one test per behavior; for example, a selector variant
 (`byId`, `byLabel`) that changes the URL is worth its own test.
 
