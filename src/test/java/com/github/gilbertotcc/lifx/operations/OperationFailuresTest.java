@@ -109,7 +109,10 @@ class OperationFailuresTest extends OperationsTestFixtures {
   @MethodSource("operations")
   void shouldKeepStatusCodeRawBodyAndRateLimitFor429(final Function<LifxClient, LifxResult<?>> call,
                                                      final String path) {
-    final var body = "{\"error\":\"rate limit exceeded\"}";
+    final var body = """
+      {
+        "error": "rate limit exceeded"
+      }""";
     stubResponse(path, aResponse()
       .withStatus(429)
       .withBody(body)

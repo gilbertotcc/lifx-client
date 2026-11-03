@@ -53,7 +53,16 @@ class ResultsDtoTest {
   // Documents the owner's decision: an undocumented status fails the whole deserialization
   @Test
   void deserializeUnknownStatusShouldFail() {
-    String json = "{\"results\":[{\"id\":\"1\",\"label\":\"Lamp\",\"status\":\"mystery\"}]}";
+    String json = """
+      {
+        "results": [
+          {
+            "id": "1",
+            "label": "Lamp",
+            "status": "mystery"
+          }
+        ]
+      }""";
 
     assertThrows(JacksonException.class,
       () -> deserializeJson(json, new TypeReference<ResultsDto<Result>>() {
