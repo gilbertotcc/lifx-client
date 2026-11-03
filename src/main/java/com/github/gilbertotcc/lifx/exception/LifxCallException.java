@@ -12,13 +12,14 @@ public class LifxCallException extends RuntimeException {
 
   /**
    * Creates an exception that retains the cause and identifies the failed request by HTTP method and URL.
-   * The method and URL are left out if the request itself cannot be built, since {@link Call#request()} then throws.
+   * A placeholder replaces the method and URL if the request itself cannot be built, since {@link Call#request()} then
+   * throws.
    */
   public static LifxCallException with(final Call<?> call, final Throwable cause) {
     var target = Try.of(call::request)
-      .map(request -> "%s %s ".formatted(request.method(), request.url()))
-      .getOrElse("");
-    return new LifxCallException("Call %sfailed with cause %s".formatted(target, cause.getMessage()), cause);
+      .map(request -> "%s %s".formatted(request.method(), request.url()))
+      .getOrElse("<unknown request>");
+    return new LifxCallException("Call %s failed with cause %s".formatted(target, cause.getMessage()), cause);
   }
 
   LifxCallException(String message, Throwable cause) {

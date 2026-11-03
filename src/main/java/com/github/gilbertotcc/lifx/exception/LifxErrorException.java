@@ -71,7 +71,9 @@ public class LifxErrorException extends RuntimeException {
   private static String message(final int statusCode, final @Nullable ErrorModel errorModel) {
     var type = LifxErrorType.byHttpCode(statusCode);
     var summary = "Error %s, HTTP %d (%s)".formatted(type.name(), statusCode, type.reason);
-    var errorMessage = errorModel == null ? null : errorModel.errorMessage();
-    return errorMessage == null ? summary : "%s: %s".formatted(summary, errorMessage);
+    return Optional.ofNullable(errorModel)
+      .map(ErrorModel::errorMessage)
+      .map(errorMessage -> "%s: %s".formatted(summary, errorMessage))
+      .orElse(summary);
   }
 }

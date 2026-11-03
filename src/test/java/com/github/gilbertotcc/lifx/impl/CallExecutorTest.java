@@ -199,7 +199,7 @@ class CallExecutorTest {
     var exception = new CallExecutor<String>(callMock).execute().getLeft();
 
     assertSame(failure, exception.getCause());
-    assertEquals("Call failed with cause bad selector", exception.getMessage());
+    assertEquals("Call <unknown request> failed with cause bad selector", exception.getMessage());
   }
 
   @Test
@@ -212,7 +212,7 @@ class CallExecutorTest {
 
     var exception = new CallExecutor<String>(callMock).executeExpectingBody().getLeft();
 
-    assertEquals("Call failed with cause Successful response has no body", exception.getMessage());
+    assertEquals("Call <unknown request> failed with cause Successful response has no body", exception.getMessage());
   }
 
   @SuppressWarnings("unchecked")
