@@ -18,7 +18,7 @@ public record Light(
   @Nullable String label,
 
   @JsonProperty("connected")
-  boolean connected,
+  @Nullable Boolean connected,
 
   @JsonProperty("power")
   @Nullable Power power,
@@ -30,7 +30,7 @@ public record Light(
   @Nullable String infrared,
 
   @JsonProperty("brightness")
-  double brightness,
+  @Nullable Double brightness,
 
   @JsonProperty("group")
   @Nullable Group group,
@@ -42,7 +42,7 @@ public record Light(
   @Nullable ZonedDateTime lastSeen,
 
   @JsonProperty("seconds_since_seen")
-  int secondsSinceSeen,
+  @Nullable Double secondsSinceSeen,
 
   @JsonProperty("product")
   @Nullable Product product
@@ -50,13 +50,13 @@ public record Light(
 
   public record Color(
     @JsonProperty("hue")
-    double hue,
+    @Nullable Double hue,
 
     @JsonProperty("saturation")
-    double saturation,
+    @Nullable Double saturation,
 
     @JsonProperty("kelvin")
-    int kelvin
+    @Nullable Integer kelvin
   ) {
   }
 
@@ -94,25 +94,25 @@ public record Light(
 
     public record Capabilities(
       @JsonProperty("has_color")
-      boolean hasColor,
+      @Nullable Boolean hasColor,
 
       @JsonProperty("has_variable_color_temp")
-      boolean hasVariableColorTemperature,
+      @Nullable Boolean hasVariableColorTemperature,
 
       @JsonProperty("min_kelvin")
-      int minKelvin,
+      @Nullable Integer minKelvin,
 
       @JsonProperty("max_kelvin")
-      int maxKelvin,
+      @Nullable Integer maxKelvin,
 
       @JsonProperty("has_ir")
-      boolean hasIr,
+      @Nullable Boolean hasIr,
 
       @JsonProperty("has_chain")
-      boolean hasChain,
+      @Nullable Boolean hasChain,
 
       @JsonProperty("has_multizone")
-      boolean hasMultizone
+      @Nullable Boolean hasMultizone
     ) {
     }
   }

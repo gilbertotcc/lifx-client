@@ -44,7 +44,7 @@ class JacksonUtilsTest {
   }
 
   @Test
-  void deserializeNullPrimitiveShouldFail() {
+  void deserializeNullKelvinShouldGiveNull() {
     String json = """
       {
         "id": "1234",
@@ -56,11 +56,13 @@ class JacksonUtilsTest {
       }
       """;
 
-    assertThrows(JacksonException.class, () -> deserializeJson(json, Light.class));
+    Light light = deserializeJson(json, Light.class);
+
+    assertNull(light.color().kelvin());
   }
 
   @Test
-  void deserializeMissingPrimitiveShouldUseDefaultValue() {
+  void deserializeMissingKelvinShouldGiveNull() {
     String json = """
       {
         "id": "1234",
@@ -73,7 +75,7 @@ class JacksonUtilsTest {
 
     Light light = deserializeJson(json, Light.class);
 
-    assertEquals(0, light.color().kelvin());
+    assertNull(light.color().kelvin());
   }
 
   @Test
