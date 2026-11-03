@@ -70,10 +70,9 @@ null).
 
 When LIFX answers with an error status, the cause of the `lifxCallException()` is a `LifxErrorException` with the details:
 `getType()`, `getStatusCode()`, `getErrorModel()` (the parsed error, or null), `getRawBody()` and `getRateLimit()` (the
-`X-RateLimit-*` headers, or null). The client doesn't retry, but after a 429 `getRateLimit().reset()` says when the next
-rate-limit window begins.
-
-Fields of a `Light` are nullable: LIFX may omit them or send null.
+`X-RateLimit-*` headers, or null). The client doesn't retry, but after a 429 `reset()` on the rate limit says when the
+next rate-limit window begins. Check for null first: `getRateLimit()` is null if LIFX sent no usable rate-limit header,
+and `reset()` is null if that header is absent or malformed.
 
 `src/integrationTest` shows the client calling the real LIFX cloud, and the tests in `src/test` cover every operation
 the LIFX HTTP API provides.
