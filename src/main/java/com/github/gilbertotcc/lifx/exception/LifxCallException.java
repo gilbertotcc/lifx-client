@@ -1,5 +1,6 @@
 package com.github.gilbertotcc.lifx.exception;
 
+import io.vavr.control.Try;
 import retrofit2.Call;
 
 import java.io.Serial;
@@ -11,12 +12,14 @@ public class LifxCallException extends RuntimeException {
 
   /**
    * Creates an exception that retains the cause and identifies the failed request by HTTP method and URL.
+   * A placeholder replaces the method and URL if the request itself cannot be built, since {@link Call#request()} then
+   * throws.
    */
   public static LifxCallException with(final Call<?> call, final Throwable cause) {
-    return new LifxCallException(
-      "Call %s %s failed with cause %s".formatted(call.request().method(), call.request().url(), cause.getMessage()),
-      cause
-    );
+    var target = Try.of(call::request)
+      .map(request -> "%s %s".formatted(request.method(), request.url()))
+      .getOrElse("<unknown request>");
+    return new LifxCallException("Call %s failed with cause %s".formatted(target, cause.getMessage()), cause);
   }
 
   LifxCallException(String message, Throwable cause) {

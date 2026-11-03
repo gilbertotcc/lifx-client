@@ -10,6 +10,7 @@ import retrofit2.Response;
 
 import java.io.Serial;
 import java.util.Objects;
+import java.util.Optional;
 
 @Getter
 public class LifxErrorException extends RuntimeException {
@@ -17,47 +18,62 @@ public class LifxErrorException extends RuntimeException {
   @Serial
   private static final long serialVersionUID = -1185407732054355941L;
 
+  private final int statusCode;
   private final LifxErrorType type;
   private final @Nullable ErrorModel errorModel;
+  private final @Nullable String rawBody;
+  private final @Nullable LifxRateLimit rateLimit;
 
   /**
-   * Builds an exception from the HTTP status and JSON error body, consuming the body.
+   * Builds an exception from the HTTP status, headers and error body, consuming the body.
    * Unmapped status codes use {@link LifxErrorType#UNKNOWN}.
    *
-   * @return an exception with the type mapped from the status code, and a null error model if the body is absent,
-   *     cannot be read, or cannot be parsed
+   * @return an exception with the status code, the type mapped from it, the rate-limit data if any, the raw body
+   *     (null if absent or unreadable), and a null error model if the body is absent, cannot be read, or cannot be
+   *     parsed
    * @throws NullPointerException if the response is null
    */
   public static LifxErrorException from(Response<?> response) {
-    var errorType = LifxErrorType.byHttpCode(response.code());
-    var errorModel = Try.of(() -> {
-      var errorBody = Objects.requireNonNull(response.errorBody());
-      return OBJECT_MAPPER.readerFor(ErrorModel.class).<ErrorModel>readValue(errorBody.string());
-    }).getOrNull();
+    var rawBody = Try.of(() -> Objects.requireNonNull(response.errorBody()).string()).getOrNull();
+    var errorModel = Optional.ofNullable(rawBody)
+      .map(nonEmptyBody -> Try.of(() -> OBJECT_MAPPER.readerFor(ErrorModel.class).<ErrorModel>readValue(nonEmptyBody)))
+      .flatMap(Try::toJavaOptional)
+      .orElse(null);
 
-    return new LifxErrorException(errorType, errorModel);
+    return new LifxErrorException(response.code(), errorModel, rawBody, LifxRateLimit.from(response.headers()));
   }
 
   /**
-   * Creates an exception retaining the error type and parsed error.
-   * The message includes the type and reason, plus the parsed error message when non-null.
+   * Creates an exception retaining the response data, with the error type derived from the status code.
+   * The message includes the type, status code and reason, plus the parsed error message when non-null. It leaves out
+   * the raw body.
    *
-   * @throws NullPointerException if the type is null
+   * @param statusCode the HTTP status code
+   * @param errorModel the parsed error body, or null if it is not available
+   * @param rawBody the error body as received, or null if it is not available
+   * @param rateLimit the rate-limit data of the response, or null if it is not available
    */
-  public LifxErrorException(final LifxErrorType type, final @Nullable ErrorModel errorModel) {
-    super(message(type, errorModel));
-    this.type = type;
+  public LifxErrorException(final int statusCode,
+                            final @Nullable ErrorModel errorModel,
+                            final @Nullable String rawBody,
+                            final @Nullable LifxRateLimit rateLimit) {
+    super(message(statusCode, errorModel));
+    this.statusCode = statusCode;
+    this.type = LifxErrorType.byHttpCode(statusCode);
     this.errorModel = errorModel;
+    this.rawBody = rawBody;
+    this.rateLimit = rateLimit;
   }
 
   /**
-   * Formats the error type and reason, appending the parsed error message when non-null.
-   *
-   * @throws NullPointerException if the type is null
+   * Formats the error type, status code and reason, appending the parsed error message when non-null.
    */
-  private static String message(final LifxErrorType type, final @Nullable ErrorModel errorModel) {
-    var summary = "Error %s (%s)".formatted(type.name(), type.reason);
-    var errorMessage = errorModel == null ? null : errorModel.errorMessage();
-    return errorMessage == null ? summary : "%s: %s".formatted(summary, errorMessage);
+  private static String message(final int statusCode, final @Nullable ErrorModel errorModel) {
+    var type = LifxErrorType.byHttpCode(statusCode);
+    var summary = "Error %s, HTTP %d (%s)".formatted(type.name(), statusCode, type.reason);
+    return Optional.ofNullable(errorModel)
+      .map(ErrorModel::errorMessage)
+      .map(errorMessage -> "%s: %s".formatted(summary, errorMessage))
+      .orElse(summary);
   }
 }

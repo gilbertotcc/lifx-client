@@ -3,11 +3,13 @@ package com.github.gilbertotcc.lifx.models;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.deserializeJson;
 import static com.github.gilbertotcc.lifx.testutil.TestUtils.loadJsonFromFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
+import tools.jackson.core.JacksonException;
 import tools.jackson.core.type.TypeReference;
 
 class ResultsDtoTest {
@@ -46,5 +48,24 @@ class ResultsDtoTest {
     assertEquals("[selector 2]", operationResult1.operation().selector());
     assertTrue(operationResult1.results().isEmpty());
     assertEquals("not found", operationResult1.error());
+  }
+
+  // Documents the owner's decision: an undocumented status fails the whole deserialization
+  @Test
+  void deserializeUnknownStatusShouldFail() {
+    String json = """
+      {
+        "results": [
+          {
+            "id": "1",
+            "label": "Lamp",
+            "status": "mystery"
+          }
+        ]
+      }""";
+
+    assertThrows(JacksonException.class,
+      () -> deserializeJson(json, new TypeReference<ResultsDto<Result>>() {
+      }));
   }
 }

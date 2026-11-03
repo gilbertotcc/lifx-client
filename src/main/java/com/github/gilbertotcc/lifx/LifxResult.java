@@ -3,8 +3,8 @@ package com.github.gilbertotcc.lifx;
 import com.github.gilbertotcc.lifx.exception.LifxCallException;
 
 /**
- * Outcome of a client call: a {@link Success} (with or without a result) or a {@link Failure}. No exception is thrown
- * to callers.
+ * Outcome of a client call: a {@link Success} (with or without a result) or a {@link Failure}. Call failures are not
+ * thrown to callers; only a null argument, which is a programmer error, throws a {@link NullPointerException}.
  *
  * @param <T> the type of the result carried by {@link Success.Some}
  */

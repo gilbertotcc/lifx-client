@@ -36,6 +36,7 @@ import org.jspecify.annotations.Nullable;
 import retrofit2.Retrofit;
 
 import java.util.List;
+import java.util.Objects;
 
 import static io.vavr.control.Validation.invalid;
 import static io.vavr.control.Validation.valid;
@@ -115,46 +116,46 @@ public class LifxClientImpl implements LifxClient {
 
   @Override
   public LifxResult<List<Light>> listLights(ListLightsInput input) {
-    return listLightsQuery.execute(input);
+    return listLightsQuery.execute(Objects.requireNonNull(input, "input"));
   }
 
   @Override
   public LifxResult<List<Result>> setLightsState(SetLightsStateInput input) {
-    return setLightsStateCommand.execute(input);
+    return setLightsStateCommand.execute(Objects.requireNonNull(input, "input"));
   }
 
   @Override
   public LifxResult<List<OperationResult>> setLightsStates(SetLightsStatesInput input) {
-    return setLightsStatesCommand.execute(input);
+    return setLightsStatesCommand.execute(Objects.requireNonNull(input, "input"));
   }
 
   @Override
   public LifxResult<List<Result>> setLightsStateDelta(SetLightsStateDeltaInput input) {
-    return setLightsStateDeltaCommand.execute(input);
+    return setLightsStateDeltaCommand.execute(Objects.requireNonNull(input, "input"));
   }
 
   @Override
   public LifxResult<List<Result>> toggleLightsPower(ToggleLightsPowerInput input) {
-    return toggleLightsPowerCommand.execute(input);
+    return toggleLightsPowerCommand.execute(Objects.requireNonNull(input, "input"));
   }
 
   @Override
   public LifxResult<List<Result>> doBreatheEffect(DoBreatheEffectInput input) {
-    return doBreatheEffectCommand.execute(input);
+    return doBreatheEffectCommand.execute(Objects.requireNonNull(input, "input"));
   }
 
   @Override
   public LifxResult<List<Result>> doPulseEffect(DoPulseEffectInput input) {
-    return doPulseEffectCommand.execute(input);
+    return doPulseEffectCommand.execute(Objects.requireNonNull(input, "input"));
   }
 
   @Override
   public LifxResult<List<Result>> transitToNextState(TransitToNextStateInput input) {
-    return transitToNextStateCommand.execute(input);
+    return transitToNextStateCommand.execute(Objects.requireNonNull(input, "input"));
   }
 
   @Override
   public LifxResult<Color> validateColor(ValidateColorInput input) {
-    return validateColorQuery.execute(input);
+    return validateColorQuery.execute(Objects.requireNonNull(input, "input"));
   }
 }
