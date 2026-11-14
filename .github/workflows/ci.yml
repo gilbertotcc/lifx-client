@@ -48,7 +48,7 @@ jobs:
         run: ./gradlew check --continue -PtestJavaVersion=${{ matrix.test-java }}
       - name: Report test results
         if: always()
-        uses: mikepenz/action-junit-report@v6.7.0
+        uses: mikepenz/action-junit-report@v6.7.1
         with:
           report_paths: build/test-results/**/TEST-*.xml
           annotate_only: true
