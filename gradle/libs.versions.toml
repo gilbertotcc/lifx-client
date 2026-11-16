@@ -1,16 +1,16 @@
 [versions]
 retrofit = "3.0.0"
 # Jackson 3.x keeps jackson-annotations on the 2.x line; the BOM pins the matching version
-jackson-bom = "3.2.4"
+jackson-bom = "3.3.0"
 # Pinned on its own because jackson-annotations is api (the BOM is not): the value BOM 3.2.4 sets. Keep it in step
 # with the BOM; if they drift, Gradle picks the highest version at runtime.
-jackson-annotations = "2.22"
+jackson-annotations = "2.23"
 lombok = "1.18.48"
 vavr = "1.1.0"
 slf4j = "2.0.20"
 okhttp = "5.5.1"
 jspecify = "1.0.1"
-errorprone = "2.51.0"
+errorprone = "2.52.0"
 nullaway = "0.14.3"
 jacoco = "0.8.16"
 checkstyle = "14.4.0"
